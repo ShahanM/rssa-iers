@@ -27,6 +27,7 @@
       "react-app/jest"
     ]
   },
+  "homepage": "https://rssa.recsys.dev/ierss",
   "browserslist": {
     "production": [
       ">0.2%",

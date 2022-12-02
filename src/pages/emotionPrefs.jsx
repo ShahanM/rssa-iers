@@ -121,7 +121,7 @@ export default function EmotionPreferences(props) {
 			<Row>
 				<Col id="emotionPanel">
 					<div className="emoPrefControlPanel">
-						<div style={{ marginTop: "2rem" }}>
+						{/* <div style={{ marginTop: "2rem" }}>
 							<p style={{ fontWeight: "800" }}>
 								Please inspect the recommendations and adjust 
 								them to your preference.
@@ -160,7 +160,7 @@ export default function EmotionPreferences(props) {
 								Adjust the recommendations until they best fit 
 								your preferences.
 							</p>
-						</div>
+						</div> */}
 						<div style={{ marginTop: "4em" }}>
 							<EmotionToggle onToggle={handleToggle} emotions={emotionToggles}/>
 							{/* <EmotionSlider onSliderChange={handleSliderChange}/> */}
