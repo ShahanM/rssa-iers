@@ -6,6 +6,7 @@ import './App.css';
 import RateMovies from './pages/rateMovies';
 import EmotionPreferences from './pages/emotionPrefs';
 import { Container } from 'react-bootstrap';
+import PickMovies from './pages/pickMovies';
 
 function App() {
 	return (
@@ -21,6 +22,7 @@ function App() {
 						<Routes>
 							<Route path="/" element={<RateMovies />} />
 							<Route path="/recommendations" element={<EmotionPreferences />} />
+							<Route path="/selection" element={<PickMovies />} />
 						</Routes>
 					</Suspense>
 				</Container>

@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import Button from 'react-bootstrap/Button';
-import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
-import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
-import { API } from '../constants';
-import MovieGrid from '../widgets/movieGrid';
 import Spinner from 'react-bootstrap/Spinner';
 import { useNavigate } from 'react-router-dom';
+import { API } from '../constants';
+import MovieGrid from '../widgets/movieGrid';
 
 
 export default function RateMovies() {
@@ -16,21 +14,16 @@ export default function RateMovies() {
 	const [ratedMovies, setRatedMovies] = useState([]);
 
 	const [movies, setMovies] = useState([]);
-	const [rssaCondition, setRssaCondition] = useState(-1);
 
 	const [ratedMovieCount, setRatedMovieCount] = useState(0);
 
 	const [recommendedMovies, setRecommendedMovies] = useState([]);
-	const [conditionRecommendations, setConditionRecommendations] = useState([]);
 	const [loading, setLoading] = useState(false);
-	const [recLoading, setRecLoading] = useState(false);
-	const [conLoading, setConLoading] = useState(false);
-	// const [itemsPerPage, setItemsPerPage] = useState(12);
 	const [currentPage, setCurrentPage] = useState(1);
 
 	const [buttonDisabled, setButtonDisabled] = useState(true);
 
-	const itemsPerPage = 16;
+	const itemsPerPage = 24;
 	const navigate = useNavigate();
 
 	const rateMoviesHandler = (newRating, movieid) => {
@@ -95,14 +88,9 @@ export default function RateMovies() {
 				} 
 			});
 		}
-	}, [recommendedMovies, navigate]);
+	}, [recommendedMovies, ratedMoviesData, navigate]);
 
 	const submitHandler = (recType) => {
-		if (recType === 0) {
-			setRecLoading(true);
-		} else {
-			setConLoading(true);
-		}
 		setLoading(true);
 		if (ratedMovies.length > 0) {
 			fetch(API + 'ers/recommendation/', {
@@ -122,39 +110,14 @@ export default function RateMovies() {
 			})
 				.then((response): Promise<movie[]> => response.json())
 				.then((movies: movie[]) => {
-					if (recType === 0) {
-						setRecommendedMovies([...movies]);
-						setRecLoading(false);
-					} else {
-						setConditionRecommendations([...movies]);
-						setConLoading(false);
-					}
+					setRecommendedMovies([...movies]);
 					setLoading(false);
 				})
 				.catch((error) => {
 					console.log(error);
 					setLoading(false);
-					setRecLoading(false);
-					setConLoading(false);
 				});
 		}
-	}
-
-	const rssaConditionHandler = (event) => {
-		const condition = event.target.value;
-		setRssaCondition(condition);
-		if (condition > 0) {
-			submitHandler(condition);
-		}
-	}
-
-	const removeMovieHandler = (movieId) => {
-		setRatedMovies(ratedMovies.filter(movie => movie.movie_id !== movieId));
-		setRatedMoviesData(ratedMoviesData.filter(movie => movie.movie_id !== movieId));
-		setMovies(movies.map(movie => (
-			movie.movie_id === movieId ? {
-				...movie, rating: 0
-			} : movie)));
 	}
 
 	const updateCurrentPage = (page) => {

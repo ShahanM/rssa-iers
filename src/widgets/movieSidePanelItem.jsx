@@ -1,8 +1,9 @@
 import ListGroup from "react-bootstrap/ListGroup";
 import Image from "react-bootstrap/Image";
+import { Button } from "react-bootstrap";
 
 
-export default function MovieSidePanelItem(props) {
+export default function SidePanelItem(props) {
 
 	return (
 		<ListGroup.Item as="div"
@@ -20,6 +21,11 @@ export default function MovieSidePanelItem(props) {
 					{props.movie.title + " (" + props.movie.year + ")"}
 				</p>
 			</div>
+			{props.pick ?
+			<div>
+				<Button variant="outline-primary">Select</Button>
+			</div>
+			: ''}
 		</ListGroup.Item>
 	)
 }

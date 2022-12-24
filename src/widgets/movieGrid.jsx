@@ -54,7 +54,7 @@ export default function MovieGrid(props) {
 						</Button>
 					</div>
 				</Col>
-				<Col md={{ span: 3, offset: 3 }}>
+				<Col md={{ span: 3, offset: 5 }}>
 					<div className="btnDiv">
 						<Button id="gallery-right-btn" variant="primary" onClick={renderNext}>
 							&gt;

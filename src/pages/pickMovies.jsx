@@ -1,6 +1,6 @@
-import { useLocation, useNavigate } from "react-router-dom"
+import { useLocation } from "react-router-dom"
 import React, { useEffect } from 'react';
-import { Button, Container, ListGroup, ListGroupItem, Spinner } from
+import { Button, Container, ListGroup, ListGroupItem, Spinner } from 
 	"react-bootstrap";
 import MovieSidePanel from "../widgets/movieSidePanel";
 import SidePanelItem from "../widgets/movieSidePanelItem";
@@ -13,13 +13,13 @@ import Col from "react-bootstrap/Col";
 import { useState } from "react";
 import Card from "react-bootstrap/Card";
 
-export default function EmotionPreferences(props) {
+export default function PickMovies(props) {
 	let userid = 1;
 	const state = useLocation().state;
 	const ratings = state.ratings;
 	// const movies = state.recommendations;
 
-	const [movies, setMovies] = useState(state.recommendations);
+	const [movies, setMovies] = useState(state.finalrecommendations);
 	const [isShown, setIsShown] = useState(false);
 	const [activeMovie, setActiveMovie] = useState(null);
 	const [buttonDisabled, setButtonDisabled] = useState(true);
@@ -35,22 +35,20 @@ export default function EmotionPreferences(props) {
 		'Anticipation': 'ignore'
 	});
 
-	const navigate = useNavigate();
-
 	useEffect(() => {
 		// console.log(emotionToggles);
 		if (Object.values(emotionToggles).some(item => item.length > 0)) {
 			// console.log(emotionToggles);
 			const emoinput = Object.keys(emotionToggles).map(
 				(key) => ({
-					emotion: key,
+					emotion: key, 
 					weight: emotionToggles[key].length > 0 ? emotionToggles[key] : 'ignore'
 				}));
-			updateRecommendations(emoinput);
+			// updateRecommendations(emoinput);
 		}
 		// if (Object.values(emotionToggles).some(value => value !== 'ignore')) {
-		// console.log('button enabled');
-		// updateRecommendations();
+			// console.log('button enabled');
+			// updateRecommendations();
 		// }
 	}, [emotionToggles]);
 
@@ -85,15 +83,6 @@ export default function EmotionPreferences(props) {
 		});
 	}
 
-	const handleNext = () => {
-		navigate('/selection',
-			{
-				state: {
-					finalrecommendations: movies
-				}
-			});
-	}
-
 	const updateRecommendations = (emoinput) => {
 		setLoading(true);
 		setButtonDisabled(true);
@@ -115,18 +104,18 @@ export default function EmotionPreferences(props) {
 				num_rec: 20
 			})
 		})
-			.then((response): Promise<movie[]> => response.json())
-			.then((movies: movie[]) => {
-				console.log(movies);
-				setMovies(movies);
-				setLoading(false);
-				setButtonDisabled(false);
-			})
-			.catch((error) => {
-				console.log(error);
-				setLoading(false);
-				setButtonDisabled(false);
-			});
+		.then((response): Promise<movie[]> => response.json())
+		.then((movies: movie[]) => {
+			console.log(movies);
+			setMovies(movies);
+			setLoading(false);
+			setButtonDisabled(false);
+		})
+		.catch((error) => {
+			console.log(error);
+			setLoading(false);
+			setButtonDisabled(false);
+		});
 	}
 
 	return (
@@ -144,7 +133,7 @@ export default function EmotionPreferences(props) {
 				</div>
 			</Row>
 			<Row>
-				<Col id="emotionPanel">
+				{/* <Col id="emotionPanel">
 					<div className="emoPrefControlPanel">
 						{/* <div style={{ marginTop: "2rem" }}>
 							<p style={{ fontWeight: "800" }}>
@@ -186,21 +175,21 @@ export default function EmotionPreferences(props) {
 								your preferences.
 							</p>
 						</div> */}
-						<div style={{ marginTop: "4em" }}>
-							<EmotionToggle onToggle={handleToggle} emotions={emotionToggles} onReset={resetToggles} />
+						{/* <div style={{ marginTop: "4em" }}>
+							<EmotionToggle onToggle={handleToggle} emotions={emotionToggles} onReset={resetToggles}/>
 							{/* <EmotionSlider onSliderChange={handleSliderChange}/> */}
-						</div>
+						{/* </div> */}
 						{/* <Button variant="info" onClick={() => sortmovies('anger')}>Anger</Button> */}
 						{/* <Button variant="info" onClick={() => sortmovies('joy')}>Joy</Button> */}
-					</div>
-				</Col>
+					{/* </div>
+				</Col> */}
 				<Col id="moviePanel">
-					<MovieSidePanel id="leftPanel"
+					<MovieSidePanel id="leftPanel" 
 						movieList={movies.slice(0, 7)}
 						panelTitle={'Movies you may like'}
 						panelByline={''}
 						byline={''}
-						render={(props) => <SidePanelItem {...props} />}
+						render={(props) => <SidePanelItem {...props} pick={true} />}
 						hoverHandler={handleHover}
 					/>
 				</Col>
@@ -208,20 +197,18 @@ export default function EmotionPreferences(props) {
 					{isShown && (activeMovie != null) ? (
 						<Card bg="light" text="black">
 							<Card.Body style={{ height: '900px' }}>
-								<Card.Img variant="top"
+								<Card.Img variant="top" 
 									className="d-flex mx-auto d-block 
 										img-thumbnail"
-									src={activeMovie.poster}
+									src={activeMovie.poster} 
 									alt={"Poster of the movie " +
 										activeMovie.title}
-									style={{
-										maxHeight: "36%", minHeight: "36%",
-										width: "auto"
-									}} />
+									style={{ maxHeight: "36%", minHeight: "36%",
+										width: "auto" }} />
 								<Card.Title style={{ marginTop: "0.5rem" }}>
 									{activeMovie.title}
 								</Card.Title>
-								<Container className="overflow-auto"
+								<Container className="overflow-auto" 
 									style={{ height: "27%" }}>
 									<Card.Text>
 										{activeMovie.description}
@@ -236,11 +223,11 @@ export default function EmotionPreferences(props) {
 			</Row>
 			<Row>
 				<div className="jumbotron jumbotron-footer">
-					<Button className="next-button footer-btn"
-						variant={buttonDisabled ? 'secondary' : 'primary'}
+					<Button className="next-button footer-btn" 
+						variant={buttonDisabled ? 'secondary' : 'primary'} 
 						size="lg"
 						disabled={buttonDisabled && !loading}
-						onClick={handleNext}>
+						>
 						{!loading ? 'Next'
 							:
 							<>

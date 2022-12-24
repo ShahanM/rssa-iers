@@ -1,68 +1,69 @@
 .App {
-  text-align: center;
+	text-align: center;
 }
 
 .App-logo {
-  height: 40vmin;
-  pointer-events: none;
+	height: 40vmin;
+	pointer-events: none;
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+	.App-logo {
+		animation: App-logo-spin infinite 20s linear;
+	}
 }
 
 .App-header {
-  background-color: #282c34;
-  height: 3vh;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+	background-color: #282c34;
+	height: 3vh;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	justify-content: center;
+	font-size: calc(10px + 2vmin);
+	color: white;
 }
 
 .App-link {
-  color: #61dafb;
+	color: #61dafb;
 }
 
 @keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+	from {
+		transform: rotate(0deg);
+	}
+
+	to {
+		transform: rotate(360deg);
+	}
 }
 
 
 /* Gallery */
 .gallery {
-  width: fit-content;
-  margin: 0 auto;
-  /* display: flex; */
+	width: fit-content;
+	margin: 0 auto;
+	/* display: flex; */
 }
 
 .gallery .btnDiv {
-  margin-top: 0.75em;
-  padding: 0;
+	margin-top: 0.75em;
+	padding: 0;
 }
 
-.gallery .btnDiv:last-child {
-  /* margin-left: 18px; */
-}
+/* .gallery .btnDiv:last-child { */
+	/* margin-left: 18px; */
+/* } */
 
 .gallery .btnDiv Button {
-  width: 230px;
-  height: 54px;
-  margin: 0;
+	width: 230px;
+	height: 54px;
+	margin: 0;
 }
 
 .grid-container {
 	display: grid;
-	grid-template-columns: auto auto auto auto;
+	grid-template-columns: auto auto auto auto auto auto;
 	grid-template-rows: auto auto auto auto;
 	justify-items: stretch;
 	overflow-x: hidden;
@@ -181,6 +182,14 @@
 	padding: 1em 1em;
 	/* height: 900px; */
 }
+/* 
+.btn-check {
+	background-color: #e0e0e0;
+	border-color: #707070;
+	font-weight: 400;
+	color: #4a4b4b;
+	font-size: small;	
+} */
 
 .btn-ersToggle {
 	background-color: #e0e0e0;
@@ -198,6 +207,32 @@
 .btn-ersToggle:focus {
 	background-color: #f9b05c;
 	color: #4a4b4b;
+}
+
+.ersToggleBtn {
+	background-color: #e0e0e0;
+	border-color: #707070;
+	font-weight: 400;
+	color: #4a4b4b;
+	font-size: small;
+}
+
+.ersToggleBtn:hover {
+	background-color: #f9b05c !important;
+	color: #4a4b4b !important;
+}
+
+.ersToggleBtn.active {
+	background-color: #f9b05c !important;
+	color: #4a4b4b !important;
+}
+
+.ersToggleBtnChecked {
+	border-color: #707070;
+	font-weight: 400;
+	font-size: small;
+	background-color: #f9b05c !important;
+	color: #4a4b4b !important;
 }
 
 .btn-ersControl {
@@ -220,7 +255,7 @@
 }
 
 .sidePanelThumbnail {
-	width: 45px;
+	width: 63px;
 }
 
 

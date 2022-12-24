@@ -22,6 +22,20 @@ export default function EmotionToggle(props) {
 		props.onToggle(emotion, value);
 	}
 
+	const handleReset = () => {
+		setEmotionValues({
+			'Joy': 'ignore',
+			'Trust': 'ignore',
+			'Fear': 'ignore',
+			'Surprise': 'ignore',
+			'Sadness': 'ignore',
+			'Disgust': 'ignore',
+			'Anger': 'ignore',
+			'Anticipation': 'ignore'
+		});
+		props.onReset();
+	}
+
 	return (
 		<Container>
 			<h4>Your taste on movie emotions</h4>
@@ -35,13 +49,16 @@ export default function EmotionToggle(props) {
 							<Col md={{ span: 3, offset: 2 }}>
 								<ToggleButtonGroup type="radio" name={emotion+"_Toggle"} value={emotionValues[emotion]}
 									onChange={(evt) => handleToggle(emotion, evt)}>
-									<ToggleButton id={emotion + "_low"} value={"low"}>
+									<ToggleButton id={emotion + "_low"} value={"low"} 
+										className={emotionValues[emotion] === 'low' ? 'ersToggleBtnChecked' : 'ersToggleBtn'}>
 											Low
 									</ToggleButton>
-									<ToggleButton id={emotion + "_high"} value={"high"}>
+									<ToggleButton id={emotion + "_high"} value={"high"}
+										className={emotionValues[emotion] === 'high' ? 'ersToggleBtnChecked' : 'ersToggleBtn'}>
 											High
 									</ToggleButton>
-									<ToggleButton id={emotion + "ignore"} value={"ignore"}>
+									<ToggleButton id={emotion + "ignore"} value={"ignore"} 
+										className={emotionValues[emotion] === 'ignore' ? 'ersToggleBtnChecked' : 'ersToggleBtn'}>
 											Ignore
 									</ToggleButton>
 								</ToggleButtonGroup>
@@ -51,7 +68,7 @@ export default function EmotionToggle(props) {
 				}
 			</div>
 			<div className='d-flex'>
-				<Button variant="ersControl" style={{ margin: "2em auto 0" }}>
+				<Button variant="ersControl" style={{ margin: "2em auto 0" }} onClick={() => handleReset()}>
 					Reset
 				</Button>
 			</div>
