@@ -82,11 +82,12 @@ export default function RateMovies() {
 		if (recommendedMovies.length > 0) {
 			console.log("got recommended movies");
 			navigate('/recommendations',
-			{ state: { 
-					recommendations: recommendedMovies,
-					ratings: ratedMoviesData
-				} 
-			});
+				{
+					state: {
+						recommendations: recommendedMovies,
+						ratings: ratedMoviesData
+					}
+				});
 		}
 	}, [recommendedMovies, ratedMoviesData, navigate]);
 
@@ -149,7 +150,7 @@ export default function RateMovies() {
 						<span><i>{ratedMovieCount}</i></span>
 						<span><i>of {10}</i></span>
 					</div>
-					<Button variant={buttonDisabled ? 'secondary' : 'primary'} size="lg" style={{ height: "fit-content", marginTop: "1em" }}
+					<Button variant="ers" size="lg" style={{ height: "fit-content", marginTop: "1em" }}
 						className="next-button footer-btn" disabled={buttonDisabled && !loading}
 						onClick={() => submitHandler(0)}>
 						{!loading ? 'Next'

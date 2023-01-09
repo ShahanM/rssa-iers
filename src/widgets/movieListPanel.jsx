@@ -1,18 +1,22 @@
 import Col from "react-bootstrap/Col";
 import ListGroup from "react-bootstrap/ListGroup";
+import { useState } from "react";
 
-export default function MovieSidePanel(props) {
+export default function MovieListPanel(props) {
 
+	const [selectedid, setSelectedid] = useState(props.selectedid);
 
 	const changeRating = (newRating, movieid) => {
 		let panelid = props.id;
 		props.ratingHandler(panelid, newRating, movieid);
 	}
 
-	const onValueChange = (event) => {
-		let panelid = props.id;
-		let movieid = event.target.value;
-		props.selectionHandler(panelid, movieid);
+	const onValueChange = (movieid) => {
+		// let panelid = props.id;
+		// console.log("onValueChange: ", event);
+		// let movieid = event.target.value;
+		props.selectionHandler(movieid);
+		setSelectedid(movieid);
 	}
 
 	const onHover = (evt, isShown, activeMovie, action) => {
@@ -41,10 +45,10 @@ export default function MovieSidePanel(props) {
 					props.render({
 						key: movie.movie_id,
 						movie: movie,
-						selectedid: props.selectedid,
+						selectedid: selectedid,
 						hoverHandler: onHover,
 						ratingsHandler: changeRating,
-						selectStateHandler: onValueChange
+						selectionHandler: onValueChange
 					})
 					// <SidePanelItem key={movie.movie_id} movie={movie}
 					// 	pick={this.props.pick || false}

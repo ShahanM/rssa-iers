@@ -49,14 +49,14 @@ export default function MovieGrid(props) {
 			<Row>
 				<Col md={3}>
 					<div className="btnDiv">
-						<Button id="gallery-left-btn" disabled={currentPage === 1} variant="primary" onClick={renderPrev}>
+						<Button id="gallery-left-btn" disabled={currentPage === 1} variant="ers" onClick={renderPrev}>
 							&lt;
 						</Button>
 					</div>
 				</Col>
 				<Col md={{ span: 3, offset: 5 }}>
 					<div className="btnDiv">
-						<Button id="gallery-right-btn" variant="primary" onClick={renderNext}>
+						<Button id="gallery-right-btn" variant="ers" onClick={renderNext}>
 							&gt;
 						</Button>
 					</div>

@@ -3,7 +3,7 @@ import Image from "react-bootstrap/Image";
 import { Button } from "react-bootstrap";
 
 
-export default function SidePanelItem(props) {
+export default function MovieListPanelItem(props) {
 
 	return (
 		<ListGroup.Item as="div"
@@ -22,10 +22,14 @@ export default function SidePanelItem(props) {
 				</p>
 			</div>
 			{props.pick ?
-			<div>
-				<Button variant="outline-primary">Select</Button>
-			</div>
-			: ''}
+				<div>
+					{ props.movie.movie_id === props.selectedid ?
+						<Button variant="ersDone">Selected</Button>
+						:
+						<Button variant="ers" onClick={() => props.selectionHandler(props.movie.movie_id)}>Select</Button>
+					}
+				</div>
+				: ''}
 		</ListGroup.Item>
 	)
 }

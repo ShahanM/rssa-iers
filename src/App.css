@@ -51,14 +51,81 @@
 	padding: 0;
 }
 
-/* .gallery .btnDiv:last-child { */
-	/* margin-left: 18px; */
-/* } */
-
 .gallery .btnDiv Button {
 	width: 230px;
 	height: 54px;
 	margin: 0;
+}
+
+.btn-ers {
+	background-color: #f9b05c;
+	/* border-color: #707070; */
+	font-weight: 400;
+	color: #4a4b4b;
+}
+
+.btn-ers:hover {
+	background-color: #d9903c;
+	color: #4a4b4b;
+}
+
+.btn-ers:disabled {
+	background-color: #c0c0c0;
+	color: #4a4b4b;
+	border-width: 0;
+}
+
+.btn-lg {
+	padding: 0.75rem 1rem;
+	font-size: 1rem;
+	font-size: large;
+}
+
+.btn-ersDone {
+	background-color: #39e04c;
+	/* border-color: #707070; */
+	font-weight: 400;
+	color: #4a4b4b;
+	border: solid #19cf2c 1px;
+}
+
+.btn-ersDone:hover {
+	background-color: #11af11;
+	color: #f0f0f0;
+}
+
+.btn-ersDone:disabled {
+	background-color: #c0c0c0;
+	color: #4a4b4b;
+	border-width: 0;
+}
+
+.btn-ersDone:active {
+	background-color: #5cbf5c ! important;
+	color: #4a4b4b;
+	border-width: 0;
+}
+
+.btn-ersCancel {
+	background-color: #c9ccd5;
+	border-color: #c9ccd5;
+}
+
+.btn-ersCancel:hover {
+	background-color: #8b8b8b;
+	border-color: #8b8b8b;
+}
+
+.btn-ersCancel:disabled {
+	background-color: #c0c0c0;
+	color: #4a4b4b;
+	border-width: 0;
+}
+
+.btn-ersCancel:active {
+	background-color: #8b8b8b ! important;
+	color: #4a4b4b;
+	border-width: 0;
 }
 
 .grid-container {
@@ -182,32 +249,6 @@
 	padding: 1em 1em;
 	/* height: 900px; */
 }
-/* 
-.btn-check {
-	background-color: #e0e0e0;
-	border-color: #707070;
-	font-weight: 400;
-	color: #4a4b4b;
-	font-size: small;	
-} */
-
-.btn-ersToggle {
-	background-color: #e0e0e0;
-	border-color: #707070;
-	font-weight: 400;
-	color: #4a4b4b;
-	font-size: small;
-}
-
-.btn-ersToggle:hover {
-	background-color: #f9b05c;
-	color: #4a4b4b;
-}
-
-.btn-ersToggle:focus {
-	background-color: #f9b05c;
-	color: #4a4b4b;
-}
 
 .ersToggleBtn {
 	background-color: #e0e0e0;
@@ -215,6 +256,17 @@
 	font-weight: 400;
 	color: #4a4b4b;
 	font-size: small;
+}
+
+.ersToggleBtn.disabled {
+	pointer-events: none;
+	filter: none;
+	opacity: .65;
+	background-color: #e0e0e0 !important;
+	border-color: #707070 !important;
+	font-weight: 400;
+	color: #4a4b4b !important;
+	font-size: small;	
 }
 
 .ersToggleBtn:hover {
@@ -233,16 +285,6 @@
 	font-size: small;
 	background-color: #f9b05c !important;
 	color: #4a4b4b !important;
-}
-
-.btn-ersControl {
-	background-color: #c9ccd5;
-	border-color: #c9ccd5;
-}
-
-.btn-ersControl:hover {
-	background-color: #8b8b8b;
-	border-color: #8b8b8b;
 }
 
 .progress {
