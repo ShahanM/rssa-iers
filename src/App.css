@@ -38,6 +38,15 @@
 	}
 }
 
+.instructionblurb {
+	text-align: left;
+}
+
+.modal-80w {
+	max-width: 80%;
+	margin: 1.75rem auto;
+}
+
 
 /* Gallery */
 .gallery {
@@ -201,6 +210,7 @@
 .jumbotron {
 	padding: 1em 1rem;
 	margin-bottom: 0.5rem;
+	margin-top: 1.5rem;
 	background-color: #e9ecef;
 	border-radius: 0.3rem;
 }
@@ -266,7 +276,7 @@
 	border-color: #707070 !important;
 	font-weight: 400;
 	color: #4a4b4b !important;
-	font-size: small;	
+	font-size: small;
 }
 
 .ersToggleBtn:hover {
