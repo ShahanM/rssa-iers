@@ -7,13 +7,15 @@ import './App.css';
 import EmotionPreferences from './pages/emotionPrefs';
 import RateMovies from './pages/rateMovies';
 import Welcome from './pages/welcome';
+import StudyMap from './pages/studymap';
+import PreSurvey from './pages/presurvey';
 
 function App() {
 	return (
 		<div className="App">
 			<Router basename='/ierss'>
 				<header className="App-header">
-					<Navbar id="topnav" bg="light" style={{width: "100%"}}>
+					<Navbar id="topnav" bg="light" style={{ width: "100%" }}>
 						<Navbar.Brand style={{ marginLeft: "1em", fontWeight: "450", textAlign: 'center', height: "1.5em" }}>Movie Recommender Study</Navbar.Brand>
 					</Navbar>
 				</header>
@@ -21,6 +23,8 @@ function App() {
 					<Suspense fallback={<h1>Loading</h1>}>
 						<Routes>
 							<Route path="/" element={<Welcome />} />
+							<Route path="/studyoverview" element={<StudyMap />} />
+							<Route path="/presurvey" element={<PreSurvey />} />
 							<Route path="/ratemovies" element={<RateMovies />} />
 							<Route path="/recommendations" element={<EmotionPreferences />} />
 							<Route path="/quit" element={<h1>Thank you for participating!</h1>} />

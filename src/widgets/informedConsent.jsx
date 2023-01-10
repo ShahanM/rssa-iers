@@ -85,7 +85,8 @@ export default function InformedConsentModal(props) {
 				<Form.Check
 					label="I have read and understand this study and my rights above. My participation in this
                             study is voluntary. I voluntarily agree to participate in this research study."
-					onChange={(evt) => setIsConsentGiven(!evt.target.checked)} />
+					onChange={(evt) => setIsConsentGiven(evt.target.checked)}
+					default={false} />
 
 			</Modal.Body>
 			<Modal.Footer>
@@ -94,8 +95,8 @@ export default function InformedConsentModal(props) {
 						Exit
 					</Button>
 				</Link>
-				<Button variant="ers" disabled={isConsentGiven && !isLoading}
-					onClick={handleConsent}>
+				<Button variant="ers" disabled={!isConsentGiven || isLoading}
+					onClick={(e) => handleConsent(e)}>
 					{!isLoading ? 'Continue'
 						:
 						<>

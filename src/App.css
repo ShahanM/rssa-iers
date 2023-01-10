@@ -47,6 +47,9 @@
 	margin: 1.75rem auto;
 }
 
+.overviewCard {
+	height: 18em;
+}
 
 /* Gallery */
 .gallery {
@@ -263,8 +266,8 @@
 .ersToggleBtn {
 	background-color: #e0e0e0;
 	border-color: #707070;
-	font-weight: 400;
 	color: #4a4b4b;
+	font-weight: 400;
 	font-size: small;
 }
 
@@ -322,3 +325,111 @@
 .emoStatbars>div:nth-child(even) .progress-bar {
 	background-color: #e4d8dc;
 }
+
+.survey-question-block {
+	padding: 3px 9px 0 9px;
+	/* border-top-width: 1px; */
+	/* border-top-style: dotted; */
+	border-left: black;
+	border-left-width: 3px;
+	border-left-color: darkgray;
+	border-left-style: solid;
+	margin: 0 auto 9px auto;
+	/* border-right-width: 3px; */
+	/* border-right-color: darkgray; */
+	/* border-right-style: solid; */
+	width: 720px;
+	text-align: left;
+}
+
+/* 
+.survey-question-block:first-child {
+	border-top-style: solid;
+	border-top-width: 3px;
+	border-top-color: darkgray;
+}
+
+.survey-question-block:last-child {
+	border-bottom-style: solid;
+	border-bottom-width: 3px;
+	border-bottom-color: darkgray;
+	margin-bottom: 0;
+} */
+
+.surveyQuestion {
+	margin: 9px 0 0 18px;
+}
+
+.radio-margin {
+	/* margin-right: 1em; */
+	margin: auto;
+	margin-bottom: 9px;
+}
+
+.movieSurvey.surveyQuestion {
+	margin: 9px 0 9px 3px;
+}
+
+.checkboxgroup {
+	display: inline-block;
+	text-align: center;
+}
+
+.checkboxGroup {
+	/* margin: 0 0 3px 18px; */
+	display: inline-flex;
+}
+
+/* .movieSurvey.checkboxGroup {
+	margin: 0 0 9px 9px;
+} */
+
+/* .checkboxgroup label {
+	display: block;
+	font-size: small;
+} */
+
+.checkboxBtn {
+	cursor: pointer;
+	padding: 3px;
+	background-color: #e0e0e0;
+	border-color: #707070;
+	color: #4a4b4b;
+	margin: 3px 9px 3px 9px;
+	border-radius: 3px;
+	height: 54px;
+	width: 99px;
+	display: inline-flex;
+}
+
+/* .movieSurvey.checkboxBtn {
+	padding: 0;
+	margin: 0 0 0 3px;
+	height: fit-content;
+} */
+
+.checkboxBtn input[type="radio"] {
+	visibility: hidden;
+	width: 0;
+	height: 0;
+	margin: 0;
+}
+
+.checkboxBtn:hover {
+	background-color: #f9b05c;
+	color: #4a4b4b;
+}
+
+.checkboxBtnChecked {
+	background-color: #f9b05c;
+	color: #4a4b4b;
+}
+
+.checkboxLbl {
+	text-align: center;
+	margin: auto;
+}
+
+/* .movieSurvey.checkboxLbl {
+	width: 99px;
+} */
