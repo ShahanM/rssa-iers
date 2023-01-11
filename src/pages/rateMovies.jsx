@@ -80,7 +80,6 @@ export default function RateMovies() {
 
 	useEffect(() => {
 		if (recommendedMovies.length > 0) {
-			console.log("got recommended movies");
 			navigate('/recommendations',
 				{
 					state: {

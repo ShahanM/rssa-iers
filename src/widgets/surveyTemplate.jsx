@@ -6,15 +6,17 @@ export default function SurveyTemplate(props) {
 	const surveyquestiongroup = "test";
 	const surveyquestions = ['a', 'b', 'c', 'd'];
 
+	console.log(props);
+
 	return (
 		<Row>
-			{surveyquestions.map((question, i) => {
+			{props.surveyquestions.map((question, i) => {
 				return (
 					<FormGroup className="survey-question-block">
 						<div>
-							<p>{question}</p>
+							<p className="surveyQuestionText">{question.question}</p>
 						</div>
-						<LikertBar surveyquestiongroup={surveyquestiongroup} qid={i} />
+						<LikertBar surveyquestiongroup={props.surveyquestiongroup} qid={i} />
 					</FormGroup>
 				)
 			})}

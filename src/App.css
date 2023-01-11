@@ -327,19 +327,23 @@
 }
 
 .survey-question-block {
-	padding: 3px 9px 0 9px;
+	padding: 3px 9px 0 18px;
 	/* border-top-width: 1px; */
 	/* border-top-style: dotted; */
 	border-left: black;
 	border-left-width: 3px;
 	border-left-color: darkgray;
 	border-left-style: solid;
-	margin: 0 auto 9px auto;
+	margin: 18px auto 9px auto;
 	/* border-right-width: 3px; */
 	/* border-right-color: darkgray; */
 	/* border-right-style: solid; */
 	width: 720px;
 	text-align: left;
+}
+
+.surveyQuestionText {
+	font-size: 1.3em;
 }
 
 /* 

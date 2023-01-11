@@ -47,11 +47,11 @@ export default function Welcome(props) {
 					"user_type": "ersStudy"
 				})
 			})
-				.then((response): Promive<user> => response.json())
-				.then((user: user) => {
+			.then((response): Promise<user> => response.json())
+			.then((user: user) => {
 					setUserdata(user);
-				})
-				.catch((error) => console.log(error));
+			})
+			.catch((error) => console.log(error));
 		}
 	}
 
