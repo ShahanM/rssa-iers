@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import FormLabel from "react-bootstrap/FormLabel";
 
 export default function LikertBar(props) {
@@ -8,6 +8,15 @@ export default function LikertBar(props) {
 	const qgroup = props.surveyquestiongroup;
 	const qid = props.qid
 	const [selectedValue, setSelectedValue] = useState(undefined);
+
+	// useEffect(() => {
+	// 	props.changeCallback(qid, selectedValue);
+	// }, [selectedValue, props, qid]);
+
+	const handleRadioChange = (val) => {
+		setSelectedValue(val);
+		props.changeCallback(qid, val);
+	}
 
 	return (
 		<div className="checkboxGroup">
@@ -23,7 +32,7 @@ export default function LikertBar(props) {
 							name={qgroup + "_" + qid + "_" + j}
 							value={j}
 							id={qgroup + "_" + qid + "_" + j}
-							onChange={(evt) => setSelectedValue(j)}
+							onChange={(evt) => handleRadioChange(j)}
 						/>
 					</FormLabel>
 				);

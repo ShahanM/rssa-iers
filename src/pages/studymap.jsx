@@ -10,8 +10,6 @@ export default function StudyMap(props) {
 	const state = { state: useLocation().state };
 	const navigate = useNavigate();
 
-	console.log(state);
-
 	return (
 		<Container>
 			<Row>

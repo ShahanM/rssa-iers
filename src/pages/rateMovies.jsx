@@ -4,7 +4,7 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Spinner from 'react-bootstrap/Spinner';
 import { useNavigate } from 'react-router-dom';
-import { API } from '../constants';
+import { API, CORSHeaders, post, get, put } from '../utils/api-middleware';
 import MovieGrid from '../widgets/movieGrid';
 
 
@@ -60,17 +60,12 @@ export default function RateMovies() {
 	const fetchMovies = async () => {
 		const offset = (currentPage - 1) * itemsPerPage * 2;
 		const limit = itemsPerPage * 2;
-		fetch(API + 'ers/movies/?skip=' + offset + '&limit=' + limit, {
-			method: 'GET',
-			header: {
-				'Content-Type': 'application/json',
-				"Access-Control-Allow-Headers": "*",
-				"Access-Control-Allow-Origin": "*",
-				"Access-Control-Allow-Methods": "*"
-			}
-		})
+		get('ers/movies/?skip=' + offset + '&limit=' + limit)
 			.then((response): Promise<movie[]> => response.json())
-			.then((newmovies: movie[]) => { setMovies([...movies, ...newmovies]); })
+			.then((newmovies: movie[]) => {
+				updateSeenItems(newmovies.map(item => item.movie_id));
+				setMovies([...movies, ...newmovies]);
+			})
 			.catch((error) => console.log(error));
 	}
 
@@ -93,32 +88,48 @@ export default function RateMovies() {
 	const submitHandler = (recType) => {
 		setLoading(true);
 		if (ratedMovies.length > 0) {
-			fetch(API + 'ers/recommendation/', {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-					"Access-Control-Allow-Headers": "*",
-					"Access-Control-Allow-Origin": "*",
-					"Access-Control-Allow-Methods": "*"
-				},
-				body: JSON.stringify({
-					user_id: userid,
-					ratings: ratedMoviesData,
-					rec_type: recType,
-					num_rec: 20
-				})
-			})
-				.then((response): Promise<movie[]> => response.json())
-				.then((movies: movie[]) => {
-					setRecommendedMovies([...movies]);
-					setLoading(false);
-				})
-				.catch((error) => {
-					console.log(error);
-					setLoading(false);
+			updateItemrating().then((isupdateSuccess): Promise<Boolean> => isupdateSuccess)
+				.then((isupdateSuccess) => {
+					if (isupdateSuccess) {
+						post('ers/recommendation/', {
+							user_id: userid,
+							ratings: ratedMoviesData,
+							rec_type: recType,
+							num_rec: 20
+						})
+							.then((response): Promise<movie[]> => response.json())
+							.then((movies: movie[]) => { setRecommendedMovies([...movies]); })
+							.catch((error) => { console.log(error); });
+					}
 				});
 		}
+		setLoading(false);
 	}
+
+	const updateItemrating = async () => {
+		return put('user/' + userid + '/itemrating/', {
+			'user_id': userid,
+			'page_id': 4,
+			'page_level': currentPage,
+			'ratings': ratedMoviesData
+		})
+			.then((response): Promise<ratedItems[]> => response.json())
+			.then((ratedItems: ratedItems) => { return ratedItems.length > 0; })
+			.catch((error) => { console.log(error); return false });
+	}
+
+	const updateSeenItems = async (items) => {
+		put('user/' + userid + '/seenitems/', {
+			'user_id': userid,
+			'page_id': 4,
+			'page_level': currentPage,
+			'items': items
+		})
+			.then((response): Promise<success> => response.json())
+			.then((success: success) => { console.log('LKOG', success); })
+			.catch((error) => console.log(error));
+	}
+
 
 	const updateCurrentPage = (page) => {
 		setCurrentPage(page);

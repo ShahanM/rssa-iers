@@ -4,14 +4,17 @@ import Card from 'react-bootstrap/Card';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import { useNavigate } from 'react-router-dom';
-import { API } from '../constants';
+import { get, post } from '../utils/api-middleware';
 import InformedConsentModal from '../widgets/informedConsent';
 
 export default function Welcome(props) {
 
+	const studyID = 1;
+	const step = 1;
 
 	const [show, setShowInformedConsent] = useState(false);
 	const [userdata, setUserdata] = useState({});
+	const [study, setStudy] = useState({});
 
 	const showInformedConsent = () => {
 		setShowInformedConsent(!show);
@@ -22,36 +25,39 @@ export default function Welcome(props) {
 	useEffect(() => {
 		const userProps = ['id', 'condition', 'user_type', 'seen_items'];
 		if (userProps.every(item => userdata.hasOwnProperty(item))) {
-			console.log('works great!');
 			navigate('/studyoverview',
 				{
 					state: {
-						user: userdata
+						user: userdata,
+						step: step + 1
 					}
 				});
 		}
 	}, [userdata, navigate]);
 
+	useEffect(() => {
+		get('study/' + studyID)
+			.then((response): Promise<study> => response.json())
+			.then((study: study) => {
+				setStudy(study);
+				console.log(study);
+			});
+
+	}, []);
+
 	const consentCallbackHandler = (consent) => {
 		if (consent) {
-			fetch(API + 'user/consent/', {
-				method: 'POST',
-				headers: {
-					"Content-Type": "application/json",
-					"Access-Control-Allow-Headers": "*",
-					"Access-Control-Allow-Origin": "*",
-					"Access-Control-Allow-Methods": "*"
-				},
-				body: JSON.stringify({
-					"condition": 1,
-					"user_type": "ersStudy"
-				})
+			const conditions = study.conditions.map(con => con.id);
+			post('user/consent/', {
+				study_id: study.id,
+				study_conditions: conditions,
+				user_type: 'ersStudy'
 			})
-			.then((response): Promise<user> => response.json())
-			.then((user: user) => {
+				.then((response): Promise<user> => response.json())
+				.then((user: user) => {
 					setUserdata(user);
-			})
-			.catch((error) => console.log(error));
+				})
+				.catch((error) => console.log(error));
 		}
 	}
 
@@ -90,7 +96,7 @@ export default function Welcome(props) {
 			</Row>
 
 			<InformedConsentModal show={show} consentCallback={consentCallbackHandler} />
-			
+
 			<Row>
 				<div className="jumbotron jumbotron-footer">
 					<Button variant="ers" size="lg" className="footer-btn" onClick={showInformedConsent}>

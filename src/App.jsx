@@ -8,7 +8,7 @@ import EmotionPreferences from './pages/emotionPrefs';
 import RateMovies from './pages/rateMovies';
 import Welcome from './pages/welcome';
 import StudyMap from './pages/studymap';
-import PreSurvey from './pages/presurvey';
+import Survey from './pages/survey';
 
 function App() {
 	return (
@@ -24,9 +24,10 @@ function App() {
 						<Routes>
 							<Route path="/" element={<Welcome />} />
 							<Route path="/studyoverview" element={<StudyMap />} />
-							<Route path="/presurvey" element={<PreSurvey />} />
+							<Route path="/presurvey" element={<Survey />} />
 							<Route path="/ratemovies" element={<RateMovies />} />
 							<Route path="/recommendations" element={<EmotionPreferences />} />
+							<Route path="/postsurvey" element={<Survey />} />
 							<Route path="/quit" element={<h1>Thank you for participating!</h1>} />
 						</Routes>
 					</Suspense>

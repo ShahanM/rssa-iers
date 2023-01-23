@@ -4,7 +4,7 @@ import Card from "react-bootstrap/Card";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import { useLocation, useNavigate } from "react-router-dom";
-import { API } from '../constants';
+import { API, CORSHeaders, put } from '../utils/api-middleware';
 import EmotionStats from "../widgets/emotionStats";
 import EmotionToggle from "../widgets/emotionToggle";
 import MovieListPanel from "../widgets/movieListPanel";
@@ -31,6 +31,7 @@ export default function EmotionPreferences(props) {
 		'Anticipation': 'ignore'
 	});
 	const [isToggleDone, setIsToggleDone] = useState(false);
+	const [selectedMovieid, setSelectedMovieid] = useState(null);
 	// const [isSelectionDone, setIsSelectionDone] = useState(false);
 
 	const navigate = useNavigate();
@@ -40,7 +41,7 @@ export default function EmotionPreferences(props) {
 			const emoinput = Object.keys(emotionToggles).map(
 				(key) => ({
 					emotion: key,
-					weight: emotionToggles[key].length > 0 
+					weight: emotionToggles[key].length > 0
 						? emotionToggles[key] : 'ignore'
 				}));
 			updateRecommendations(emoinput);
@@ -63,6 +64,7 @@ export default function EmotionPreferences(props) {
 
 	const handleSelection = (movieid) => {
 		console.log('selected movie: ' + movieid);
+		setSelectedMovieid(movieid);
 		// setIsSelectionDone(true);
 		setButtonDisabled(false);
 	}
@@ -82,16 +84,29 @@ export default function EmotionPreferences(props) {
 
 	const finalizeToggles = () => {
 		console.log('finalizing');
-		setIsToggleDone(true);
+		finalizeEmotionPrefs();
+		// setIsToggleDone(true);
+	}
+
+	const finalizeEmotionPrefs = () => {
+		const emoinput = Object.keys(emotionToggles).map(
+			(key) => ({
+				emotion: key,
+				weight: emotionToggles[key].length > 0
+					? emotionToggles[key] : 'ignore'
+			}));
+		put('user/' + userid + '/emotionprefs/', emoinput)
+			.then((response) => {
+				console.log(response);
+				setIsToggleDone(true);
+			})
+			.catch((error) => {
+				console.log(error);
+			});
 	}
 
 	const handleNext = () => {
-		navigate('/selection',
-			{
-				state: {
-					finalrecommendations: movies
-				}
-			});
+		submitSelection(selectedMovieid);
 	}
 
 	const updateRecommendations = (emoinput) => {
@@ -101,12 +116,7 @@ export default function EmotionPreferences(props) {
 		console.log(API + 'ers/updaterecommendations');
 		fetch(API + 'ers/updaterecommendations/', {
 			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-				"Access-Control-Allow-Headers": "*",
-				"Access-Control-Allow-Origin": "*",
-				"Access-Control-Allow-Methods": "*"
-			},
+			headers: CORSHeaders,
 			body: JSON.stringify({
 				user_id: userid,
 				input_type: "discrete",
@@ -117,7 +127,6 @@ export default function EmotionPreferences(props) {
 		})
 			.then((response): Promise<movie[]> => response.json())
 			.then((movies: movie[]) => {
-				console.log(movies);
 				setMovies(movies);
 				setLoading(false);
 				// setButtonDisabled(false);
@@ -127,6 +136,34 @@ export default function EmotionPreferences(props) {
 				setLoading(false);
 				// setButtonDisabled(false);
 			});
+	}
+
+	const submitSelection = (movieid) => {
+		console.log('submitting selection');
+		setLoading(true);
+		// setButtonDisabled(true);
+		put('user/' + userid + '/itemselect/', {
+			'user_id': userid,
+			'page_id': 4,
+			'selected_item': {
+				'item_id': movieid,
+				'rating': 99
+			}
+		}).then((response): Promise<value> => response.json())
+			.then((selectedItem: value) => {
+				if (selectedItem.item_id === parseInt(selectedMovieid) && selectedItem.rating === 99) {
+					navigate('/selection',
+						{
+							state: {
+								finalrecommendations: movies
+							}
+						});
+				}
+				// setButtonDisabled(false);
+			}).catch((error) => {
+				console.log(error);
+			});
+		setLoading(false);
 	}
 
 	return (
@@ -204,7 +241,7 @@ export default function EmotionPreferences(props) {
 						panelTitle={'Movies you may like'}
 						panelByline={''}
 						byline={''}
-						render={(props) => <MovieListPanelItem {...props} 
+						render={(props) => <MovieListPanelItem {...props}
 							pick={isToggleDone} />}
 						hoverHandler={handleHover}
 						selectionHandler={handleSelection}
