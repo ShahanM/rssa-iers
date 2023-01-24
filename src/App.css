@@ -256,6 +256,11 @@
 	float: right;
 }
 
+.nextButton {
+	height: fit-content;
+	margin-top: 1em;
+}
+
 .emoPrefControlPanel {
 	background-color: #e9ecef;
 	border-radius: 0.3em;
@@ -437,3 +442,14 @@
 /* .movieSurvey.checkboxLbl {
 	width: 99px;
 } */
+
+.instructionsBlock {
+	margin-top: 1rem;
+	overflow-y: scroll;
+	max-height: 244px;
+	transition: height 0.9s ease-in-out 0s;
+}
+
+.instructionsBlock p {
+	text-align: left;
+}

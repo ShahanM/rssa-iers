@@ -1,11 +1,11 @@
+import { useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
+import Card from "react-bootstrap/Card";
+import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import Card from "react-bootstrap/Card";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { get, getNextStudyStep } from "../utils/api-middleware";
+import { getNextStudyStep } from "../utils/api-middleware";
 import HeaderJumbotron from "../widgets/headerJumbotron";
 
 export default function StudyMap(props) {

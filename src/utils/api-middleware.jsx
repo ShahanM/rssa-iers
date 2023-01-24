@@ -31,11 +31,10 @@ export function get(path: string) {
 	});
 }
 
-export function getNextStudyStep(studyid, stepid){
+export function getNextStudyStep(studyid, stepid) {
 	return get('/study/' + studyid + '/step/' + stepid + '/next')
-	.then((response): Promise<step> => response.json())
-	.then((step: step) => {
-		console.log(step.step_name, step);
-		return step;
-	})
+		.then((response): Promise<step> => response.json())
+		.then((step: step) => {
+			return step;
+		})
 }

@@ -6,9 +6,9 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './App.css';
 import EmotionPreferences from './pages/emotionPrefs';
 import RateMovies from './pages/rateMovies';
-import Welcome from './pages/welcome';
 import StudyMap from './pages/studymap';
 import Survey from './pages/survey';
+import Welcome from './pages/welcome';
 
 function App() {
 	return (
@@ -16,7 +16,9 @@ function App() {
 			<Router basename='/ierss'>
 				<header className="App-header">
 					<Navbar id="topnav" bg="light" style={{ width: "100%" }}>
-						<Navbar.Brand style={{ marginLeft: "1em", fontWeight: "450", textAlign: 'center', height: "1.5em" }}>Movie Recommender Study</Navbar.Brand>
+						<Navbar.Brand style={{ marginLeft: "1em", fontWeight: "450", textAlign: 'center', height: "1.5em" }}>
+							Movie Recommender Study
+						</Navbar.Brand>
 					</Navbar>
 				</header>
 				<Container>

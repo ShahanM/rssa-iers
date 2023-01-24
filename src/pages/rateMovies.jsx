@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
-import Spinner from 'react-bootstrap/Spinner';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { get, post, put, getNextStudyStep } from '../utils/api-middleware';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { get, getNextStudyStep, post, put } from '../utils/api-middleware';
 import HeaderJumbotron from '../widgets/headerJumbotron';
 import MovieGrid from '../widgets/movieGrid';
+import NextButton from '../widgets/nextButton';
 
 
 export default function RateMovies() {
@@ -162,23 +161,8 @@ export default function RateMovies() {
 						<span><i>{ratedMovieCount}</i></span>
 						<span><i>of {10}</i></span>
 					</div>
-					<Button variant="ers" size="lg" style={{ height: "fit-content", marginTop: "1em" }}
-						className="next-button footer-btn" disabled={buttonDisabled && !loading}
-						onClick={() => submitHandler(0)}>
-						{!loading ? 'Next'
-							:
-							<>
-								<Spinner
-									as="span"
-									animation="grow"
-									size="sm"
-									role="status"
-									aria-hidden="true"
-								/>
-								Loading...
-							</>
-						}
-					</Button>
+					<NextButton disabled={buttonDisabled && !loading}
+						loading={loading} onClick={() => submitHandler(0)} />
 				</div>
 			</Row>
 		</Container>

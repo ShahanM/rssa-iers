@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Container, Spinner } from "react-bootstrap";
+import { Container } from "react-bootstrap";
+import Button from 'react-bootstrap/Button';
 import Card from "react-bootstrap/Card";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
@@ -10,6 +11,7 @@ import EmotionToggle from "../widgets/emotionToggle";
 import HeaderJumbotron from '../widgets/headerJumbotron';
 import MovieListPanel from "../widgets/movieListPanel";
 import MovieListPanelItem from "../widgets/movieListPanelItem";
+import NextButton from '../widgets/nextButton';
 
 export default function EmotionPreferences(props) {
 
@@ -38,7 +40,8 @@ export default function EmotionPreferences(props) {
 	const [step, setStep] = useState({});
 	const [isToggleDone, setIsToggleDone] = useState(false);
 	const [selectedMovieid, setSelectedMovieid] = useState(null);
-	// const [isSelectionDone, setIsSelectionDone] = useState(false);
+
+	const [hideInstruction, setHideInstruction] = useState(true);
 
 
 	useEffect(() => {
@@ -121,18 +124,6 @@ export default function EmotionPreferences(props) {
 
 	const updateRecommendations = (emoinput) => {
 		setLoading(true);
-		// setButtonDisabled(true);
-		// fetch(API + 'ers/updaterecommendations/', {
-		// 	method: 'POST',
-		// 	headers: CORSHeaders,
-		// 	body: JSON.stringify({
-		// 		user_id: userdata.id,
-		// 		input_type: "discrete",
-		// 		emotion_input: emoinput,
-		// 		ratings: ratings,
-		// 		num_rec: 20
-		// 	})
-		// })
 		post('ers/updaterecommendations/', {
 			user_id: userdata.id,
 			input_type: "discrete",
@@ -144,18 +135,15 @@ export default function EmotionPreferences(props) {
 			.then((movies: movie[]) => {
 				setMovies(movies);
 				setLoading(false);
-				// setButtonDisabled(false);
 			})
 			.catch((error) => {
 				console.log(error);
 				setLoading(false);
-				// setButtonDisabled(false);
 			});
 	}
 
 	const submitSelection = (movieid) => {
 		setLoading(true);
-		// setButtonDisabled(true);
 		put('user/' + userdata.id + '/itemselect/', {
 			'user_id': userdata.id,
 			'page_id': 4,
@@ -174,7 +162,6 @@ export default function EmotionPreferences(props) {
 							}
 						});
 				}
-				// setButtonDisabled(false);
 			}).catch((error) => {
 				console.log(error);
 			});
@@ -189,55 +176,62 @@ export default function EmotionPreferences(props) {
 			<Row>
 				<Col id="emotionPanel">
 					<div className="emoPrefControlPanel">
-						<div style={{ marginTop: "4em" }}>
-							<EmotionToggle onToggle={handleToggle}
-								emotions={emotionToggles}
-								onReset={resetToggles}
-								onFinalize={finalizeToggles} />
-							{/* <EmotionSlider onSliderChange={handleSliderChange}/> */}
-						</div>
-						{/* <Button variant="info" onClick={() => sortmovies('anger')}>Anger</Button> */}
-						{/* <Button variant="info" onClick={() => sortmovies('joy')}>Joy</Button> */}
-						<div style={{ marginTop: "2rem" }}>
-							<p style={{ fontWeight: "800" }}>
-								Please inspect the recommendations and adjust
-								them to your preference.
-							</p>
-							<ol>
-								<li>
-									<p>
-										Among the movies in your system, we
-										predict that you will like these 7
-										movies the best based on your ratings.
-									</p>
-								</li>
-								<li>
-									<p>
-										You can hover over movies to see a
-										preview of the poster, a short synopsis,
-										and a radar graph depicting the movie's
-										emotional feature in 8 emotions: joy,
-										trust, fear, surprise, surprise,
-										sadness, disgust, anger, and
-										anticipation.
-									</p>
-								</li>
-								<li>
-									<p>
-										You can specify your preference of
-										movies from the perspective of movie
-										emotions in the following panel. Please
-										adjust the emotion strength indicators
-										bellow so we could fine-tune the
-										recommendations for you.
-									</p>
-								</li>
-							</ol>
-							<p style={{ fontWeight: "800" }}>
-								Adjust the recommendations until they best fit
-								your preferences.
-							</p>
-						</div>
+						<Row>
+							<div style={{ marginTop: "4em" }}>
+								<EmotionToggle onToggle={handleToggle}
+									emotions={emotionToggles}
+									onReset={resetToggles}
+									onFinalize={finalizeToggles} />
+							</div>
+						</Row>
+						<Row style={{ marginTop: "2em" }}>
+							<Button style={{ textAlign: "left" }}
+								variant="secondary" onClick={() => setHideInstruction(!hideInstruction)}>
+								{hideInstruction ? '+ Show' : '- Hide'} Instructions
+							</Button>
+						</Row>
+						<Row>
+							<div className="instructionsBlock" style={{ height: hideInstruction ? "0" : "245px" }}>
+								<p style={{ fontWeight: "800" }}>
+									Please inspect the recommendations and adjust
+									them to your preference.
+								</p>
+								<ol>
+									<li>
+										<p>
+											Among the movies in your system, we
+											predict that you will like these 7
+											movies the best based on your ratings.
+										</p>
+									</li>
+									<li>
+										<p>
+											You can hover over movies to see a
+											preview of the poster, a short synopsis,
+											and a radar graph depicting the movie's
+											emotional feature in 8 emotions: joy,
+											trust, fear, surprise, surprise,
+											sadness, disgust, anger, and
+											anticipation.
+										</p>
+									</li>
+									<li>
+										<p>
+											You can specify your preference of
+											movies from the perspective of movie
+											emotions in the following panel. Please
+											adjust the emotion strength indicators
+											bellow so we could fine-tune the
+											recommendations for you.
+										</p>
+									</li>
+								</ol>
+								<p style={{ fontWeight: "800" }}>
+									Adjust the recommendations until they best fit
+									your preferences.
+								</p>
+							</div>
+						</Row>
 					</div>
 
 				</Col>
@@ -285,25 +279,8 @@ export default function EmotionPreferences(props) {
 			</Row>
 			<Row>
 				<div className="jumbotron jumbotron-footer">
-					<Button className="next-button footer-btn"
-						variant="ers"
-						size="lg"
-						disabled={buttonDisabled && !loading}
-						onClick={handleNext}>
-						{!loading ? 'Next'
-							:
-							<>
-								<Spinner
-									as="span"
-									animation="grow"
-									size="sm"
-									role="status"
-									aria-hidden="true"
-								/>
-								Loading...
-							</>
-						}
-					</Button>
+					<NextButton disabled={buttonDisabled && !loading}
+						onClick={handleNext} loading={loading} />
 				</div>
 			</Row>
 		</Container>

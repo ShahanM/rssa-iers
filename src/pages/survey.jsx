@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
-import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
-import Spinner from "react-bootstrap/Spinner";
 import { useLocation, useNavigate } from "react-router-dom";
-import { get, put, getNextStudyStep } from "../utils/api-middleware";
+import { get, getNextStudyStep, put } from "../utils/api-middleware";
 import HeaderJumbotron from "../widgets/headerJumbotron";
+import NextButton from "../widgets/nextButton";
 import SurveyTemplate from "../widgets/surveyTemplate";
 
 export default function Survey(props) {
@@ -119,23 +118,8 @@ export default function Survey(props) {
 			</Row>
 			<Row>
 				<div className="jumbotron jumbotron-footer">
-					<Button variant="ers" size="lg" className="footer-btn"
-						disabled={nextButtonDisabled}
-						onClick={() => next()}>
-						{!loading ? 'Next'
-							:
-							<>
-								<Spinner
-									as="span"
-									animation="grow"
-									size="sm"
-									role="status"
-									aria-hidden="true"
-								/>
-								Loading...
-							</>
-						}
-					</Button>
+					<NextButton disabled={nextButtonDisabled}
+						loading={loading} onClick={() => next()} />
 				</div>
 			</Row>
 		</Container>
