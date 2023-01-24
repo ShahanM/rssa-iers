@@ -4,14 +4,15 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Spinner from "react-bootstrap/Spinner";
 import { useLocation, useNavigate } from "react-router-dom";
-import { get, put } from "../utils/api-middleware";
+import { get, put, getNextStudyStep } from "../utils/api-middleware";
+import HeaderJumbotron from "../widgets/headerJumbotron";
 import SurveyTemplate from "../widgets/surveyTemplate";
 
 export default function Survey(props) {
 
 
 	const userdata = useLocation().state.user;
-	const step = useLocation().state.step;
+	const stepid = useLocation().state.step;
 	const navigate = useNavigate();
 
 	const [pageData, setPageData] = useState({});
@@ -19,6 +20,7 @@ export default function Survey(props) {
 	const [loading, setLoading] = useState(false);
 	const [surveyAnswers, setSurveyAnswers] = useState({});
 	const [serverValidation, setServerValidation] = useState({});
+	const [step, setStep] = useState({});
 
 	const getsurveypage = (studyid, stepid, pageid) => {
 		let path = '';
@@ -39,17 +41,22 @@ export default function Survey(props) {
 	}
 
 	useEffect(() => {
-		if (Object.keys(surveyAnswers).length === 0) {
-			getsurveypage(userdata.study_id, step, null);
-		}
+		getNextStudyStep(userdata.study_id, stepid)
+			.then((value) => { setStep(value) });
 	}, []);
+
+	useEffect(() => {
+		if (Object.keys(surveyAnswers).length === 0 && Object.entries(step).length !== 0) {
+			getsurveypage(userdata.study_id, step.id, null);
+		}
+	}, [step]);
 
 	useEffect(() => {
 		if (pageData.id === null) {
 			navigate('/ratemovies', {
 				state: {
 					user: userdata,
-					step: step + 1
+					step: step.id
 				}
 			});
 		}
@@ -62,7 +69,7 @@ export default function Survey(props) {
 			if (serverValidation[pageData.id] === false) {
 				submitAndValidate();
 			} else {
-				getsurveypage(userdata.study_id, step, pageData.id);
+				getsurveypage(userdata.study_id, step.id, pageData.id);
 			}
 		}
 	}
@@ -88,7 +95,7 @@ export default function Survey(props) {
 			.then((isvalidated: isvalidated) => {
 				if (isvalidated === true) {
 					setServerValidation({ ...serverValidation, [pageData.id]: true });
-					getsurveypage(userdata.study_id, step, pageData.id);
+					getsurveypage(userdata.study_id, step.id, pageData.id);
 					setNextButtonDisabled(true);
 				} else {
 					setLoading(false);
@@ -100,10 +107,7 @@ export default function Survey(props) {
 	return (
 		<Container>
 			<Row>
-				<div className="jumbotron">
-					<h1 className="header">Study Survey</h1>
-					<p>Please pick the option that best describe your agreement with the following statements.</p>
-				</div>
+				<HeaderJumbotron step={step} />
 			</Row>
 			<Row>
 				{Object.entries(pageData).length !== 0 ?

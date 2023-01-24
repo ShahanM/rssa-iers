@@ -10,11 +10,12 @@ import InformedConsentModal from '../widgets/informedConsent';
 export default function Welcome(props) {
 
 	const studyID = 1;
-	const step = 1;
+	// const step = 1;
 
 	const [show, setShowInformedConsent] = useState(false);
 	const [userdata, setUserdata] = useState({});
 	const [study, setStudy] = useState({});
+	const [step, setStep] = useState({});
 
 	const showInformedConsent = () => {
 		setShowInformedConsent(!show);
@@ -29,11 +30,11 @@ export default function Welcome(props) {
 				{
 					state: {
 						user: userdata,
-						step: step + 1
+						step: step.id
 					}
 				});
 		}
-	}, [userdata, navigate]);
+	}, [userdata, navigate, step]);
 
 	useEffect(() => {
 		get('study/' + studyID)
@@ -41,6 +42,12 @@ export default function Welcome(props) {
 			.then((studyres: studyres) => {
 				setStudy(studyres);
 			});
+		get('/study/' + studyID + '/step/first/')
+			.then((response): Promise<step> => response.json())
+			.then((step: step) => {
+				console.log(step.step_name, step);
+				setStep(step);
+			})
 
 	}, []);
 
@@ -63,7 +70,6 @@ export default function Welcome(props) {
 	return (
 		<Container>
 			<Row>
-
 				<div className="jumbotron">
 					<h1 className="header">Welcome</h1>
 					<p>Welcome to the study on movie recommendation.</p>

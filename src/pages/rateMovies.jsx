@@ -4,7 +4,8 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Spinner from 'react-bootstrap/Spinner';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { get, post, put } from '../utils/api-middleware';
+import { get, post, put, getNextStudyStep } from '../utils/api-middleware';
+import HeaderJumbotron from '../widgets/headerJumbotron';
 import MovieGrid from '../widgets/movieGrid';
 
 
@@ -13,7 +14,7 @@ export default function RateMovies() {
 
 	const itemsPerPage = 24;
 	const userdata = useLocation().state.user;
-	const step = useLocation().state.step;
+	const stepid = useLocation().state.step;
 	const navigate = useNavigate();
 
 	const [ratedMoviesData, setRatedMoviesData] = useState([]);
@@ -28,6 +29,8 @@ export default function RateMovies() {
 	const [currentPage, setCurrentPage] = useState(1);
 
 	const [buttonDisabled, setButtonDisabled] = useState(true);
+
+	const [step, setStep] = useState({});
 
 
 	const rateMoviesHandler = (newRating, movieid) => {
@@ -74,6 +77,8 @@ export default function RateMovies() {
 	}
 
 	useEffect(() => {
+		getNextStudyStep(userdata.study_id, stepid)
+			.then((value) => { setStep(value) });
 		fetchMovies();
 	}, []);
 
@@ -85,7 +90,7 @@ export default function RateMovies() {
 						recommendations: recommendedMovies,
 						ratings: ratedMoviesData,
 						user: userdata,
-						step: step + 1
+						step: step.id
 					}
 				});
 		}
@@ -144,16 +149,7 @@ export default function RateMovies() {
 	return (
 		<Container>
 			<Row>
-				<div className="jumbotron">
-					<h1 className="header">Indicate your preferences</h1>
-					<p>Use the blue button on the right to scroll through
-						the gallery of movies and rate at least 10 movies
-						that you have already watched. Once you have rated 10
-						movies, the system will be able to give you
-						recommendations.
-						Keep in mind, you can click on the blue button on the
-						right to get more movies to rate!</p>
-				</div>
+				<HeaderJumbotron step={step} />
 			</Row>
 			<Row>
 				<MovieGrid ratingCallback={rateMoviesHandler} userid={userdata.id} movies={movies}

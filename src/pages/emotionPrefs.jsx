@@ -4,16 +4,17 @@ import Card from "react-bootstrap/Card";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import { useLocation, useNavigate } from "react-router-dom";
-import { post, put } from '../utils/api-middleware';
+import { getNextStudyStep, post, put } from '../utils/api-middleware';
 import EmotionStats from "../widgets/emotionStats";
 import EmotionToggle from "../widgets/emotionToggle";
+import HeaderJumbotron from '../widgets/headerJumbotron';
 import MovieListPanel from "../widgets/movieListPanel";
 import MovieListPanelItem from "../widgets/movieListPanelItem";
 
 export default function EmotionPreferences(props) {
 
 	const userdata = useLocation().state.user;
-	const step = useLocation().state.step;
+	const stepid = useLocation().state.step;
 	const ratings = useLocation().state.ratings;
 	const recommendations = useLocation().state.recommendations;
 	const navigate = useNavigate();
@@ -33,10 +34,17 @@ export default function EmotionPreferences(props) {
 		'Anger': 'ignore',
 		'Anticipation': 'ignore'
 	});
+
+	const [step, setStep] = useState({});
 	const [isToggleDone, setIsToggleDone] = useState(false);
 	const [selectedMovieid, setSelectedMovieid] = useState(null);
 	// const [isSelectionDone, setIsSelectionDone] = useState(false);
 
+
+	useEffect(() => {
+		getNextStudyStep(userdata.study_id, stepid)
+			.then((value) => { setStep(value) });
+	}, []);
 
 	useEffect(() => {
 		if (Object.values(emotionToggles).some(item => item.length > 0)) {
@@ -146,7 +154,6 @@ export default function EmotionPreferences(props) {
 	}
 
 	const submitSelection = (movieid) => {
-		console.log('submitting selection');
 		setLoading(true);
 		// setButtonDisabled(true);
 		put('user/' + userdata.id + '/itemselect/', {
@@ -163,7 +170,7 @@ export default function EmotionPreferences(props) {
 						{
 							state: {
 								user: userdata,
-								step: step + 1
+								step: step.id
 							}
 						});
 				}
@@ -177,16 +184,7 @@ export default function EmotionPreferences(props) {
 	return (
 		<Container>
 			<Row>
-				<div className="jumbotron">
-					<h1 className="header">Refine your recommendations</h1>
-					<p>
-						Please rate the following recommendations and
-						alternative items to help us fine-tune our
-						recommendations to you. Please rate all movies, even the
-						ones you haven't watched (read the description and then
-						guess how you'd rate it.)
-					</p>
-				</div>
+				<HeaderJumbotron step={step} />
 			</Row>
 			<Row>
 				<Col id="emotionPanel">

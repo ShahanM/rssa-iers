@@ -30,3 +30,12 @@ export function get(path: string) {
 		headers: CORSHeaders
 	});
 }
+
+export function getNextStudyStep(studyid, stepid){
+	return get('/study/' + studyid + '/step/' + stepid + '/next')
+	.then((response): Promise<step> => response.json())
+	.then((step: step) => {
+		console.log(step.step_name, step);
+		return step;
+	})
+}

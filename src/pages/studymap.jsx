@@ -4,20 +4,27 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Card from "react-bootstrap/Card";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { get, getNextStudyStep } from "../utils/api-middleware";
+import HeaderJumbotron from "../widgets/headerJumbotron";
 
 export default function StudyMap(props) {
 
 	const userdata = useLocation().state.user;
-	const step = useLocation().state.step;
+	const stepid = useLocation().state.step;
 	const navigate = useNavigate();
+
+	const [step, setStep] = useState({});
+
+	useEffect(() => {
+		getNextStudyStep(userdata.study_id, stepid)
+			.then((value) => { setStep(value) });
+	}, []);
 
 	return (
 		<Container>
 			<Row>
-				<div className="jumbotron">
-					<h1 className="header">Welcome</h1>
-					<p>Welcome to the study on movie recommendation.</p>
-				</div>
+				<HeaderJumbotron step={step} />
 			</Row>
 
 			<Row>
@@ -65,7 +72,7 @@ export default function StudyMap(props) {
 						onClick={() => navigate('/presurvey', {
 							state: {
 								user: userdata,
-								step: step + 1
+								step: step.id
 							}
 						})}>
 						Next
