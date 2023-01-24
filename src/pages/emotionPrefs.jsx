@@ -4,18 +4,21 @@ import Card from "react-bootstrap/Card";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import { useLocation, useNavigate } from "react-router-dom";
-import { API, CORSHeaders, put } from '../utils/api-middleware';
+import { API, CORSHeaders, post, put } from '../utils/api-middleware';
 import EmotionStats from "../widgets/emotionStats";
 import EmotionToggle from "../widgets/emotionToggle";
 import MovieListPanel from "../widgets/movieListPanel";
 import MovieListPanelItem from "../widgets/movieListPanelItem";
 
 export default function EmotionPreferences(props) {
-	let userid = 1;
-	const state = useLocation().state;
-	const ratings = state.ratings;
 
-	const [movies, setMovies] = useState(state.recommendations);
+	const userdata = useLocation().state.user;
+	const step = useLocation().state.step;
+	const ratings = useLocation().state.ratings;
+	const recommendations = useLocation().state.recommendations;
+	const navigate = useNavigate();
+
+	const [movies, setMovies] = useState(recommendations);
 	const [isShown, setIsShown] = useState(false);
 	const [activeMovie, setActiveMovie] = useState(null);
 	const [buttonDisabled, setButtonDisabled] = useState(true);
@@ -34,7 +37,6 @@ export default function EmotionPreferences(props) {
 	const [selectedMovieid, setSelectedMovieid] = useState(null);
 	// const [isSelectionDone, setIsSelectionDone] = useState(false);
 
-	const navigate = useNavigate();
 
 	useEffect(() => {
 		if (Object.values(emotionToggles).some(item => item.length > 0)) {
@@ -95,7 +97,7 @@ export default function EmotionPreferences(props) {
 				weight: emotionToggles[key].length > 0
 					? emotionToggles[key] : 'ignore'
 			}));
-		put('user/' + userid + '/emotionprefs/', emoinput)
+		put('user/' + userdata.id + '/emotionprefs/', emoinput)
 			.then((response) => {
 				console.log(response);
 				setIsToggleDone(true);
@@ -114,16 +116,23 @@ export default function EmotionPreferences(props) {
 		// setButtonDisabled(true);
 		console.log(emoinput);
 		console.log(API + 'ers/updaterecommendations');
-		fetch(API + 'ers/updaterecommendations/', {
-			method: 'POST',
-			headers: CORSHeaders,
-			body: JSON.stringify({
-				user_id: userid,
-				input_type: "discrete",
-				emotion_input: emoinput,
-				ratings: ratings,
-				num_rec: 20
-			})
+		// fetch(API + 'ers/updaterecommendations/', {
+		// 	method: 'POST',
+		// 	headers: CORSHeaders,
+		// 	body: JSON.stringify({
+		// 		user_id: userdata.id,
+		// 		input_type: "discrete",
+		// 		emotion_input: emoinput,
+		// 		ratings: ratings,
+		// 		num_rec: 20
+		// 	})
+		// })
+		post('ers/updaterecommendations/', {
+			user_id: userdata.id,
+			input_type: "discrete",
+			emotion_input: emoinput,
+			ratings: ratings,
+			num_rec: 20
 		})
 			.then((response): Promise<movie[]> => response.json())
 			.then((movies: movie[]) => {
@@ -142,8 +151,8 @@ export default function EmotionPreferences(props) {
 		console.log('submitting selection');
 		setLoading(true);
 		// setButtonDisabled(true);
-		put('user/' + userid + '/itemselect/', {
-			'user_id': userid,
+		put('user/' + userdata.id + '/itemselect/', {
+			'user_id': userdata.id,
 			'page_id': 4,
 			'selected_item': {
 				'item_id': movieid,
@@ -152,10 +161,11 @@ export default function EmotionPreferences(props) {
 		}).then((response): Promise<value> => response.json())
 			.then((selectedItem: value) => {
 				if (selectedItem.item_id === parseInt(selectedMovieid) && selectedItem.rating === 99) {
-					navigate('/selection',
+					navigate('/postsurvey',
 						{
 							state: {
-								finalrecommendations: movies
+								userdata: userdata,
+								step: step + 1
 							}
 						});
 				}

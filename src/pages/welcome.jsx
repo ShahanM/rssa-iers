@@ -37,10 +37,9 @@ export default function Welcome(props) {
 
 	useEffect(() => {
 		get('study/' + studyID)
-			.then((response): Promise<study> => response.json())
-			.then((study: study) => {
-				setStudy(study);
-				console.log(study);
+			.then((response): Promise<studyres> => response.json())
+			.then((studyres: studyres) => {
+				setStudy(studyres);
 			});
 
 	}, []);

@@ -1,22 +1,23 @@
-import { useLocation, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import Button from "react-bootstrap/Button";
+import Spinner from "react-bootstrap/Spinner";
+import { useLocation, useNavigate } from "react-router-dom";
+import { get, put } from "../utils/api-middleware";
 import SurveyTemplate from "../widgets/surveyTemplate";
-import { useEffect, useState } from "react";
-import { API, CORSHeaders } from "../utils/api-middleware";
 
 export default function Survey(props) {
 
-	const user = useLocation().state.user;
+
+	const userdata = useLocation().state.user;
+	const step = useLocation().state.step;
 	const navigate = useNavigate();
 
 	const [pageData, setPageData] = useState({});
 	const [nextButtonDisabled, setNextButtonDisabled] = useState(true);
 	const [loading, setLoading] = useState(false);
 	const [surveyAnswers, setSurveyAnswers] = useState({});
-	const [surveyComplete, setSurveyComplete] = useState(false);
 	const [serverValidation, setServerValidation] = useState({});
 
 	const getsurveypage = (studyid, stepid, pageid) => {
@@ -26,13 +27,9 @@ export default function Survey(props) {
 		} else {
 			path = 'study/' + studyid + '/step/' + stepid + '/page/first/';
 		}
-		fetch(API + path, {
-			method: 'GET',
-			headers: CORSHeaders
-		})
+		get(path)
 			.then((response): Promise<page> => response.json())
 			.then((page: page) => {
-				console.log(page);
 				setPageData(page);
 				const pagevalidation = {};
 				pagevalidation[page.id] = false;
@@ -42,60 +39,56 @@ export default function Survey(props) {
 	}
 
 	useEffect(() => {
-		// FIXME fetch the page number dynamically
-		getsurveypage(user.study_id, 1, null);
+		if (Object.keys(surveyAnswers).length === 0) {
+			getsurveypage(userdata.study_id, step, null);
+		}
 	}, []);
 
 	useEffect(() => {
 		if (pageData.id === null) {
-			navigate('/ratemovies', { state: { user: user } });
+			navigate('/ratemovies', {
+				state: {
+					user: userdata,
+					step: step + 1
+				}
+			});
 		}
 		setLoading(false);
-	}, [pageData, navigate, user]);
+	}, [pageData, navigate, userdata, step]);
 
 	const next = () => {
 		setLoading(true);
 		if (pageData.id !== null) {
 			if (serverValidation[pageData.id] === false) {
-				// TODO submit data to server and then fetch new set of questions
-				console.log('submitting data to server');
 				submitAndValidate();
 			} else {
-				getsurveypage(user.study_id, 1, pageData.id);
+				getsurveypage(userdata.study_id, step, pageData.id);
 			}
 		}
 	}
 
 	const submitHandler = (data) => {
-		console.log('submitHandler', data);
 		setSurveyAnswers(data);
 		setNextButtonDisabled(false);
 	}
 
 	const submitAndValidate = () => {
-		console.log('submitAndValidate');
-		console.log('validate', surveyAnswers);
-		fetch(API + 'user/' + user.id + '/response/likert', {
-			method: 'PUT',
-			headers: CORSHeaders,
-			body: JSON.stringify({
-				'user_id': user.id,
-				'study_id': user.study_id,
-				'page_id': pageData.id,
-				'responses': Object.entries(surveyAnswers).map(([key, value]) => {
-					return {
-						'question_id': key,
-						'response': value
-					}
-				})
+		put('user/' + userdata.id + '/response/likert/', {
+			'user_id': userdata.id,
+			'study_id': userdata.study_id,
+			'page_id': pageData.id,
+			'responses': Object.entries(surveyAnswers).map(([key, value]) => {
+				return {
+					'question_id': key,
+					'response': value
+				}
 			})
 		})
 			.then((response): Promise<isvalidated> => response.json())
 			.then((isvalidated: isvalidated) => {
-				console.log('isvalidated', isvalidated);
 				if (isvalidated === true) {
 					setServerValidation({ ...serverValidation, [pageData.id]: true });
-					getsurveypage(user.study_id, 1, pageData.id);
+					getsurveypage(userdata.study_id, step, pageData.id);
 					setNextButtonDisabled(true);
 				} else {
 					setLoading(false);
@@ -125,7 +118,19 @@ export default function Survey(props) {
 					<Button variant="ers" size="lg" className="footer-btn"
 						disabled={nextButtonDisabled}
 						onClick={() => next()}>
-						Next
+						{!loading ? 'Next'
+							:
+							<>
+								<Spinner
+									as="span"
+									animation="grow"
+									size="sm"
+									role="status"
+									aria-hidden="true"
+								/>
+								Loading...
+							</>
+						}
 					</Button>
 				</div>
 			</Row>

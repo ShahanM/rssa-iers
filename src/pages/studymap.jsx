@@ -7,7 +7,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 export default function StudyMap(props) {
 
-	const state = { state: useLocation().state };
+	const userdata = useLocation().state.user;
+	const step = useLocation().state.step;
 	const navigate = useNavigate();
 
 	return (
@@ -61,7 +62,12 @@ export default function StudyMap(props) {
 			<Row>
 				<div className="jumbotron jumbotron-footer">
 					<Button variant="ers" size="lg" className="footer-btn"
-						onClick={() => navigate('/presurvey', state)}>
+						onClick={() => navigate('/presurvey', {
+							state: {
+								user: userdata,
+								step: step + 1
+							}
+						})}>
 						Next
 					</Button>
 				</div>

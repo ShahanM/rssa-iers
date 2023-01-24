@@ -3,13 +3,19 @@ import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Spinner from 'react-bootstrap/Spinner';
-import { useNavigate } from 'react-router-dom';
-import { API, CORSHeaders, post, get, put } from '../utils/api-middleware';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { get, post, put } from '../utils/api-middleware';
 import MovieGrid from '../widgets/movieGrid';
 
 
 export default function RateMovies() {
-	let userid = 1;
+
+
+	const itemsPerPage = 24;
+	const userdata = useLocation().state.user;
+	const step = useLocation().state.step;
+	const navigate = useNavigate();
+
 	const [ratedMoviesData, setRatedMoviesData] = useState([]);
 	const [ratedMovies, setRatedMovies] = useState([]);
 
@@ -23,8 +29,6 @@ export default function RateMovies() {
 
 	const [buttonDisabled, setButtonDisabled] = useState(true);
 
-	const itemsPerPage = 24;
-	const navigate = useNavigate();
 
 	const rateMoviesHandler = (newRating, movieid) => {
 		const isNew = !ratedMoviesData.some(item => item.item_id === movieid);
@@ -79,11 +83,13 @@ export default function RateMovies() {
 				{
 					state: {
 						recommendations: recommendedMovies,
-						ratings: ratedMoviesData
+						ratings: ratedMoviesData,
+						user: userdata,
+						step: step + 1
 					}
 				});
 		}
-	}, [recommendedMovies, ratedMoviesData, navigate]);
+	}, [recommendedMovies, ratedMoviesData, navigate, userdata, step]);
 
 	const submitHandler = (recType) => {
 		setLoading(true);
@@ -92,7 +98,7 @@ export default function RateMovies() {
 				.then((isupdateSuccess) => {
 					if (isupdateSuccess) {
 						post('ers/recommendation/', {
-							user_id: userid,
+							user_id: userdata.id,
 							ratings: ratedMoviesData,
 							rec_type: recType,
 							num_rec: 20
@@ -107,8 +113,8 @@ export default function RateMovies() {
 	}
 
 	const updateItemrating = async () => {
-		return put('user/' + userid + '/itemrating/', {
-			'user_id': userid,
+		return put('user/' + userdata.id + '/itemrating/', {
+			'user_id': userdata.id,
 			'page_id': 4,
 			'page_level': currentPage,
 			'ratings': ratedMoviesData
@@ -119,8 +125,8 @@ export default function RateMovies() {
 	}
 
 	const updateSeenItems = async (items) => {
-		put('user/' + userid + '/seenitems/', {
-			'user_id': userid,
+		put('user/' + userdata.id + '/seenitems/', {
+			'user_id': userdata.id,
 			'page_id': 4,
 			'page_level': currentPage,
 			'items': items
@@ -150,7 +156,7 @@ export default function RateMovies() {
 				</div>
 			</Row>
 			<Row>
-				<MovieGrid ratingCallback={rateMoviesHandler} userid={userid} movies={movies}
+				<MovieGrid ratingCallback={rateMoviesHandler} userid={userdata.id} movies={movies}
 					pagingCallback={updateCurrentPage} itemsPerPage={itemsPerPage} dataCallback={fetchMovies} />
 			</Row>
 			<Row>
