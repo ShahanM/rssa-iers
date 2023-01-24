@@ -162,7 +162,7 @@ export default function EmotionPreferences(props) {
 					navigate('/postsurvey',
 						{
 							state: {
-								userdata: userdata,
+								user: userdata,
 								step: step + 1
 							}
 						});
