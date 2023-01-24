@@ -4,7 +4,7 @@ import Card from "react-bootstrap/Card";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import { useLocation, useNavigate } from "react-router-dom";
-import { API, CORSHeaders, post, put } from '../utils/api-middleware';
+import { post, put } from '../utils/api-middleware';
 import EmotionStats from "../widgets/emotionStats";
 import EmotionToggle from "../widgets/emotionToggle";
 import MovieListPanel from "../widgets/movieListPanel";
@@ -114,8 +114,6 @@ export default function EmotionPreferences(props) {
 	const updateRecommendations = (emoinput) => {
 		setLoading(true);
 		// setButtonDisabled(true);
-		console.log(emoinput);
-		console.log(API + 'ers/updaterecommendations');
 		// fetch(API + 'ers/updaterecommendations/', {
 		// 	method: 'POST',
 		// 	headers: CORSHeaders,
