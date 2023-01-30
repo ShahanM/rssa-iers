@@ -8,6 +8,10 @@ export default function SurveyTemplate(props) {
 	const [surveyAnswers, setSurveyAnswers] = useState({});
 
 	useEffect(() => {
+		setSurveyAnswers({});
+	}, [props.surveyquestions]);
+
+	useEffect(() => {
 		if ((Object.keys(surveyAnswers).length === props.surveyquestions.length)
 			&& (Object.values(surveyAnswers).every((x) => x !== undefined))) {
 			props.submitCallback(surveyAnswers);
