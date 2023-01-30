@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import FormLabel from "react-bootstrap/FormLabel";
 
 export default function LikertBar(props) {
@@ -8,10 +8,6 @@ export default function LikertBar(props) {
 	const qgroup = props.surveyquestiongroup;
 	const qid = props.qid
 	const [selectedValue, setSelectedValue] = useState(undefined);
-
-	// useEffect(() => {
-	// 	props.changeCallback(qid, selectedValue);
-	// }, [selectedValue, props, qid]);
 
 	const handleRadioChange = (val) => {
 		setSelectedValue(val);

@@ -1,6 +1,6 @@
+import { useState } from "react";
 import Col from "react-bootstrap/Col";
 import ListGroup from "react-bootstrap/ListGroup";
-import { useState } from "react";
 
 export default function MovieListPanel(props) {
 
@@ -12,9 +12,6 @@ export default function MovieListPanel(props) {
 	}
 
 	const onValueChange = (movieid) => {
-		// let panelid = props.id;
-		// console.log("onValueChange: ", event);
-		// let movieid = event.target.value;
 		props.selectionHandler(movieid);
 		setSelectedid(movieid);
 	}
@@ -28,7 +25,7 @@ export default function MovieListPanel(props) {
 		<Col id={props.id}>
 			<div className="align-items-center justify-content-center"
 				style={{
-					height: props.byline.length > 0 ? "108px" : "81", padding: "27px 18px",
+					height: props.byline.length > 0 ? "108px" : "81", padding: "9px 18px",
 					textAlign: "center", borderRadius: "0.3rem 0.3rem 0 0",
 					backgroundColor: "#e9ecef"
 				}}>
@@ -50,12 +47,6 @@ export default function MovieListPanel(props) {
 						ratingsHandler: changeRating,
 						selectionHandler: onValueChange
 					})
-					// <SidePanelItem key={movie.movie_id} movie={movie}
-					// 	pick={this.props.pick || false}
-					// 	selectedid={this.props.selectedid}
-					// 	hoverHandler={this.onHover}
-					// 	ratingsHandler={this.changeRating}
-					// 	selectStateHandler={this.onValueChange} />
 				))}
 			</ListGroup>
 		</Col>

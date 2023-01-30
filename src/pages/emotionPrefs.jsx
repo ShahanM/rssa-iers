@@ -1,18 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { Container } from "react-bootstrap";
 import Button from 'react-bootstrap/Button';
-import Card from "react-bootstrap/Card";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getNextStudyStep, post, put } from '../utils/api-middleware';
-import EmotionStats from "../widgets/emotionStats";
+import { emotionsDict } from '../utils/constants';
 import EmotionToggle from "../widgets/emotionToggle";
 import HeaderJumbotron from '../widgets/headerJumbotron';
+import MovieEmotionPreviewPanel from '../widgets/movieEmotionPreviewPanel';
 import MovieListPanel from "../widgets/movieListPanel";
 import MovieListPanelItem from "../widgets/movieListPanelItem";
 import NextButton from '../widgets/nextButton';
-import MovieEmotionPreviewPanel from '../widgets/movieEmotionPreviewPanel';
 
 export default function EmotionPreferences(props) {
 
@@ -27,16 +26,7 @@ export default function EmotionPreferences(props) {
 	const [activeMovie, setActiveMovie] = useState(null);
 	const [buttonDisabled, setButtonDisabled] = useState(true);
 	const [loading, setLoading] = useState(false);
-	const [emotionToggles, setEmotionToggles] = useState({
-		'Joy': 'ignore',
-		'Trust': 'ignore',
-		'Fear': 'ignore',
-		'Surprise': 'ignore',
-		'Sadness': 'ignore',
-		'Disgust': 'ignore',
-		'Anger': 'ignore',
-		'Anticipation': 'ignore'
-	});
+	const [emotionToggles, setEmotionToggles] = useState(emotionsDict);
 
 	const [step, setStep] = useState({});
 	const [isToggleDone, setIsToggleDone] = useState(false);
@@ -79,27 +69,16 @@ export default function EmotionPreferences(props) {
 	const handleSelection = (movieid) => {
 		console.log('selected movie: ' + movieid);
 		setSelectedMovieid(movieid);
-		// setIsSelectionDone(true);
 		setButtonDisabled(false);
 	}
 
 	const resetToggles = () => {
-		setEmotionToggles({
-			'Joy': 'ignore',
-			'Trust': 'ignore',
-			'Fear': 'ignore',
-			'Surprise': 'ignore',
-			'Sadness': 'ignore',
-			'Disgust': 'ignore',
-			'Anger': 'ignore',
-			'Anticipation': 'ignore'
-		});
+		setEmotionToggles(emotionsDict);
 	}
 
 	const finalizeToggles = () => {
 		console.log('finalizing');
 		finalizeEmotionPrefs();
-		// setIsToggleDone(true);
 	}
 
 	const finalizeEmotionPrefs = () => {
@@ -177,14 +156,17 @@ export default function EmotionPreferences(props) {
 			<Row>
 				<Col id="emotionPanel">
 					<div className="emoPrefControlPanel">
-						<Row>
+						<Row style={{ marginBottom: "0.25em" }}>
 							{/* <Row> */}
 							<Button style={{ textAlign: "left" }}
 								variant="secondary" onClick={() => setHideInstruction(!hideInstruction)}>
 								{hideInstruction ? '+ Show' : '- Hide'} Instructions
 							</Button>
 							{/* </Row> */}
-							<div className="instructionsBlock" style={{ height: hideInstruction ? "0" : "245px" }}>
+							<div className="instructionsBlock" style={{
+								height: hideInstruction ? "0" : "245px",
+								margin: "0em 0em 0.5em 0em", backgroundColor: "#e0e0e0", borderRadius: "0.25em"
+							}}>
 								<p style={{ fontWeight: "800" }}>
 									Please inspect the recommendations and adjust
 									them to your preference.
@@ -227,12 +209,12 @@ export default function EmotionPreferences(props) {
 						</Row>
 						{/* <Row> */}
 						<Row>
-							<div style={{ marginTop: "4em" }}>
-								<EmotionToggle onToggle={handleToggle}
-									emotions={emotionToggles}
-									onReset={resetToggles}
-									onFinalize={finalizeToggles} />
-							</div>
+							{/* <div style={{ marginTop: "0em" }}> */}
+							<EmotionToggle onToggle={handleToggle}
+								emotions={emotionToggles}
+								onReset={resetToggles}
+								onFinalize={finalizeToggles} />
+							{/* </div> */}
 						</Row>
 					</div>
 					{/* </Row> */}
@@ -256,33 +238,6 @@ export default function EmotionPreferences(props) {
 							<MovieEmotionPreviewPanel movie={activeMovie} />
 						) : (<></>)}
 					</div>
-					{/* {isShown && (activeMovie != null) ? (
-						<Card bg="light" text="black">
-							<Card.Body style={{ height: '900px' }}>
-								<Card.Img variant="left"
-									className="d-flex mx-auto d-block 
-										img-thumbnail"
-									src={activeMovie.poster}
-									alt={"Poster of the movie " +
-										activeMovie.title}
-									style={{
-										maxHeight: "36%", minHeight: "36%",
-										width: "auto"
-									}} />
-								<Card.Title style={{ marginTop: "0.5rem" }}>
-									{activeMovie.title}
-								</Card.Title>
-								<Container className="overflow-auto"
-									style={{ height: "27%" }}>
-									<Card.Text>
-										{activeMovie.description}
-									</Card.Text>
-								</Container>
-								<EmotionStats movie={activeMovie} />
-							</Card.Body>
-						</Card>
-					) : (<div style={{ height: "900px" }} />)
-					} */}
 				</Col>
 			</Row >
 			<Row>

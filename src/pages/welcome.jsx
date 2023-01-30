@@ -10,7 +10,6 @@ import InformedConsentModal from '../widgets/informedConsent';
 export default function Welcome(props) {
 
 	const studyID = 1;
-	// const step = 1;
 
 	const [show, setShowInformedConsent] = useState(false);
 	const [userdata, setUserdata] = useState({});
