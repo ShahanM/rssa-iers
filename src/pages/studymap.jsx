@@ -7,6 +7,7 @@ import Row from "react-bootstrap/Row";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getNextStudyStep } from "../utils/api-middleware";
 import HeaderJumbotron from "../widgets/headerJumbotron";
+import Image from "react-bootstrap/Image";
 
 export default function StudyMap(props) {
 
@@ -15,6 +16,12 @@ export default function StudyMap(props) {
 	const navigate = useNavigate();
 
 	const [step, setStep] = useState({});
+
+
+	const rspref = require("../res/rate-prefs.png");
+	const presurvey = require("../res/pre-survey.png");
+	const rsinteract = require("../res/interact.png");
+	const postsurvey = require("../res/post-survey.png")
 
 	useEffect(() => {
 		getNextStudyStep(userdata.study_id, stepid)
@@ -34,6 +41,7 @@ export default function StudyMap(props) {
 							<Card.Title>
 								Pre-survey
 							</Card.Title>
+							<Image src={presurvey} fluid />
 						</Card.Body>
 					</Card>
 				</Col>
@@ -43,6 +51,7 @@ export default function StudyMap(props) {
 							<Card.Title>
 								Rate Movies
 							</Card.Title>
+							<Image src={rspref} fluid />
 						</Card.Body>
 					</Card>
 				</Col>
@@ -50,8 +59,9 @@ export default function StudyMap(props) {
 					<Card className="overviewCard">
 						<Card.Body>
 							<Card.Title>
-								Tweak recommendation
+								Interact with the system
 							</Card.Title>
+							<Image src={rsinteract} fluid />
 						</Card.Body>
 					</Card>
 				</Col>
@@ -61,6 +71,7 @@ export default function StudyMap(props) {
 							<Card.Title>
 								Post-survey
 							</Card.Title>
+							<Image src={postsurvey} fluid />
 						</Card.Body>
 					</Card>
 				</Col>
