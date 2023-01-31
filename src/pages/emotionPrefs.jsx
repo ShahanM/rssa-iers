@@ -153,16 +153,14 @@ export default function EmotionPreferences(props) {
 			<Row>
 				<HeaderJumbotron step={step} />
 			</Row>
-			<Row>
+			<Row style={{height: "fit-content"}}>
 				<Col id="emotionPanel">
 					<div className="emoPrefControlPanel">
 						<Row style={{ marginBottom: "0.25em" }}>
-							{/* <Row> */}
 							<Button style={{ textAlign: "left" }}
 								variant="secondary" onClick={() => setHideInstruction(!hideInstruction)}>
 								{hideInstruction ? '+ Show' : '- Hide'} Instructions
 							</Button>
-							{/* </Row> */}
 							<div className="instructionsBlock" style={{
 								height: hideInstruction ? "0" : "245px",
 								margin: "0em 0em 0.5em 0em", backgroundColor: "#e0e0e0", borderRadius: "0.25em"
@@ -207,17 +205,13 @@ export default function EmotionPreferences(props) {
 								</p>
 							</div>
 						</Row>
-						{/* <Row> */}
 						<Row>
-							{/* <div style={{ marginTop: "0em" }}> */}
 							<EmotionToggle onToggle={handleToggle}
 								emotions={emotionToggles}
 								onReset={resetToggles}
 								onFinalize={finalizeToggles} />
-							{/* </div> */}
 						</Row>
 					</div>
-					{/* </Row> */}
 
 				</Col>
 				<Col id="moviePanel">
@@ -233,7 +227,7 @@ export default function EmotionPreferences(props) {
 					/>
 				</Col>
 				<Col id="moviePosterPreview" >
-					<div className="d-flex mx-auto" style={{ height: "900px" }}>
+					<div className="d-flex mx-auto moviePreviewPanel">
 						{isShown && (activeMovie != null) ? (
 							<MovieEmotionPreviewPanel movie={activeMovie} />
 						) : (<></>)}

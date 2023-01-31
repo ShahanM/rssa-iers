@@ -23,7 +23,7 @@ export default function MoviePreviewCard(props) {
 					<Row>
 						<h5 style={{ textAlign: "left" }}>{props.movie.title}</h5>
 					</Row>
-					<Row>
+					<Row style={{ height: "216px", overflowY: "scroll" }}>
 						<p style={{ textAlign: "left" }}>
 							{props.movie.description}
 						</p>
