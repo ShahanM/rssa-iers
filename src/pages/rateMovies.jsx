@@ -8,7 +8,7 @@ import MovieGrid from '../widgets/movieGrid';
 import NextButton from '../widgets/nextButton';
 
 
-export default function RateMovies() {
+export default function RateMovies(props) {
 
 
 	const itemsPerPage = 24;
@@ -83,7 +83,7 @@ export default function RateMovies() {
 
 	useEffect(() => {
 		if (recommendedMovies.length > 0) {
-			navigate('/recommendations',
+			navigate(props.next,
 				{
 					state: {
 						recommendations: recommendedMovies,
@@ -148,7 +148,7 @@ export default function RateMovies() {
 	return (
 		<Container>
 			<Row>
-				<HeaderJumbotron step={step} />
+				<HeaderJumbotron title={step.step_name} content={step.step_description} />
 			</Row>
 			<Row>
 				<MovieGrid ratingCallback={rateMoviesHandler} userid={userdata.id} movies={movies}

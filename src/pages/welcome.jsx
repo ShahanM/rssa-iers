@@ -25,7 +25,7 @@ export default function Welcome(props) {
 	useEffect(() => {
 		const userProps = ['id', 'condition', 'user_type', 'seen_items'];
 		if (userProps.every(item => userdata.hasOwnProperty(item))) {
-			navigate('/studyoverview',
+			navigate(props.next,
 				{
 					state: {
 						user: userdata,
@@ -89,7 +89,7 @@ export default function Welcome(props) {
 						<ol>
 							<li>Complete a pre-survey on your preference profile.</li>
 							<li>Rate a few movies you are familiar with.</li>
-							<li>Interact with the movie recommender system by tweaking the recommendations before picking a movie from the final recommendations.</li>
+							<li>Interact with the movie recommender system before picking a movie you would watch.</li>
 							<li>Complete survey about your experience interacting with the system.</li>
 						</ol>
 

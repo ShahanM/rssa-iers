@@ -47,12 +47,12 @@ export default function InformedConsentModal(props) {
 
 				<p style={{ marginBottom: "0" }}><strong>Incentives</strong></p>
 				<p>
-					You must complete all step in the study to get a compensation of $2.75.
+					You must complete all steps in the study to get a compensation of $2.75.
 				</p>
 
 				<p style={{ marginBottom: "0" }}><strong>Protection of Privacy and Confidentiality</strong></p>
 				<p>
-					The results of this study may be published in scientific journals, professional
+					The results of this study may be published in scientific journals, professional``
 					publications, or educational presentations.
 					<br /><br />
 					The information collected during the study could be used for future research
@@ -72,7 +72,7 @@ export default function InformedConsentModal(props) {
 					questions. However, you may contact the Clemson IRB if the research staff cannot
 					be reached or if you wish to speak with someone other than the research staff.
 					If you have any study related questions or if any problem arise, please contact
-					Sushmita Khan at <a href="mailto:<lijieg>@clemson.edu">&lt;lijieg&gt;@clemson.edu</a>.
+					Lijie Guo at <a href="mailto:<lijieg>@clemson.edu">&lt;lijieg&gt;@clemson.edu</a>.
 				</p>
 
 				<p style={{ marginBottom: "0" }}><strong>Consent</strong></p>

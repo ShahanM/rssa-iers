@@ -31,7 +31,7 @@ export default function StudyMap(props) {
 	return (
 		<Container>
 			<Row>
-				<HeaderJumbotron step={step} />
+				<HeaderJumbotron title={step.step_name} content={step.step_description} />
 			</Row>
 
 			<Row>
@@ -49,7 +49,7 @@ export default function StudyMap(props) {
 					<Card className="overviewCard">
 						<Card.Body>
 							<Card.Title>
-								Rate Movies
+								Indicate your preferences
 							</Card.Title>
 							<Image src={rspref} fluid />
 						</Card.Body>
@@ -80,7 +80,7 @@ export default function StudyMap(props) {
 			<Row>
 				<div className="jumbotron jumbotron-footer">
 					<Button variant="ers" size="lg" className="footer-btn"
-						onClick={() => navigate('/presurvey', {
+						onClick={() => navigate(props.next, {
 							state: {
 								user: userdata,
 								step: step.id

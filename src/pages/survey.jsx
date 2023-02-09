@@ -52,7 +52,7 @@ export default function Survey(props) {
 
 	useEffect(() => {
 		if (pageData.id === null) {
-			navigate('/ratemovies', {
+			navigate(props.next, {
 				state: {
 					user: userdata,
 					step: step.id
@@ -106,7 +106,7 @@ export default function Survey(props) {
 	return (
 		<Container>
 			<Row>
-				<HeaderJumbotron step={step} />
+				<HeaderJumbotron title={step.step_name} content={step.step_description} />
 			</Row>
 			<Row>
 				{Object.entries(pageData).length !== 0 ?

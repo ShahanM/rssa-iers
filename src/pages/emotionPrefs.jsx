@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Container } from "react-bootstrap";
-import Button from 'react-bootstrap/Button';
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import { useLocation, useNavigate } from "react-router-dom";
-import { getNextStudyStep, post, put } from '../utils/api-middleware';
+import { getNextStudyStep, post, put, get } from '../utils/api-middleware';
 import { emotionsDict } from '../utils/constants';
 import EmotionToggle from "../widgets/emotionToggle";
 import HeaderJumbotron from '../widgets/headerJumbotron';
+import { InstructionModal } from '../widgets/instructionModal';
 import MovieEmotionPreviewPanel from '../widgets/movieEmotionPreviewPanel';
 import MovieListPanel from "../widgets/movieListPanel";
 import MovieListPanelItem from "../widgets/movieListPanelItem";
@@ -34,11 +34,19 @@ export default function EmotionPreferences(props) {
 
 	const [hideInstruction, setHideInstruction] = useState(true);
 
+	const [recCriteria, setRecCriteria] = useState('')
+
+	const [pageData, setPageData] = useState(undefined);
+
 
 	useEffect(() => {
 		getNextStudyStep(userdata.study_id, stepid)
-			.then((value) => { setStep(value) });
+			.then((value) => {
+				setStep(value);
+
+			});
 	}, []);
+
 
 	useEffect(() => {
 		if (Object.values(emotionToggles).some(item => item.length > 0)) {
@@ -48,9 +56,37 @@ export default function EmotionPreferences(props) {
 					weight: emotionToggles[key].length > 0
 						? emotionToggles[key] : 'ignore'
 				}));
+			const emostr = emoinput.map((item) => {
+				if (item.weight !== 'ignore') {
+					return item.emotion + ':' + item.weight;
+				}
+				return undefined;
+			}).filter((item) => item !== undefined).join('; ');
+			setRecCriteria(emostr);
 			updateRecommendations(emoinput);
 		}
 	}, [emotionToggles]);
+
+	const getStepPage = (studyid, stepid, pageid) => {
+		let path = '';
+		if (pageid !== null) {
+			path = 'study/' + studyid + '/step/' + stepid + '/page/' + pageid + '/next';
+		} else {
+			path = 'study/' + studyid + '/step/' + stepid + '/page/first/';
+		}
+		get(path)
+			.then((response): Promise<page> => response.json())
+			.then((page: page) => {
+				setPageData(page);
+			})
+			.catch((error) => console.log(error));
+	}
+
+	useEffect(() => {
+		if (Object.keys(step).length > 0) {
+			getStepPage(userdata.study_id, step.id, null);
+		}
+	}, [step]);
 
 	const handleHover = (isShown, activeMovie, action, panelid) => {
 		setIsShown(isShown);
@@ -67,7 +103,6 @@ export default function EmotionPreferences(props) {
 	}
 
 	const handleSelection = (movieid) => {
-		console.log('selected movie: ' + movieid);
 		setSelectedMovieid(movieid);
 		setButtonDisabled(false);
 	}
@@ -77,7 +112,6 @@ export default function EmotionPreferences(props) {
 	}
 
 	const finalizeToggles = () => {
-		console.log('finalizing');
 		finalizeEmotionPrefs();
 	}
 
@@ -90,12 +124,12 @@ export default function EmotionPreferences(props) {
 			}));
 		put('user/' + userdata.id + '/emotionprefs/', emoinput)
 			.then((response) => {
-				console.log(response);
 				setIsToggleDone(true);
 			})
 			.catch((error) => {
 				console.log(error);
 			});
+		getStepPage(userdata.study_id, step.id, pageData.id);
 	}
 
 	const handleNext = () => {
@@ -134,7 +168,7 @@ export default function EmotionPreferences(props) {
 		}).then((response): Promise<value> => response.json())
 			.then((selectedItem: value) => {
 				if (selectedItem.item_id === parseInt(selectedMovieid) && selectedItem.rating === 99) {
-					navigate('/postsurvey',
+					navigate(props.next,
 						{
 							state: {
 								user: userdata,
@@ -148,68 +182,33 @@ export default function EmotionPreferences(props) {
 		setLoading(false);
 	}
 
+	const infoHandler = () => {
+		setHideInstruction(false);
+	}
+
 	return (
 		<Container>
 			<Row>
-				<HeaderJumbotron step={step} />
+				{pageData !== undefined ?
+					<HeaderJumbotron title={pageData.page_name} content={pageData.page_instruction} />
+					:
+					<HeaderJumbotron title={step.step_name} content={step.step_description} />
+				}
 			</Row>
-			<Row style={{height: "fit-content"}}>
+			<InstructionModal show={!hideInstruction} onHide={() => setHideInstruction(true)} />
+			<Row style={{ height: "fit-content" }}>
 				<Col id="emotionPanel">
 					<div className="emoPrefControlPanel">
-						<Row style={{ marginBottom: "0.25em" }}>
-							<Button style={{ textAlign: "left" }}
-								variant="secondary" onClick={() => setHideInstruction(!hideInstruction)}>
-								{hideInstruction ? '+ Show' : '- Hide'} Instructions
-							</Button>
-							<div className="instructionsBlock" style={{
-								height: hideInstruction ? "0" : "245px",
-								margin: "0em 0em 0.5em 0em", backgroundColor: "#e0e0e0", borderRadius: "0.25em"
-							}}>
-								<p style={{ fontWeight: "800" }}>
-									Please inspect the recommendations and adjust
-									them to your preference.
-								</p>
-								<ol>
-									<li>
-										<p>
-											Among the movies in your system, we
-											predict that you will like these 7
-											movies the best based on your ratings.
-										</p>
-									</li>
-									<li>
-										<p>
-											You can hover over movies to see a
-											preview of the poster, a short synopsis,
-											and a radar graph depicting the movie's
-											emotional feature in 8 emotions: joy,
-											trust, fear, surprise, surprise,
-											sadness, disgust, anger, and
-											anticipation.
-										</p>
-									</li>
-									<li>
-										<p>
-											You can specify your preference of
-											movies from the perspective of movie
-											emotions in the following panel. Please
-											adjust the emotion strength indicators
-											bellow so we could fine-tune the
-											recommendations for you.
-										</p>
-									</li>
-								</ol>
-								<p style={{ fontWeight: "800" }}>
-									Adjust the recommendations until they best fit
-									your preferences.
-								</p>
+						<Row>
+							<div style={{ alignItems: "left" }}>
+								{/* <FcAbout size={30}/> */}
 							</div>
 						</Row>
 						<Row>
 							<EmotionToggle onToggle={handleToggle}
 								emotions={emotionToggles}
 								onReset={resetToggles}
-								onFinalize={finalizeToggles} />
+								onFinalize={finalizeToggles} infoCallback={infoHandler} />
 						</Row>
 					</div>
 
@@ -217,9 +216,9 @@ export default function EmotionPreferences(props) {
 				<Col id="moviePanel">
 					<MovieListPanel id="leftPanel"
 						movieList={movies.slice(0, 7)}
-						panelTitle={'Movies you may like'}
-						panelByline={''}
-						byline={''}
+						panelTitle={'Recommendations'}
+						panelByline={recCriteria}
+						byline={emotionToggles}
 						render={(props) => <MovieListPanelItem {...props}
 							pick={isToggleDone} />}
 						hoverHandler={handleHover}

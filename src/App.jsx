@@ -4,6 +4,7 @@ import Navbar from 'react-bootstrap/Navbar';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './App.css';
 import EmotionPreferences from './pages/emotionPrefs';
+import FeedbackPage from './pages/feedbackPage';
 import RateMovies from './pages/rateMovies';
 import StudyMap from './pages/studymap';
 import Survey from './pages/survey';
@@ -20,17 +21,18 @@ function App() {
 						</Navbar.Brand>
 					</Navbar>
 				</header>
-					<Suspense fallback={<h1>Loading</h1>}>
-						<Routes>
-							<Route path="/" element={<Welcome />} />
-							<Route path="/studyoverview" element={<StudyMap />} />
-							<Route path="/presurvey" element={<Survey />} />
-							<Route path="/ratemovies" element={<RateMovies />} />
-							<Route path="/recommendations" element={<EmotionPreferences />} />
-							<Route path="/postsurvey" element={<Survey />} />
-							<Route path="/quit" element={<h1>Thank you for participating!</h1>} />
-						</Routes>
-					</Suspense>
+				<Suspense fallback={<h1>Loading</h1>}>
+					<Routes>
+						<Route path="/" element={<Welcome next="/studyoverview" />} />
+						<Route path="/studyoverview" element={<StudyMap next="/presurvey" />} />
+						<Route path="/presurvey" element={<Survey next="/ratemovies" />} />
+						<Route path="/ratemovies" element={<RateMovies next="/recommendations" />} />
+						<Route path="/recommendations" element={<EmotionPreferences next="/feedback" />} />
+						<Route path="/feedback" element={<FeedbackPage next="/postsurvey" />} />
+						<Route path="/postsurvey" element={<Survey next="/quit" />} />
+						<Route path="/quit" element={<h1>Thank you for participating!</h1>} />
+					</Routes>
+				</Suspense>
 			</Router>
 		</div>
 	);

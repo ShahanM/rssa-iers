@@ -30,10 +30,32 @@ export default function MovieListPanel(props) {
 					backgroundColor: "#e9ecef"
 				}}>
 				<h5>{props.panelTitle}</h5>
-				{props.byline.length > 0 ?
-					<p style={{ textAlign: "left", fontSize: "14px" }}>
-						{props.panelByline}
-					</p>
+				{props.panelByline.length > 0 ?
+					Object.keys(props.byline)
+						.filter(key =>
+							!(props.byline[key].length === 0
+								|| props.byline[key] === 'ignore'))
+						.map((key, i) => {
+							return (
+								<div className="badge" key={'badge_' + i}>
+									<div className="name">
+										<span>
+											{key}
+										</span>
+									</div>
+									<div
+										className={props.byline[key] === 'low'
+											? "status ersorange" : "status green"}>
+										<span>
+											{props.byline[key]}
+										</span>
+									</div>
+								</div>
+							)
+						})
+					// <p style={{ textAlign: "left", fontSize: "11px" }}>
+					// {props.panelByline}
+					// </p>
 					: ''
 				}
 			</div>

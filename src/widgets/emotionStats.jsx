@@ -98,15 +98,15 @@ export default function EmotionStats(props) {
 				{
 					emotions.map((emotion, i) =>
 						<Row key={emotion.emo + '_' + i + '_' + movie.id} md={2} style={{ margin: "1px 0", height: "27px" }}>
-							<Col className="d-flex" md={{ span: 3, offset: 3 }} style={{ padding: "0" }} >
-								<p style={{ margin: "auto 0", textAlign: "left" }}>{emotion.emo}</p>
-							</Col>
-							<Col md={{ span: 3, offset: 0 }} style={{ margin: "auto 0" }}>
-								<ProgressBar>
+							{/* <Col className="d-flex" md={{ span: 3, offset: 3 }} style={{ padding: "0" }} > */}
+								<p style={{ margin: "auto 0", textAlign: "right" }}>{emotion.emo}</p>
+							{/* </Col> */}
+							{/* <Col md={{ span: 3, offset: 0 }} style={{ margin: "auto 0" }}> */}
+								<ProgressBar style={{margin: "auto 0", padding: "inherit"}}>
 									<ProgressBar style={{ background: linearGradient(emotion, props.movie.emotions) }}
 										now={getEmoScaled(emotion, props.movie.emotions) * 100} />
 								</ProgressBar>
-							</Col>
+							{/* </Col> */}
 						</Row>
 					)
 				}

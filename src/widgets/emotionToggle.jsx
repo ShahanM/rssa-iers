@@ -6,6 +6,7 @@ import Row from 'react-bootstrap/Row';
 import ToggleButton from 'react-bootstrap/ToggleButton';
 import ToggleButtonGroup from 'react-bootstrap/ToggleButtonGroup';
 import { emotionsDict } from '../utils/constants';
+import { FcAbout } from "react-icons/fc";
 
 
 export default function EmotionToggle(props) {
@@ -36,8 +37,11 @@ export default function EmotionToggle(props) {
 
 	return (
 		<Container>
-			<div style={{ marginBottom: "3px" }}>
+			<div style={{ marginBottom: "3px", display: "inline-flex", marginTop: "27px" }}>
 				<h4>Your taste on movie emotions</h4>
+				<FcAbout size={30} className="infoIcon"
+				style={{ marginTop: "-18px", marginLeft: "9px" }} 
+				onClick={props.infoCallback}/>
 			</div>
 			<Row>
 				{/* <div> */}
