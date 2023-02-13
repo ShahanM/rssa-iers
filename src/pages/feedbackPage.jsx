@@ -11,18 +11,18 @@ import NextButton from '../widgets/nextButton';
 export default function FeedbackPage(props) {
 
 	const userdata = useLocation().state.user;
-	const stepid = useLocation().state.step;
+	const stepid = useLocation().state.studyStep;
 	const navigate = useNavigate();
 
 	const [buttonDisabled, setButtonDisabled] = useState(true);
 	const [loading, setLoading] = useState(false);
 	const [responseText, setResponseText] = useState('');
-	const [step, setStep] = useState({});
+	const [studyStep, setStudyStep] = useState({});
 	const [pageData, setPageData] = useState({});
 
 	useEffect(() => {
 		getNextStudyStep(userdata.study_id, stepid)
-			.then((value) => { setStep(value) });
+			.then((value) => { setStudyStep(value) });
 	}, []);
 
 	const storeText = (evt) => {
@@ -51,10 +51,10 @@ export default function FeedbackPage(props) {
 	}
 
 	useEffect(() => {
-		if (Object.keys(step).length > 0) {
-			getStepPage(userdata.study_id, step.id, null);
+		if (Object.keys(studyStep).length > 0) {
+			getStepPage(userdata.study_id, studyStep.id, null);
 		}
-	}, [step]);
+	}, [studyStep]);
 
 	const submitHandler = () => {
 		put('user/' + userdata.id + '/response/freetext/', {
@@ -72,7 +72,7 @@ export default function FeedbackPage(props) {
 					navigate(props.next, {
 						state: {
 							user: userdata,
-							step: step.id
+							step: studyStep.id
 						}
 					});
 				} else {

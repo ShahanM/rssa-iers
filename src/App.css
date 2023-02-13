@@ -501,3 +501,7 @@ div.badge div span {
 .badge .status.ersorange {
 	background: #f9b05c;
 }
+
+.galleryFooter {
+	margin-top: 3px;
+}

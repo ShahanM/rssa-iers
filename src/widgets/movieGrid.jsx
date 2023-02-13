@@ -46,7 +46,7 @@ export default function MovieGrid(props) {
 					}
 				</Col>
 			</Row>
-			<Row>
+			<Row className='galleryFooter'>
 				<Col md={3}>
 					<div className="btnDiv">
 						<Button id="gallery-left-btn" disabled={currentPage === 1} variant="ers" onClick={renderPrev}>

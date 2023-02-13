@@ -12,10 +12,10 @@ import Image from "react-bootstrap/Image";
 export default function StudyMap(props) {
 
 	const userdata = useLocation().state.user;
-	const stepid = useLocation().state.step;
+	const stepid = useLocation().state.studyStep;
 	const navigate = useNavigate();
 
-	const [step, setStep] = useState({});
+	const [studyStep, setStudyStep] = useState({});
 
 
 	const rspref = require("../res/rate-prefs.png");
@@ -25,13 +25,13 @@ export default function StudyMap(props) {
 
 	useEffect(() => {
 		getNextStudyStep(userdata.study_id, stepid)
-			.then((value) => { setStep(value) });
+			.then((value) => { setStudyStep(value) });
 	}, []);
 
 	return (
 		<Container>
 			<Row>
-				<HeaderJumbotron title={step.step_name} content={step.step_description} />
+				<HeaderJumbotron title={studyStep.step_name} content={studyStep.step_description} />
 			</Row>
 
 			<Row>
@@ -83,7 +83,7 @@ export default function StudyMap(props) {
 						onClick={() => navigate(props.next, {
 							state: {
 								user: userdata,
-								step: step.id
+								studyStep: studyStep.id
 							}
 						})}>
 						Next

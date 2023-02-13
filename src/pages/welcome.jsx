@@ -14,7 +14,7 @@ export default function Welcome(props) {
 	const [show, setShowInformedConsent] = useState(false);
 	const [userdata, setUserdata] = useState({});
 	const [study, setStudy] = useState({});
-	const [step, setStep] = useState({});
+	const [studyStep, setStudyStep] = useState({});
 
 	const showInformedConsent = () => {
 		setShowInformedConsent(!show);
@@ -29,11 +29,11 @@ export default function Welcome(props) {
 				{
 					state: {
 						user: userdata,
-						step: step.id
+						studyStep: studyStep.id
 					}
 				});
 		}
-	}, [userdata, navigate, step]);
+	}, [userdata, navigate, studyStep]);
 
 	useEffect(() => {
 		get('study/' + studyID)
@@ -42,10 +42,10 @@ export default function Welcome(props) {
 				setStudy(studyres);
 			});
 		get('/study/' + studyID + '/step/first/')
-			.then((response): Promise<step> => response.json())
-			.then((step: step) => {
-				console.log(step.step_name, step);
-				setStep(step);
+			.then((response): Promise<studyStep> => response.json())
+			.then((studyStep: studyStep) => {
+				console.log(studyStep.step_name, studyStep);
+				setStudyStep(studyStep);
 			})
 
 	}, []);

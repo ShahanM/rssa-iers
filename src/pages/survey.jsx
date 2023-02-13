@@ -11,7 +11,7 @@ export default function Survey(props) {
 
 
 	const userdata = useLocation().state.user;
-	const stepid = useLocation().state.step;
+	const stepid = useLocation().state.studyStep;
 	const navigate = useNavigate();
 
 	const [pageData, setPageData] = useState({});
@@ -19,7 +19,7 @@ export default function Survey(props) {
 	const [loading, setLoading] = useState(false);
 	const [surveyAnswers, setSurveyAnswers] = useState({});
 	const [serverValidation, setServerValidation] = useState({});
-	const [step, setStep] = useState({});
+	const [studyStep, setStudyStep] = useState({});
 
 	const getsurveypage = (studyid, stepid, pageid) => {
 		let path = '';
@@ -41,26 +41,26 @@ export default function Survey(props) {
 
 	useEffect(() => {
 		getNextStudyStep(userdata.study_id, stepid)
-			.then((value) => { setStep(value) });
+			.then((value) => { setStudyStep(value) });
 	}, []);
 
 	useEffect(() => {
-		if (Object.keys(surveyAnswers).length === 0 && Object.entries(step).length !== 0) {
-			getsurveypage(userdata.study_id, step.id, null);
+		if (Object.keys(surveyAnswers).length === 0 && Object.entries(studyStep).length !== 0) {
+			getsurveypage(userdata.study_id, studyStep.id, null);
 		}
-	}, [step]);
+	}, [studyStep]);
 
 	useEffect(() => {
 		if (pageData.id === null) {
 			navigate(props.next, {
 				state: {
 					user: userdata,
-					step: step.id
+					studyStep: studyStep.id
 				}
 			});
 		}
 		setLoading(false);
-	}, [pageData, navigate, userdata, step]);
+	}, [pageData, navigate, userdata, studyStep]);
 
 	const next = () => {
 		setLoading(true);
@@ -68,7 +68,7 @@ export default function Survey(props) {
 			if (serverValidation[pageData.id] === false) {
 				submitAndValidate();
 			} else {
-				getsurveypage(userdata.study_id, step.id, pageData.id);
+				getsurveypage(userdata.study_id, studyStep.id, pageData.id);
 			}
 		}
 	}
@@ -94,7 +94,7 @@ export default function Survey(props) {
 			.then((isvalidated: isvalidated) => {
 				if (isvalidated === true) {
 					setServerValidation({ ...serverValidation, [pageData.id]: true });
-					getsurveypage(userdata.study_id, step.id, pageData.id);
+					getsurveypage(userdata.study_id, studyStep.id, pageData.id);
 					setNextButtonDisabled(true);
 				} else {
 					setLoading(false);
@@ -106,7 +106,7 @@ export default function Survey(props) {
 	return (
 		<Container>
 			<Row>
-				<HeaderJumbotron title={step.step_name} content={step.step_description} />
+				<HeaderJumbotron title={studyStep.step_name} content={studyStep.step_description} />
 			</Row>
 			<Row>
 				{Object.entries(pageData).length !== 0 ?

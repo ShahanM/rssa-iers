@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Container } from "react-bootstrap";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import { useLocation, useNavigate } from "react-router-dom";
-import { getNextStudyStep, post, put, get } from '../utils/api-middleware';
-import { emotionsDict } from '../utils/constants';
+import { ShepherdTour, ShepherdTourContext } from 'react-shepherd';
+import { get, getNextStudyStep, post, put } from '../utils/api-middleware';
+import { emotionsDict, studyConditions } from '../utils/constants';
+import { emoPrefSteps, tourOptions } from '../utils/onboarding';
 import EmotionToggle from "../widgets/emotionToggle";
 import HeaderJumbotron from '../widgets/headerJumbotron';
 import { InstructionModal } from '../widgets/instructionModal';
@@ -13,13 +15,16 @@ import MovieListPanel from "../widgets/movieListPanel";
 import MovieListPanelItem from "../widgets/movieListPanelItem";
 import NextButton from '../widgets/nextButton';
 
-export default function EmotionPreferences(props) {
+const Content = (props) => {
+
+	const condition = 4; // TODO: get condition from backend
+	const emoVizEnabled = studyConditions[condition].emoVizEnabled;
+	const emoTogglesEnabled = studyConditions[condition].emoTogglesEnabled;
 
 	const userdata = useLocation().state.user;
-	const stepid = useLocation().state.step;
+	const stepid = useLocation().state.studyStep;
 	const ratings = useLocation().state.ratings;
 	const recommendations = useLocation().state.recommendations;
-	const navigate = useNavigate();
 
 	const [movies, setMovies] = useState(recommendations);
 	const [isShown, setIsShown] = useState(false);
@@ -28,7 +33,7 @@ export default function EmotionPreferences(props) {
 	const [loading, setLoading] = useState(false);
 	const [emotionToggles, setEmotionToggles] = useState(emotionsDict);
 
-	const [step, setStep] = useState({});
+	const [studyStep, setStudyStep] = useState({});
 	const [isToggleDone, setIsToggleDone] = useState(false);
 	const [selectedMovieid, setSelectedMovieid] = useState(null);
 
@@ -39,12 +44,20 @@ export default function EmotionPreferences(props) {
 	const [pageData, setPageData] = useState(undefined);
 
 
+	const tour = useContext(ShepherdTourContext);
+
+	function start() {
+		tour.start();
+	}
+
+
 	useEffect(() => {
 		getNextStudyStep(userdata.study_id, stepid)
 			.then((value) => {
-				setStep(value);
+				setStudyStep(value);
 
 			});
+		start();
 	}, []);
 
 
@@ -83,10 +96,10 @@ export default function EmotionPreferences(props) {
 	}
 
 	useEffect(() => {
-		if (Object.keys(step).length > 0) {
-			getStepPage(userdata.study_id, step.id, null);
+		if (Object.keys(studyStep).length > 0) {
+			getStepPage(userdata.study_id, studyStep.id, null);
 		}
-	}, [step]);
+	}, [studyStep]);
 
 	const handleHover = (isShown, activeMovie, action, panelid) => {
 		setIsShown(isShown);
@@ -129,7 +142,7 @@ export default function EmotionPreferences(props) {
 			.catch((error) => {
 				console.log(error);
 			});
-		getStepPage(userdata.study_id, step.id, pageData.id);
+		getStepPage(userdata.study_id, studyStep.id, pageData.id);
 	}
 
 	const handleNext = () => {
@@ -168,13 +181,7 @@ export default function EmotionPreferences(props) {
 		}).then((response): Promise<value> => response.json())
 			.then((selectedItem: value) => {
 				if (selectedItem.item_id === parseInt(selectedMovieid) && selectedItem.rating === 99) {
-					navigate(props.next,
-						{
-							state: {
-								user: userdata,
-								step: step.id
-							}
-						});
+					props.nagivationCallback(userdata, studyStep);
 				}
 			}).catch((error) => {
 				console.log(error);
@@ -192,24 +199,21 @@ export default function EmotionPreferences(props) {
 				{pageData !== undefined ?
 					<HeaderJumbotron title={pageData.page_name} content={pageData.page_instruction} />
 					:
-					<HeaderJumbotron title={step.step_name} content={step.step_description} />
+					<HeaderJumbotron title={studyStep.step_name} content={studyStep.step_description} />
 				}
 			</Row>
 			<InstructionModal show={!hideInstruction} onHide={() => setHideInstruction(true)} />
 			<Row style={{ height: "fit-content" }}>
 				<Col id="emotionPanel">
 					<div className="emoPrefControlPanel">
-						<Row>
-							<div style={{ alignItems: "left" }}>
-								{/* <FcAbout size={30}/> */}
-							</div>
-						</Row>
-						<Row>
-							<EmotionToggle onToggle={handleToggle}
-								emotions={emotionToggles}
-								onReset={resetToggles}
-								onFinalize={finalizeToggles} infoCallback={infoHandler} />
-						</Row>
+						{emoTogglesEnabled &&
+							<Row>
+								<EmotionToggle onToggle={handleToggle}
+									emotions={emotionToggles}
+									onReset={resetToggles}
+									onFinalize={finalizeToggles} infoCallback={infoHandler} />
+							</Row>
+						}
 					</div>
 
 				</Col>
@@ -228,7 +232,8 @@ export default function EmotionPreferences(props) {
 				<Col id="moviePosterPreview" >
 					<div className="d-flex mx-auto moviePreviewPanel">
 						{isShown && (activeMovie != null) ? (
-							<MovieEmotionPreviewPanel movie={activeMovie} />
+							<MovieEmotionPreviewPanel movie={activeMovie}
+								emoVizEnabled={emoVizEnabled} />
 						) : (<></>)}
 					</div>
 				</Col>
@@ -242,3 +247,29 @@ export default function EmotionPreferences(props) {
 		</Container >
 	)
 }
+
+
+const EmotionPreferences = (props) => {
+
+	const navigate = useNavigate();
+
+	function naviateHandler(userdata, studyStep) {
+		navigate(props.next,
+			{
+				state: {
+					user: userdata,
+					studyStep: studyStep.id
+				}
+			});
+	}
+
+	return (
+		<div>
+			<ShepherdTour steps={emoPrefSteps} tourOptions={tourOptions} >
+				<Content nagivationCallback={naviateHandler} />
+			</ShepherdTour>
+		</div>
+	)
+}
+
+export default EmotionPreferences;
