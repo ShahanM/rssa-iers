@@ -22,7 +22,7 @@ export default function MovieListPanel(props) {
 	}
 
 	return (
-		<Col id={props.id}>
+		<Col id={props.id} className="recommendationsListContainer">
 			<div className="align-items-center justify-content-center"
 				style={{
 					height: props.byline.length > 0 ? "108px" : "81", padding: "9px 18px",

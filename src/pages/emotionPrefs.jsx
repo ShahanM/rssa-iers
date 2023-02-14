@@ -6,7 +6,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { ShepherdTour, ShepherdTourContext } from 'react-shepherd';
 import { get, getNextStudyStep, post, put } from '../utils/api-middleware';
 import { emotionsDict, studyConditions } from '../utils/constants';
-import { emoPrefSteps, tourOptions } from '../utils/onboarding';
+import { emoPrefSteps, emoToggleSteps, emoPrefDone, tourOptions } from '../utils/onboarding';
 import EmotionToggle from "../widgets/emotionToggle";
 import HeaderJumbotron from '../widgets/headerJumbotron';
 import { InstructionModal } from '../widgets/instructionModal';
@@ -17,7 +17,7 @@ import NextButton from '../widgets/nextButton';
 
 const Content = (props) => {
 
-	const condition = 4; // TODO: get condition from backend
+	const condition = 1; // TODO: get condition from backend
 	const emoVizEnabled = studyConditions[condition].emoVizEnabled;
 	const emoTogglesEnabled = studyConditions[condition].emoTogglesEnabled;
 
@@ -32,24 +32,29 @@ const Content = (props) => {
 	const [buttonDisabled, setButtonDisabled] = useState(true);
 	const [loading, setLoading] = useState(false);
 	const [emotionToggles, setEmotionToggles] = useState(emotionsDict);
-
 	const [studyStep, setStudyStep] = useState({});
 	const [isToggleDone, setIsToggleDone] = useState(false);
 	const [selectedMovieid, setSelectedMovieid] = useState(null);
-
 	const [hideInstruction, setHideInstruction] = useState(true);
-
 	const [recCriteria, setRecCriteria] = useState('')
-
 	const [pageData, setPageData] = useState(undefined);
 
 
 	const tour = useContext(ShepherdTourContext);
+	tour.addSteps(emoPrefSteps(tour));
+	if (emoTogglesEnabled) {
+		tour.addSteps(
+			emoToggleSteps(tour)
+		);
+	} else {
+		setIsToggleDone(true);
+	}
 
+	tour.addSteps(emoPrefDone(tour));
+	
 	function start() {
 		tour.start();
 	}
-
 
 	useEffect(() => {
 		getNextStudyStep(userdata.study_id, stepid)
@@ -57,6 +62,8 @@ const Content = (props) => {
 				setStudyStep(value);
 
 			});
+
+
 		start();
 	}, []);
 
@@ -229,7 +236,7 @@ const Content = (props) => {
 						selectionHandler={handleSelection}
 					/>
 				</Col>
-				<Col id="moviePosterPreview" >
+				<Col id="moviePosterPreview" className="moviePreviewPanel">
 					<div className="d-flex mx-auto moviePreviewPanel">
 						{isShown && (activeMovie != null) ? (
 							<MovieEmotionPreviewPanel movie={activeMovie}
@@ -240,7 +247,7 @@ const Content = (props) => {
 			</Row >
 			<Row>
 				<div className="jumbotron jumbotron-footer">
-					<NextButton disabled={buttonDisabled && !loading}
+					<NextButton className="nextButton" disabled={buttonDisabled && !loading}
 						onClick={handleNext} loading={loading} />
 				</div>
 			</Row>
@@ -265,7 +272,7 @@ const EmotionPreferences = (props) => {
 
 	return (
 		<div>
-			<ShepherdTour steps={emoPrefSteps} tourOptions={tourOptions} >
+			<ShepherdTour steps={[]} tourOptions={tourOptions} >
 				<Content nagivationCallback={naviateHandler} />
 			</ShepherdTour>
 		</div>

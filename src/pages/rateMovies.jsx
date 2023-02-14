@@ -1,6 +1,4 @@
-import 'intro.js/introjs.css';
 import "shepherd.js/dist/css/shepherd.css";
-import { Steps } from 'intro.js-react';
 import React, { useEffect, useState, useContext } from 'react';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -32,60 +30,11 @@ export const Content = (props) => {
 
 	const [studyStep, setStudyStep] = useState({});
 
-	// const [introStepsEnabled, setIntroStepsEnabled] = useState(true);
-
-
 	const tour = useContext(ShepherdTourContext);
-	// tour.options.defaultStepOptions.when.show = () => {
-	// 	const currentStepElement = tour.getCurrentStep();
-	// 	console.log(currentStepElement);
-	// };
 
 	function start() {
 		tour.start();
-		// console.log(tour.options.defaultStepOptions.when.show());
 	}
-
-	// useEffect(() => {
-	// 	start();
-	// }, []);
-
-
-	// let introsteps = [
-	// 	{
-	// 		element: ".jumbotron",
-	// 		intro: "test"
-	// 	},
-	// 	{
-	// 		element: ".gallery",
-	// 		intro: "These are your movie recommendations.",
-	// 		position: "right"
-	// 	},
-	// 	{
-	// 		element: ".galleryFooter",
-	// 		intro: "You can rate the movies by clicking on the stars.",
-	// 	},
-	// 	{
-	// 		element: ".rankHolder",
-	// 		intro: "Please rate at least 10 movies, to get your recommendations."
-	// 	},
-	// 	{
-	// 		element: ".nextButton",
-	// 		intro: "Finally, click on the button to get your recommendations."
-	// 	}
-	// ];
-
-	// const initialStep = 0;
-
-	// const onBeforeChange = nextStepIndex => {
-	// 	if (nextStepIndex === 1) {
-	// 		introsteps.updateStepElement(nextStepIndex);
-	// 	}
-	// }
-
-	// const onExit = () => {
-	// 	setIntroStepsEnabled(false);
-	// }
 
 	const rateMoviesHandler = (newRating, movieid) => {
 		const isNew = !ratedMoviesData.some(item => item.item_id === movieid);
@@ -132,7 +81,6 @@ export const Content = (props) => {
 
 	useEffect(() => {
 		console.log('Initial render');
-		// setIntroStepsEnabled(true);
 		getNextStudyStep(userdata.study_id, stepid)
 			.then((value) => { setStudyStep(value) });
 		fetchMovies();
@@ -146,13 +94,6 @@ export const Content = (props) => {
 				ratedMoviesData, userdata, studyStep);
 		}
 	}, [recommendedMovies, ratedMoviesData]);
-
-
-	// useEffect(() => {
-	// 	if (tour) {
-	// 		tour.start();
-	// 	}
-	// }, [tour]);
 
 
 	const submitHandler = (recType) => {
@@ -208,20 +149,6 @@ export const Content = (props) => {
 
 	return (
 		<Container>
-			{/* <Steps
-				enabled={introStepsEnabled}
-				steps={introsteps}
-				options={{
-					showStepNumbers: true,
-					scrollToElement: true,
-					hideNext: false,
-					nextToDone: true
-				}}
-				initialStep={initialStep}
-				ref={isteps => introsteps = isteps}
-				onBeforeChange={onBeforeChange}
-				onExit={onExit}
-			/> */}
 			<Row>
 				<HeaderJumbotron title={studyStep.step_name} content={studyStep.step_description} />
 			</Row>
