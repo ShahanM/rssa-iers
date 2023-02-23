@@ -22,3 +22,24 @@ export default function NextButton(props) {
 		</Button>
 	)
 }
+
+export const FooterButton = (props) => {
+	return (
+		<Button variant="ers" size="lg" className={props.className + " nextButton footer-btn"}
+			disabled={props.disabled} onClick={props.onClick}>
+			{!props.loading ? props.text
+				:
+				<>
+					<Spinner
+						as="span"
+						animation="grow"
+						size="sm"
+						role="status"
+						aria-hidden="true"
+					/>
+					Loading...
+				</>
+			}
+		</Button>
+	)
+}

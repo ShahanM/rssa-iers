@@ -5,7 +5,7 @@ import Row from 'react-bootstrap/Row';
 
 export default function MoviePreviewCard(props) {
 	return (
-		<Container>
+		<Container className={props.className}>
 			<Row>
 				<Col>
 					<div className="movie-preview-card-image">

@@ -41,10 +41,9 @@ export default function Welcome(props) {
 			.then((studyres: studyres) => {
 				setStudy(studyres);
 			});
-		get('/study/' + studyID + '/step/first/')
+		get('study/' + studyID + '/step/first/')
 			.then((response): Promise<studyStep> => response.json())
 			.then((studyStep: studyStep) => {
-				console.log(studyStep.step_name, studyStep);
 				setStudyStep(studyStep);
 			})
 
@@ -87,10 +86,10 @@ export default function Welcome(props) {
 							It will take you about 10-15 minutes to complete the four steps of the study:
 						</p>
 						<ol>
-							<li>Complete a pre-survey on your preference profile.</li>
-							<li>Rate a few movies you are familiar with.</li>
-							<li>Interact with the movie recommender system before picking a movie you would watch.</li>
-							<li>Complete survey about your experience interacting with the system.</li>
+							<li>Complete a pre-survey.</li>
+							<li>Rate a few movies you are familiar with to let the recommender system know about movie preferences.</li>
+							<li>Interact with the movie recommender system, then pick one movie you will watch.</li>
+							<li>Complete survey.</li>
 						</ol>
 
 						<p>Thanks,<br />

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
@@ -14,6 +14,10 @@ export default function EmotionToggle(props) {
 
 	const [emotionValues, setEmotionValues] = useState(props.emotions);
 	const [isDone, setIsDone] = useState(props.isDone);
+
+	useEffect(() => {
+		setIsDone(props.isDone);
+	}, [props.isDone]);
 
 	const handleToggle = (emotion, value) => {
 		setEmotionValues(prevState => {
@@ -44,6 +48,7 @@ export default function EmotionToggle(props) {
 				onClick={props.infoCallback}/>
 			</div>
 			<Row className="emoToggleInputs">
+			<div className="emoToggleInputsOverlay" style={{position: "absolute", width: "410px", height: "320px", zIndex: "999", display:"None"}}></div>
 				{
 					emotions.map((emotion, i) =>
 						<Row key={emotion + '_' + i} md={2} style={{ margin: "3px 0" }}>
@@ -72,16 +77,16 @@ export default function EmotionToggle(props) {
 				}
 			</Row>
 			<Row style={{ marginTop: "2em" }}>
-				<Col md={{ span: 3 }}>
-					<Button className="emoToggleResetBtn" style={{ width: "100%" }} variant="ersCancel" onClick={() => handleReset()} disabled={isDone}>
+				{/* <Col md={{ span: 3 }}> */}
+					<Button className="emoToggleResetBtn" style={{ margin: "auto", width: "300px" }} variant="ersCancel" onClick={() => handleReset()} disabled={isDone}>
 						Reset
 					</Button>
-				</Col>
-				<Col md={{ span: 6, offset: 3 }}>
+				{/* </Col> */}
+				{/* <Col md={{ span: 6, offset: 3 }}>
 					<Button className="emoToggleFinalizeBtn" style={{ width: "100%" }} variant="ersDone" onClick={() => handleSave()}>
 						Finalize
 					</Button>
-				</Col>
+				</Col> */}
 			</Row>
 		</Container>
 	)

@@ -27,7 +27,7 @@ export default function FeedbackPage(props) {
 
 	const storeText = (evt) => {
 		setResponseText(evt.target.value);
-		if (evt.target.textLength > 2) {
+		if (evt.target.textLength > 1) {
 			setButtonDisabled(false);
 		} else {
 			setButtonDisabled(true);
@@ -69,10 +69,11 @@ export default function FeedbackPage(props) {
 			.then((response): Promise<isvalidated> => response.json())
 			.then((isvalidated: isvalidated) => {
 				if (isvalidated === true) {
+					console.log(userdata, studyStep.id);
 					navigate(props.next, {
 						state: {
 							user: userdata,
-							step: studyStep.id
+							studyStep: studyStep.id
 						}
 					});
 				} else {
@@ -104,8 +105,10 @@ export default function FeedbackPage(props) {
 				</Card>
 			</Row>
 			<Row>
-				<NextButton disabled={buttonDisabled && !loading}
-					loading={loading} onClick={() => submitHandler()} />
+				<div className="jumbotron jumbotron-footer">
+					<NextButton disabled={buttonDisabled && !loading}
+						loading={loading} onClick={() => submitHandler()} />
+				</div>
 			</Row>
 		</Container>
 	);

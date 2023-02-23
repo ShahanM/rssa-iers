@@ -22,13 +22,17 @@ export default function MovieListPanelItem(props) {
 				</p>
 			</div>
 			{props.pick ?
-				<div>
-					{props.movie.movie_id === props.selectedid ?
-						<Button variant="ersDone">Selected</Button>
-						:
-						<Button variant="ers" onClick={() => props.selectionHandler(props.movie.movie_id)}>Select</Button>
-					}
-				</div>
+				<>
+					<div>
+						<div id={"selectButtonOverlay_" + props.movie.movie_id} style={{ position: "absolute", display: "None", zIndex: "999", width: "72px", height: "38px"}}>
+						</div>
+						{props.movie.movie_id === props.selectedid ?
+							<Button variant="ersDone">Selected</Button>
+							:
+							<Button variant="ers" onClick={() => props.selectionHandler(props.movie.movie_id)}>Select</Button>
+						}
+					</div>
+				</>
 				: ''}
 		</ListGroup.Item>
 	)

@@ -3,6 +3,7 @@ import { Suspense } from 'react';
 import Navbar from 'react-bootstrap/Navbar';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './App.css';
+import DemographyPage from './pages/demographyPage';
 import EmotionPreferences from './pages/emotionPrefs';
 import FeedbackPage from './pages/feedbackPage';
 import RateMovies from './pages/rateMovies';
@@ -30,6 +31,7 @@ function App() {
 						<Route path="/recommendations" element={<EmotionPreferences next="/feedback" />} />
 						<Route path="/feedback" element={<FeedbackPage next="/postsurvey" />} />
 						<Route path="/postsurvey" element={<Survey next="/quit" />} />
+						<Route path="/demography" element={<DemographyPage next="/quit" />} />
 						<Route path="/quit" element={<h1>Thank you for participating!</h1>} />
 					</Routes>
 				</Suspense>

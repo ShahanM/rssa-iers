@@ -80,7 +80,6 @@ export const Content = (props) => {
 	}
 
 	useEffect(() => {
-		console.log('Initial render');
 		getNextStudyStep(userdata.study_id, stepid)
 			.then((value) => { setStudyStep(value) });
 		fetchMovies();
@@ -88,7 +87,6 @@ export const Content = (props) => {
 	}, []);
 
 	useEffect(() => {
-		console.log('rated movies', ratedMovies);
 		if (recommendedMovies.length > 0) {
 			props.navigationCallback(recommendedMovies,
 				ratedMoviesData, userdata, studyStep);
@@ -99,7 +97,6 @@ export const Content = (props) => {
 	const submitHandler = (recType) => {
 		setLoading(true);
 		if (ratedMovies.length > 0) {
-			console.log('getting recommendations');
 			updateItemrating().then((isupdateSuccess): Promise<Boolean> => isupdateSuccess)
 				.then((isupdateSuccess) => {
 					if (isupdateSuccess) {
@@ -121,7 +118,7 @@ export const Content = (props) => {
 	const updateItemrating = async () => {
 		return put('user/' + userdata.id + '/itemrating/', {
 			'user_id': userdata.id,
-			'page_id': 4,
+			'page_id': studyStep.id,
 			'page_level': currentPage,
 			'ratings': ratedMoviesData
 		})
@@ -133,7 +130,7 @@ export const Content = (props) => {
 	const updateSeenItems = async (items) => {
 		put('user/' + userdata.id + '/seenitems/', {
 			'user_id': userdata.id,
-			'page_id': 4,
+			'page_id': studyStep.id,
 			'page_level': currentPage,
 			'items': items
 		})
@@ -153,16 +150,14 @@ export const Content = (props) => {
 				<HeaderJumbotron title={studyStep.step_name} content={studyStep.step_description} />
 			</Row>
 			<Row>
-				<MovieGrid ratingCallback={rateMoviesHandler} userid={userdata.id} movies={movies}
-					pagingCallback={updateCurrentPage} itemsPerPage={itemsPerPage} dataCallback={fetchMovies} />
+				<div className="galleryOverlay">
+					<MovieGrid ratingCallback={rateMoviesHandler} userid={userdata.id} movies={movies}
+						pagingCallback={updateCurrentPage} itemsPerPage={itemsPerPage} dataCallback={fetchMovies} />
+				</div>
 			</Row>
 			<Row>
 				<div className="jumbotron jumbotron-footer" style={{ display: "flex" }}>
-					<div className="rankHolder">
-						<span> Ranked Movies: </span>
-						<span><i>{ratedMovieCount}</i></span>
-						<span><i>of {10}</i></span>
-					</div>
+					<RankHolder count={ratedMovieCount} />
 					<NextButton disabled={buttonDisabled && !loading}
 						loading={loading} onClick={() => submitHandler(0)} />
 				</div>
@@ -171,13 +166,23 @@ export const Content = (props) => {
 	);
 }
 
+const RankHolder = (props) => {
+	return (
+		<div className="rankHolder">
+			<span> Ranked Movies: </span>
+			<span><i>{props.count}</i></span>
+			<span><i>of {10}</i></span>
+		</div>
+	)
+}
+
+
 export const RateMovies = (props) => {
 
 	const navigate = useNavigate();
 
 	function handleNavigate(recommendedMovies,
 		ratedMoviesData, userdata, studyStep) {
-		console.log('navigating');
 		navigate(props.next,
 			{
 				state: {

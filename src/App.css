@@ -511,14 +511,31 @@ div.badge div span {
 	margin-top: 3px;
 }
 
-/* .highlight { */
-	/* background-color: red;; */
-/* } */
-
-/* .custom-class-name-1{
-	background-color: red;
+.shepherd-button-primary {
+	background-color: #f9b05c !important;
+	color: #4a4b4b !important;
 }
 
-.custom-class-name-2{
-	background-color: blue;
+.shepherd-button-secondary {
+	background-color: #c0c0c0 !important;
+}
+
+.shepherd-header {
+	background-color: #f9b05c !important;
+}
+
+.shepherd-element.shepherd-has-title[data-popper-placement^="bottom"]>.shepherd-arrow::before {
+	background-color: #f9b05c !important;
+}
+
+/* .shepherd-arrow::before {
+	background-color: #f9b05c !important;
 } */
+
+.highlight {
+	background-color: rgba(255, 200, 10, 0.5) !important;
+	border-radius: 5px;
+	box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
+	will-change: transform;
+	display: block !important;
+}

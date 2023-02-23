@@ -25,7 +25,7 @@ export default function MovieListPanel(props) {
 		<Col id={props.id} className="recommendationsListContainer">
 			<div className="align-items-center justify-content-center"
 				style={{
-					height: props.byline.length > 0 ? "108px" : "81", padding: "9px 18px",
+					height: "120px", padding: "9px 18px",
 					textAlign: "center", borderRadius: "0.3rem 0.3rem 0 0",
 					backgroundColor: "#e9ecef"
 				}}>
@@ -45,7 +45,7 @@ export default function MovieListPanel(props) {
 									</div>
 									<div
 										className={props.byline[key] === 'low'
-											? "status ersorange" : "status green"}>
+										? "status ersorange" : "status green"}>
 										<span>
 											{props.byline[key]}
 										</span>
@@ -53,10 +53,10 @@ export default function MovieListPanel(props) {
 								</div>
 							)
 						})
-					// <p style={{ textAlign: "left", fontSize: "11px" }}>
+						// <p style={{ textAlign: "left", fontSize: "11px" }}>
 					// {props.panelByline}
 					// </p>
-					: ''
+					: <p style={{padding: "1.8em"}}>No emotion preference selected</p>
 				}
 			</div>
 			<ListGroup as="ul">

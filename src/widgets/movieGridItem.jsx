@@ -2,11 +2,14 @@ import React from 'react';
 import StarRatings from 'react-star-ratings';
 
 
+const defaultMovieIco = require("../res/default_movie_icon.svg");
+
+
 export default function MovieGridItem(props) {
 	return (
 		<div id={"TN_" + props.movieItem.movie_id}
 			className={"grid-item"} style={{
-				backgroundImage: "url(" + props.movieItem.poster + "), url('" + 'defaultMovieIco' + "')",
+				backgroundImage: "url(" + props.movieItem.poster + "), url('" + defaultMovieIco + "')",
 			}}>
 			<div className="overlay">
 				<div className={props.movieItem.rating > 0 ? 'star-div-rated' : 'star-div'}>

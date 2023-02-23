@@ -1,70 +1,124 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState, useRef } from 'react';
 import { Container } from "react-bootstrap";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
+import Modal from "react-bootstrap/Modal";
+import Button from "react-bootstrap/Button";
 import { useLocation, useNavigate } from "react-router-dom";
+import Shepherd from 'shepherd.js';
 import { ShepherdTour, ShepherdTourContext } from 'react-shepherd';
 import { get, getNextStudyStep, post, put } from '../utils/api-middleware';
 import { emotionsDict, studyConditions } from '../utils/constants';
-import { emoPrefSteps, emoToggleSteps, emoPrefDone, tourOptions } from '../utils/onboarding';
+import {
+	emoPrefSteps, emoToggleSteps, emoPrefDone, tourOptions, emoVizSteps,
+	movieSelectStep, moviePreviewStep, recommendationInspectionSteps,
+	emoFinalizeStep
+}
+	from '../utils/onboarding';
 import EmotionToggle from "../widgets/emotionToggle";
 import HeaderJumbotron from '../widgets/headerJumbotron';
 import { InstructionModal } from '../widgets/instructionModal';
 import MovieEmotionPreviewPanel from '../widgets/movieEmotionPreviewPanel';
 import MovieListPanel from "../widgets/movieListPanel";
 import MovieListPanelItem from "../widgets/movieListPanelItem";
-import NextButton from '../widgets/nextButton';
+import NextButton, { FooterButton } from '../widgets/nextButton';
+
+// import Button from 'react-bootstrap/Button';
+
+const WarningDialog = (props) => {
+	const [show, setShow] = useState(false);
+
+	const handleClose = () => setShow(false);
+	// const handleShow = () => setShow(true);
+
+	useEffect(() => {
+		if (props.show) {
+			setShow(true);
+		} else {
+			setShow(false);
+		}
+	}, [props.show]);
+
+	return (
+		<>
+			<Modal show={show} onHide={handleClose}>
+				<Modal.Header closeButton>
+					<Modal.Title>Are you sure?</Modal.Title>
+				</Modal.Header>
+				<Modal.Body>
+					Finalizing will freeze your current emotion settings.
+					<br />
+					This action cannot be undone.
+				</Modal.Body>
+				<Modal.Footer>
+					<Button variant="ersCancel" onClick={() => props.confirmCallback('cancel')}>
+						Close
+					</Button>
+					<Button variant="ers" onClick={() => props.confirmCallback('confirm')}>
+						Confirm
+					</Button>
+				</Modal.Footer>
+			</Modal>
+		</>
+	);
+}
 
 const Content = (props) => {
 
-	const condition = 1; // TODO: get condition from backend
-	const emoVizEnabled = studyConditions[condition].emoVizEnabled;
-	const emoTogglesEnabled = studyConditions[condition].emoTogglesEnabled;
+	// const condition = 1; // TODO: get condition from backend
+	// const emoVizEnabled = studyConditions[condition].emoVizEnabled;
+	// const emoTogglesEnabled = studyConditions[condition].emoTogglesEnabled;
 
-	const userdata = useLocation().state.user;
-	const stepid = useLocation().state.studyStep;
+	// const userdata = useLocation().state.user;
+	// const stepid = useLocation().state.studyStep;
 	const ratings = useLocation().state.ratings;
 	const recommendations = useLocation().state.recommendations;
 
 	const [movies, setMovies] = useState(recommendations);
 	const [isShown, setIsShown] = useState(false);
-	const [activeMovie, setActiveMovie] = useState(null);
+	const [activeMovie, setActiveMovie] = useState(recommendations[0]);
 	const [buttonDisabled, setButtonDisabled] = useState(true);
 	const [loading, setLoading] = useState(false);
 	const [emotionToggles, setEmotionToggles] = useState(emotionsDict);
-	const [studyStep, setStudyStep] = useState({});
+	// const [studyStep, setStudyStep] = useState({});
 	const [isToggleDone, setIsToggleDone] = useState(false);
 	const [selectedMovieid, setSelectedMovieid] = useState(null);
 	const [hideInstruction, setHideInstruction] = useState(true);
 	const [recCriteria, setRecCriteria] = useState('')
 	const [pageData, setPageData] = useState(undefined);
+	const [showWarning, setShowWarning] = useState(false);
 
+	// const tour = useRef();
+	// const { tour } = useContext(ShepherdTourContext);
+	// tour.addSteps(emoPrefSteps(tour));
+	// if (emoTogglesEnabled) {
+	// 	tour.addSteps(
+	// 		emoToggleSteps(tour)
+	// 	);
+	// } else {
+	// 	setIsToggleDone(true);
+	// }
 
-	const tour = useContext(ShepherdTourContext);
-	tour.addSteps(emoPrefSteps(tour));
-	if (emoTogglesEnabled) {
-		tour.addSteps(
-			emoToggleSteps(tour)
-		);
-	} else {
-		setIsToggleDone(true);
-	}
+	// tour.addSteps(emoPrefDone(tour));
 
-	tour.addSteps(emoPrefDone(tour));
-	
-	function start() {
-		tour.start();
-	}
+	// function start() {
+	// 	tour.start();
+	// }
+
+	// useEffect(() => {
+	// 	getNextStudyStep(userdata.study_id, stepid)
+	// 		.then((value) => {
+	// 			setStudyStep(value);
+
+	// 		});
+	// 	// tour.current = new ShepherdTour(tourOptions);
+	// 		// start();
+	// 	}, []);
 
 	useEffect(() => {
-		getNextStudyStep(userdata.study_id, stepid)
-			.then((value) => {
-				setStudyStep(value);
-
-			});
-
-
-		start();
+		if (!props.emoTogglesEnabled) {
+			setIsToggleDone(true);
+		}
 	}, []);
 
 
@@ -100,13 +154,14 @@ const Content = (props) => {
 				setPageData(page);
 			})
 			.catch((error) => console.log(error));
+
 	}
 
 	useEffect(() => {
-		if (Object.keys(studyStep).length > 0) {
-			getStepPage(userdata.study_id, studyStep.id, null);
+		if (Object.keys(props.studyStep).length > 0) {
+			getStepPage(props.user.study_id, props.studyStep.id, null);
 		}
-	}, [studyStep]);
+	}, [props.studyStep]);
 
 	const handleHover = (isShown, activeMovie, action, panelid) => {
 		setIsShown(isShown);
@@ -132,7 +187,17 @@ const Content = (props) => {
 	}
 
 	const finalizeToggles = () => {
-		finalizeEmotionPrefs();
+		setShowWarning(true);
+		// finalizeEmotionPrefs();
+	}
+
+	const handleWarningDialog = (action) => {
+		if (action === 'cancel') {
+			setShowWarning(false);
+		} else if (action === 'confirm') {
+			setShowWarning(false);
+			finalizeEmotionPrefs();
+		}
 	}
 
 	const finalizeEmotionPrefs = () => {
@@ -142,14 +207,15 @@ const Content = (props) => {
 				weight: emotionToggles[key].length > 0
 					? emotionToggles[key] : 'ignore'
 			}));
-		put('user/' + userdata.id + '/emotionprefs/', emoinput)
+		put('user/' + props.user.id + '/emotionprefs/', emoinput)
 			.then((response) => {
 				setIsToggleDone(true);
 			})
 			.catch((error) => {
 				console.log(error);
 			});
-		getStepPage(userdata.study_id, studyStep.id, pageData.id);
+		getStepPage(props.user.study_id, props.studyStep.id, pageData.id);
+		props.onboardingCallback(true, movies);
 	}
 
 	const handleNext = () => {
@@ -159,7 +225,7 @@ const Content = (props) => {
 	const updateRecommendations = (emoinput) => {
 		setLoading(true);
 		post('ers/updaterecommendations/', {
-			user_id: userdata.id,
+			user_id: props.user.id,
 			input_type: "discrete",
 			emotion_input: emoinput,
 			ratings: ratings,
@@ -178,9 +244,9 @@ const Content = (props) => {
 
 	const submitSelection = (movieid) => {
 		setLoading(true);
-		put('user/' + userdata.id + '/itemselect/', {
-			'user_id': userdata.id,
-			'page_id': 4,
+		put('user/' + props.user.id + '/itemselect/', {
+			'user_id': props.user.id,
+			'page_id': props.studyStep.id,
 			'selected_item': {
 				'item_id': movieid,
 				'rating': 99
@@ -188,7 +254,7 @@ const Content = (props) => {
 		}).then((response): Promise<value> => response.json())
 			.then((selectedItem: value) => {
 				if (selectedItem.item_id === parseInt(selectedMovieid) && selectedItem.rating === 99) {
-					props.nagivationCallback(userdata, studyStep);
+					props.nagivationCallback(props.user, props.studyStep);
 				}
 			}).catch((error) => {
 				console.log(error);
@@ -206,18 +272,20 @@ const Content = (props) => {
 				{pageData !== undefined ?
 					<HeaderJumbotron title={pageData.page_name} content={pageData.page_instruction} />
 					:
-					<HeaderJumbotron title={studyStep.step_name} content={studyStep.step_description} />
+					<HeaderJumbotron title={props.studyStep.step_name} content={props.studyStep.step_description} />
 				}
 			</Row>
+			<WarningDialog show={showWarning} confirmCallback={handleWarningDialog} />
 			<InstructionModal show={!hideInstruction} onHide={() => setHideInstruction(true)} />
 			<Row style={{ height: "fit-content" }}>
 				<Col id="emotionPanel">
 					<div className="emoPrefControlPanel">
-						{emoTogglesEnabled &&
+						{props.emoTogglesEnabled &&
 							<Row>
 								<EmotionToggle onToggle={handleToggle}
 									emotions={emotionToggles}
 									onReset={resetToggles}
+									isDone={isToggleDone}
 									onFinalize={finalizeToggles} infoCallback={infoHandler} />
 							</Row>
 						}
@@ -225,6 +293,7 @@ const Content = (props) => {
 
 				</Col>
 				<Col id="moviePanel">
+					<div className="movieListPanelOverlay" style={{ position: "absolute", width: "423px", height: "690px", zIndex: "999", display: "None" }}></div>
 					<MovieListPanel id="leftPanel"
 						movieList={movies.slice(0, 7)}
 						panelTitle={'Recommendations'}
@@ -236,19 +305,24 @@ const Content = (props) => {
 						selectionHandler={handleSelection}
 					/>
 				</Col>
-				<Col id="moviePosterPreview" className="moviePreviewPanel">
+				<Col id="moviePosterPreview">
 					<div className="d-flex mx-auto moviePreviewPanel">
 						{isShown && (activeMovie != null) ? (
 							<MovieEmotionPreviewPanel movie={activeMovie}
-								emoVizEnabled={emoVizEnabled} />
+								emoVizEnabled={props.emoVizEnabled} />
 						) : (<></>)}
 					</div>
 				</Col>
 			</Row >
 			<Row>
 				<div className="jumbotron jumbotron-footer">
-					<NextButton className="nextButton" disabled={buttonDisabled && !loading}
-						onClick={handleNext} loading={loading} />
+					{props.emoTogglesEnabled && !isToggleDone ?
+						<FooterButton className="toggleFinalizeButton" variant="ersDone"
+							onClick={() => finalizeToggles()} text="Finalize" />
+						:
+						<NextButton className="nextButton" disabled={buttonDisabled && !loading}
+							onClick={handleNext} loading={loading} />
+					}
 				</div>
 			</Row>
 		</Container >
@@ -258,9 +332,68 @@ const Content = (props) => {
 
 const EmotionPreferences = (props) => {
 
-	const navigate = useNavigate();
+	const userdata = useLocation().state.user;
+	const stepid = useLocation().state.studyStep;
 
-	function naviateHandler(userdata, studyStep) {
+	const navigate = useNavigate();
+	const tour = useRef();
+	tour.current = new Shepherd.Tour(tourOptions);
+	// tour.next = new Shepherd.Tour(tourOptions);
+
+	const [studyStep, setStudyStep] = useState({});
+	const condition = 1; // TODO: get condition from backend
+	const emoVizEnabled = studyConditions[condition].emoVizEnabled;
+	const emoTogglesEnabled = studyConditions[condition].emoTogglesEnabled;
+	// const [activeTour, setActiveTour] = useState(tour.current);
+
+	// function start() {
+	// 	tour.start();
+	// }
+
+	useEffect(() => {
+		getNextStudyStep(userdata.study_id, stepid)
+			.then((value) => {
+				setStudyStep(value);
+
+			});
+		tour.current.addSteps(emoPrefSteps(tour.current));
+		tour.current.addSteps(recommendationInspectionSteps(tour.current));
+		tour.current.addSteps(moviePreviewStep(tour.current));
+		if (emoVizEnabled) {
+			tour.current.addSteps(
+				emoVizSteps(tour.current)
+			);
+		}
+		if (emoTogglesEnabled) {
+			tour.current.addSteps(
+				emoToggleSteps(tour.current)
+			);
+			tour.current.addSteps(
+				emoFinalizeStep(tour.current));
+			// tour.next.addSteps(emoPrefSteps(tour.next));
+			// tour.next.addSteps(movieSelectStep(tour.next));
+			// tour.next.addSteps(emoPrefDone(tour.next));
+		}
+		tour.current.start();
+	}, []);
+
+	const handleSelectionOnboarding = (isSelectionStep, movies) => {
+		if (isSelectionStep) {
+			// tour.current.
+			console.log("selection step");
+			// tour.current.reset();
+			tour.current = new Shepherd.Tour(tourOptions);
+			tour.current.addSteps(emoPrefSteps(tour.current));
+			tour.current.addSteps(recommendationInspectionSteps(tour.current));
+			console.log(movies[0]);
+			tour.current.addSteps(movieSelectStep(tour.current, movies[0].movie_id));
+			tour.current.addSteps(emoPrefDone(tour.current));
+			// tour.current.addSteps(moviePreviewStep(tour.current));
+			tour.current.start();
+		}
+	}
+
+	function navigateHandler(userdata, studyStep) {
 		navigate(props.next,
 			{
 				state: {
@@ -272,9 +405,16 @@ const EmotionPreferences = (props) => {
 
 	return (
 		<div>
-			<ShepherdTour steps={[]} tourOptions={tourOptions} >
-				<Content nagivationCallback={naviateHandler} />
-			</ShepherdTour>
+			{/* <ShepherdTour steps={[]} tourOptions={tourOptions} > */}
+			<Content nagivationCallback={navigateHandler}
+				emoTogglesEnabled={emoTogglesEnabled}
+				emoVizEnabled={emoVizEnabled}
+				onboardingCallback={handleSelectionOnboarding}
+				studyStep={studyStep} user={userdata} />
+			{/* </ShepherdTour> */}
+			<ShepherdTour tour={tour.current} steps={[]} />
+			{/* <ShepherdStep /> */}
+			{/* </ShepherdTour> */}
 		</div>
 	)
 }
