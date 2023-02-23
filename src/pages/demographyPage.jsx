@@ -39,7 +39,13 @@ export const DemographyPage = (props) => {
 
 	const submitHandler = () => {
 		setLoading(true);
+		setButtonDisabled(true);
+
 		// TODO: Send data to backend
+
+
+		setLoading(false);
+		setButtonDisabled(false);
 		navigate(props.next, {
 			state: {
 				user: userdata,

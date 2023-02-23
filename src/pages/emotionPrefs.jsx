@@ -1,20 +1,17 @@
-import React, { useContext, useEffect, useState, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Container } from "react-bootstrap";
-import Col from "react-bootstrap/Col";
-import Row from "react-bootstrap/Row";
-import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
+import Col from "react-bootstrap/Col";
+import Modal from "react-bootstrap/Modal";
+import Row from "react-bootstrap/Row";
 import { useLocation, useNavigate } from "react-router-dom";
+import { ShepherdTour } from 'react-shepherd';
 import Shepherd from 'shepherd.js';
-import { ShepherdTour, ShepherdTourContext } from 'react-shepherd';
 import { get, getNextStudyStep, post, put } from '../utils/api-middleware';
 import { emotionsDict, studyConditions } from '../utils/constants';
 import {
-	emoPrefSteps, emoToggleSteps, emoPrefDone, tourOptions, emoVizSteps,
-	movieSelectStep, moviePreviewStep, recommendationInspectionSteps,
-	emoFinalizeStep
-}
-	from '../utils/onboarding';
+	emoFinalizeStep, emoPrefDone, emoPrefSteps, emoToggleSteps, emoVizSteps, moviePreviewStep, movieSelectStep, recommendationInspectionSteps, tourOptions
+} from '../utils/onboarding';
 import EmotionToggle from "../widgets/emotionToggle";
 import HeaderJumbotron from '../widgets/headerJumbotron';
 import { InstructionModal } from '../widgets/instructionModal';
@@ -23,13 +20,11 @@ import MovieListPanel from "../widgets/movieListPanel";
 import MovieListPanelItem from "../widgets/movieListPanelItem";
 import NextButton, { FooterButton } from '../widgets/nextButton';
 
-// import Button from 'react-bootstrap/Button';
 
 const WarningDialog = (props) => {
 	const [show, setShow] = useState(false);
 
 	const handleClose = () => setShow(false);
-	// const handleShow = () => setShow(true);
 
 	useEffect(() => {
 		if (props.show) {
@@ -65,12 +60,6 @@ const WarningDialog = (props) => {
 
 const Content = (props) => {
 
-	// const condition = 1; // TODO: get condition from backend
-	// const emoVizEnabled = studyConditions[condition].emoVizEnabled;
-	// const emoTogglesEnabled = studyConditions[condition].emoTogglesEnabled;
-
-	// const userdata = useLocation().state.user;
-	// const stepid = useLocation().state.studyStep;
 	const ratings = useLocation().state.ratings;
 	const recommendations = useLocation().state.recommendations;
 
@@ -80,40 +69,12 @@ const Content = (props) => {
 	const [buttonDisabled, setButtonDisabled] = useState(true);
 	const [loading, setLoading] = useState(false);
 	const [emotionToggles, setEmotionToggles] = useState(emotionsDict);
-	// const [studyStep, setStudyStep] = useState({});
 	const [isToggleDone, setIsToggleDone] = useState(false);
 	const [selectedMovieid, setSelectedMovieid] = useState(null);
 	const [hideInstruction, setHideInstruction] = useState(true);
 	const [recCriteria, setRecCriteria] = useState('')
 	const [pageData, setPageData] = useState(undefined);
 	const [showWarning, setShowWarning] = useState(false);
-
-	// const tour = useRef();
-	// const { tour } = useContext(ShepherdTourContext);
-	// tour.addSteps(emoPrefSteps(tour));
-	// if (emoTogglesEnabled) {
-	// 	tour.addSteps(
-	// 		emoToggleSteps(tour)
-	// 	);
-	// } else {
-	// 	setIsToggleDone(true);
-	// }
-
-	// tour.addSteps(emoPrefDone(tour));
-
-	// function start() {
-	// 	tour.start();
-	// }
-
-	// useEffect(() => {
-	// 	getNextStudyStep(userdata.study_id, stepid)
-	// 		.then((value) => {
-	// 			setStudyStep(value);
-
-	// 		});
-	// 	// tour.current = new ShepherdTour(tourOptions);
-	// 		// start();
-	// 	}, []);
 
 	useEffect(() => {
 		if (!props.emoTogglesEnabled) {
@@ -338,17 +299,11 @@ const EmotionPreferences = (props) => {
 	const navigate = useNavigate();
 	const tour = useRef();
 	tour.current = new Shepherd.Tour(tourOptions);
-	// tour.next = new Shepherd.Tour(tourOptions);
 
 	const [studyStep, setStudyStep] = useState({});
 	const condition = 1; // TODO: get condition from backend
 	const emoVizEnabled = studyConditions[condition].emoVizEnabled;
 	const emoTogglesEnabled = studyConditions[condition].emoTogglesEnabled;
-	// const [activeTour, setActiveTour] = useState(tour.current);
-
-	// function start() {
-	// 	tour.start();
-	// }
 
 	useEffect(() => {
 		getNextStudyStep(userdata.study_id, stepid)
@@ -370,25 +325,17 @@ const EmotionPreferences = (props) => {
 			);
 			tour.current.addSteps(
 				emoFinalizeStep(tour.current));
-			// tour.next.addSteps(emoPrefSteps(tour.next));
-			// tour.next.addSteps(movieSelectStep(tour.next));
-			// tour.next.addSteps(emoPrefDone(tour.next));
 		}
 		tour.current.start();
 	}, []);
 
 	const handleSelectionOnboarding = (isSelectionStep, movies) => {
 		if (isSelectionStep) {
-			// tour.current.
-			console.log("selection step");
-			// tour.current.reset();
 			tour.current = new Shepherd.Tour(tourOptions);
 			tour.current.addSteps(emoPrefSteps(tour.current));
 			tour.current.addSteps(recommendationInspectionSteps(tour.current));
-			console.log(movies[0]);
 			tour.current.addSteps(movieSelectStep(tour.current, movies[0].movie_id));
 			tour.current.addSteps(emoPrefDone(tour.current));
-			// tour.current.addSteps(moviePreviewStep(tour.current));
 			tour.current.start();
 		}
 	}
@@ -405,16 +352,12 @@ const EmotionPreferences = (props) => {
 
 	return (
 		<div>
-			{/* <ShepherdTour steps={[]} tourOptions={tourOptions} > */}
 			<Content nagivationCallback={navigateHandler}
 				emoTogglesEnabled={emoTogglesEnabled}
 				emoVizEnabled={emoVizEnabled}
 				onboardingCallback={handleSelectionOnboarding}
 				studyStep={studyStep} user={userdata} />
-			{/* </ShepherdTour> */}
 			<ShepherdTour tour={tour.current} steps={[]} />
-			{/* <ShepherdStep /> */}
-			{/* </ShepherdTour> */}
 		</div>
 	)
 }

@@ -20,7 +20,7 @@ export default function MovieGrid(props) {
 	}
 
 	const renderNext = () => {
-		if (currentPage % 2 === 0) {
+		if (currentPage % 2 === 0 && currentPage * props.itemsPerPage < props.movies.length) {
 			props.dataCallback();
 		}
 		if (props.pagingCallback) {
@@ -33,6 +33,7 @@ export default function MovieGrid(props) {
 		<Container className="gallery">
 			<Row>
 				<Col md={12}>
+				<div className="galleryOverlay" style={{ position: "absolute", width: "722px", height: "624px", zIndex: "999", display: "none" }}></div>
 					{(currentPage * props.itemsPerPage <= props.movies.length) ?
 						<div className="grid-container">
 							{props.movies.slice((currentPage - 1) * props.itemsPerPage, currentPage * props.itemsPerPage).map(currentMovie => (
@@ -47,6 +48,7 @@ export default function MovieGrid(props) {
 				</Col>
 			</Row>
 			<Row className='galleryFooter'>
+			<div className="galleryFooterOverlay" style={{ position: "absolute", width: "750px", height: "81px", zIndex: "999", display: "none" }}></div>
 				<Col md={3}>
 					<div className="btnDiv">
 						<Button id="gallery-left-btn" disabled={currentPage === 1} variant="ers" onClick={renderPrev}>
@@ -56,7 +58,7 @@ export default function MovieGrid(props) {
 				</Col>
 				<Col md={{ span: 3, offset: 5 }}>
 					<div className="btnDiv">
-						<Button id="gallery-right-btn" variant="ers" onClick={renderNext}>
+						<Button id="gallery-right-btn" disabled={currentPage * props.itemsPerPage === props.maxlength} variant="ers" onClick={renderNext}>
 							&gt;
 						</Button>
 					</div>

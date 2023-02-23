@@ -18,6 +18,8 @@ export const Content = (props) => {
 	const [ratedMoviesData, setRatedMoviesData] = useState([]);
 	const [ratedMovies, setRatedMovies] = useState([]);
 
+	const [movieids, setMovieIds] = useState([]);
+
 	const [movies, setMovies] = useState([]);
 
 	const [ratedMovieCount, setRatedMovieCount] = useState(0);
@@ -70,19 +72,61 @@ export const Content = (props) => {
 	const fetchMovies = async () => {
 		const offset = (currentPage - 1) * itemsPerPage * 2;
 		const limit = itemsPerPage * 2;
-		get('ers/movies/?skip=' + offset + '&limit=' + limit)
+		// get('ers/movies/?skip=' + offset + '&limit=' + limit)
+		// 	.then((response): Promise<movie[]> => response.json())
+		// 	.then((newmovies: movie[]) => {
+		// 		updateSeenItems(newmovies.map(item => item.movie_id));
+		// 		setMovies([...movies, ...newmovies]);
+		// 	})
+		// 	.catch((error) => console.log(error));
+		const nextpageids = pickRandomMovies(movieids, limit);
+		getMoviesByIDs(nextpageids);
+	}
+
+	const getAllMovieIds = async () => {
+		get('ers/movies/ids')
 			.then((response): Promise<movie[]> => response.json())
 			.then((newmovies: movie[]) => {
+				console.log('ids', newmovies);
+				// setMovieIds(newmovies);
+				const firstpageitems = pickRandomMovies(newmovies, itemsPerPage * 2);
+				getMoviesByIDs(firstpageitems);
+			})
+			.catch((error) => console.log(error));
+	}
+
+	const getMoviesByIDs = async (ids) => {
+		console.log('requesting movies', ids);
+		post('ers/movies', ids)
+			.then((response): Promise<movie[]> => response.json())
+			.then((newmovies: movie[]) => {
+				console.log(newmovies);
 				updateSeenItems(newmovies.map(item => item.movie_id));
 				setMovies([...movies, ...newmovies]);
 			})
 			.catch((error) => console.log(error));
 	}
 
+	const pickRandomMovies = (moviearr: int[], limit) => {
+		let randomMovies = [];
+		for (let i = 0; i < limit; i++) {
+			let randomMovie = moviearr.splice(Math.floor(Math.random() * moviearr.length), 1);
+			randomMovies.push(...randomMovie);
+		}
+		console.log('random movies', randomMovies);
+		setMovieIds(moviearr);
+		return randomMovies;
+	}
+
 	useEffect(() => {
 		getNextStudyStep(userdata.study_id, stepid)
-			.then((value) => { setStudyStep(value) });
-		fetchMovies();
+			.then((value) => { 
+				console.log('userdata', userdata);
+				console.log('stepid', stepid);
+				console.log('next step', value);
+				setStudyStep(value) });
+		// fetchMovies();
+		getAllMovieIds();
 		start();
 	}, []);
 
@@ -150,10 +194,8 @@ export const Content = (props) => {
 				<HeaderJumbotron title={studyStep.step_name} content={studyStep.step_description} />
 			</Row>
 			<Row>
-				<div className="galleryOverlay">
 					<MovieGrid ratingCallback={rateMoviesHandler} userid={userdata.id} movies={movies}
 						pagingCallback={updateCurrentPage} itemsPerPage={itemsPerPage} dataCallback={fetchMovies} />
-				</div>
 			</Row>
 			<Row>
 				<div className="jumbotron jumbotron-footer" style={{ display: "flex" }}>

@@ -84,7 +84,7 @@ export const ratingSteps = [
 				}, 200);
 			});
 		},
-		buttons: tourButtons,
+		buttons: [nextButton],
 		// classes: 'shepherd-theme-custom custom-class-name-2',
 		highlightClass: 'highlight',
 		scrollTo: false,
@@ -116,8 +116,8 @@ export const ratingSteps = [
 		text: ['The gallery show the movies you can rate. Please only rate movies that you are familiar with.']
 	},
 	{
-		id: 'galleryFooter',
-		attachTo: { element: '.galleryFooter', on: 'left' },
+		id: 'galleryFooterOverlay',
+		attachTo: { element: '.galleryFooterOverlay', on: 'left' },
 		beforeShowPromise: function () {
 			return new Promise(function (resolve) {
 				setTimeout(function () {

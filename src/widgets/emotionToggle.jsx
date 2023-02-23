@@ -44,11 +44,11 @@ export default function EmotionToggle(props) {
 			<div style={{ marginBottom: "3px", display: "inline-flex", marginTop: "27px" }}>
 				<h4>Your taste on movie emotions</h4>
 				<FcAbout size={30} className="infoIcon"
-				style={{ marginTop: "-18px", marginLeft: "9px" }} 
-				onClick={props.infoCallback}/>
+					style={{ marginTop: "-18px", marginLeft: "9px" }}
+					onClick={props.infoCallback} />
 			</div>
 			<Row className="emoToggleInputs">
-			<div className="emoToggleInputsOverlay" style={{position: "absolute", width: "410px", height: "320px", zIndex: "999", display:"None"}}></div>
+				<div className="emoToggleInputsOverlay" style={{ position: "absolute", width: "410px", height: "320px", zIndex: "999", display: "None" }}></div>
 				{
 					emotions.map((emotion, i) =>
 						<Row key={emotion + '_' + i} md={2} style={{ margin: "3px 0" }}>
@@ -77,16 +77,9 @@ export default function EmotionToggle(props) {
 				}
 			</Row>
 			<Row style={{ marginTop: "2em" }}>
-				{/* <Col md={{ span: 3 }}> */}
-					<Button className="emoToggleResetBtn" style={{ margin: "auto", width: "300px" }} variant="ersCancel" onClick={() => handleReset()} disabled={isDone}>
-						Reset
-					</Button>
-				{/* </Col> */}
-				{/* <Col md={{ span: 6, offset: 3 }}>
-					<Button className="emoToggleFinalizeBtn" style={{ width: "100%" }} variant="ersDone" onClick={() => handleSave()}>
-						Finalize
-					</Button>
-				</Col> */}
+				<Button className="emoToggleResetBtn" style={{ margin: "auto", width: "300px" }} variant="ersCancel" onClick={() => handleReset()} disabled={isDone}>
+					Reset
+				</Button>
 			</Row>
 		</Container>
 	)
