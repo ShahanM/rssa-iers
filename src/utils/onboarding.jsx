@@ -1,8 +1,3 @@
-import Button from 'react-bootstrap/Button';
-
-
-const galleryNextBtn = require("../res/gallery_next_button.png");
-
 export const tourOptions = {
 	defaultStepOptions: {
 		cancelIcon: {
