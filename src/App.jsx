@@ -30,7 +30,7 @@ function App() {
 						<Route path="/ratemovies" element={<RateMovies next="/recommendations" />} />
 						<Route path="/recommendations" element={<EmotionPreferences next="/feedback" />} />
 						<Route path="/feedback" element={<FeedbackPage next="/postsurvey" />} />
-						<Route path="/postsurvey" element={<Survey next="/quit" />} />
+						<Route path="/postsurvey" element={<Survey next="/demography" />} />
 						<Route path="/demography" element={<DemographyPage next="/quit" />} />
 						<Route path="/quit" element={<h1>Thank you for participating!</h1>} />
 					</Routes>

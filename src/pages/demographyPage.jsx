@@ -37,6 +37,12 @@ export const DemographyPage = (props) => {
 		}
 	}, [gender]);
 
+	useEffect(() => {
+		if (age >= 0 && gender >= 0 && education >= 0) {
+			setButtonDisabled(false);
+		}
+	}, [age, gender, education]);
+
 	const submitHandler = () => {
 		setLoading(true);
 		setButtonDisabled(true);
@@ -63,10 +69,11 @@ export const DemographyPage = (props) => {
 					</p>
 				</div>
 			</Row>
-			<Row>
-				<Form.Group className="mb-3">
+			<Row className="generalBodyContainer">
+				<Form.Group className="mb-3" style={{textAlign: "left"}}>
 					<Form.Label>What is your age?</Form.Label>
 					<Form.Select variant="outline-secondary" title="Dropdown" id="input-group-dropdown-1"
+						style={{width: "400px"}}
 						onChange={(evt) => setAge(+evt.target.value)} value={age}>
 						<option value="-1">Please choose an option</option>
 						<option value="0">18 - 24 years old</option>
@@ -82,6 +89,7 @@ export const DemographyPage = (props) => {
 					<br />
 					<Form.Label>What is your gender?</Form.Label>
 					<Form.Select variant="outline-secondary" title="Dropdown" id="input-group-dropdown-2"
+						style={{width: "400px"}}
 						onChange={(evt) => setGender(+evt.target.value)} value={gender}>
 						<option value="-1">Please choose an option</option>
 						<option value="0">Woman</option>
@@ -95,6 +103,7 @@ export const DemographyPage = (props) => {
 					<br />
 					<Form.Label>What is the highest degree or level of education you have completed?</Form.Label>
 					<Form.Select variant="outline-secondary" title="Dropdown" id="input-group-dropdown-4"
+						style={{width: "400px"}}
 						onChange={(evt) => setEducation(+evt.target.value)} value={education}>
 						<option value="-1">Please choose an option</option>
 						<option value="0">Some high school</option>

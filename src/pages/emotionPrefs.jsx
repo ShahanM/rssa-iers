@@ -10,7 +10,9 @@ import Shepherd from 'shepherd.js';
 import { get, getNextStudyStep, post, put } from '../utils/api-middleware';
 import { emotionsDict, studyConditions } from '../utils/constants';
 import {
-	emoFinalizeStep, emoPrefDone, emoPrefSteps, emoToggleSteps, emoVizSteps, moviePreviewStep, movieSelectStep, recommendationInspectionSteps, tourOptions
+	emoFinalizeStep, emoPrefDone, emoPrefSelectStep, emoPrefSteps,
+	emoToggleSteps, emoVizSteps, moviePreviewStep, movieSelectStep,
+	recommendationInspectionSteps, tourOptions
 } from '../utils/onboarding';
 import EmotionToggle from "../widgets/emotionToggle";
 import HeaderJumbotron from '../widgets/headerJumbotron';
@@ -332,7 +334,7 @@ const EmotionPreferences = (props) => {
 	const handleSelectionOnboarding = (isSelectionStep, movies) => {
 		if (isSelectionStep) {
 			tour.current = new Shepherd.Tour(tourOptions);
-			tour.current.addSteps(emoPrefSteps(tour.current));
+			tour.current.addSteps(emoPrefSelectStep(tour.current));
 			tour.current.addSteps(recommendationInspectionSteps(tour.current));
 			tour.current.addSteps(movieSelectStep(tour.current, movies[0].movie_id));
 			tour.current.addSteps(emoPrefDone(tour.current));

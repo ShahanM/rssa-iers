@@ -87,9 +87,9 @@ export default function Welcome(props) {
 						</p>
 						<ol>
 							<li>Complete a pre-survey.</li>
-							<li>Rate a few movies you are familiar with to let the recommender system know about movie preferences.</li>
+							<li>Rate a few movies you are familiar with to let the recommender system know about movie preference.</li>
 							<li>Interact with the movie recommender system, then pick one movie you will watch.</li>
-							<li>Complete survey.</li>
+							<li>Complete a post-survey.</li>
 						</ol>
 
 						<p>Thanks,<br />

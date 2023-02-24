@@ -84,7 +84,7 @@ export const Content = (props) => {
 	}
 
 	const getAllMovieIds = async () => {
-		get('ers/movies/ids')
+		get('ers/movies/ids/')
 			.then((response): Promise<movie[]> => response.json())
 			.then((newmovies: movie[]) => {
 				console.log('ids', newmovies);
@@ -97,7 +97,7 @@ export const Content = (props) => {
 
 	const getMoviesByIDs = async (ids) => {
 		console.log('requesting movies', ids);
-		post('ers/movies', ids)
+		post('ers/movies/', ids)
 			.then((response): Promise<movie[]> => response.json())
 			.then((newmovies: movie[]) => {
 				console.log(newmovies);

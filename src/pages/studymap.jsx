@@ -49,7 +49,7 @@ export default function StudyMap(props) {
 					<Card className="overviewCard">
 						<Card.Body>
 							<Card.Title>
-								Indicate your preferences
+								Indicate your preference
 							</Card.Title>
 							<Image src={rspref} fluid />
 						</Card.Body>

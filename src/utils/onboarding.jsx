@@ -1,3 +1,8 @@
+import Button from 'react-bootstrap/Button';
+
+
+const galleryNextBtn = require("../res/gallery_next_button.png");
+
 export const tourOptions = {
 	defaultStepOptions: {
 		cancelIcon: {
@@ -92,7 +97,7 @@ export const ratingSteps = [
 			enabled: true,
 		},
 		title: 'Indicating your preferences',
-		text: ['In this step will rate movies. Please read these instructions carefully before you start.']
+		text: ['In this step you will rate movies. Please read these instructions carefully before you start.']
 	},
 	{
 		id: 'gallery',
@@ -113,7 +118,7 @@ export const ratingSteps = [
 			enabled: true,
 		},
 		title: 'Rating movies',
-		text: ['The gallery show the movies you can rate. Please only rate movies that you are familiar with.']
+		text: ['The gallery shows the movies you can rate. Please only rate movies that you are familiar with.']
 	},
 	{
 		id: 'galleryFooterOverlay',
@@ -134,7 +139,18 @@ export const ratingSteps = [
 			enabled: true,
 		},
 		title: 'Navigating the gallery',
-		text: ['Ran out of movies youare familiar with? You can request more movies by clicking on the > button. Also, as you request more movies, you can always use the < button to go back.']
+		text: [`Ran out of movies you are familiar with? You can request more 
+			movies by clicking on 
+			<Button style="background-color: #f9b05c;font-weight: 400;
+			color: #4a4b4b;border-radius: 3px;border: none;width: 45px;">
+			>
+			</Button> button.<br> 
+			Also, as you request more movies, you can always use the 
+			<Button style="background-color: #f9b05c;font-weight: 400;
+			color: #4a4b4b;border-radius: 3px;border: none;width: 45px;">
+			<
+			</Button> 
+			button to go back.`]
 	},
 	{
 		id: 'minimumNumberOfRatings',
@@ -200,9 +216,33 @@ export const emoPrefSteps = (tour) => [
 			enabled: true,
 		},
 		title: 'Interacting with the Recommender System',
-		text: ['In this step you will interact with the emotion recommender system to find a movie that you would watch.']
+		text: ['In this step you will interact with the recommender system.']
 	}
 ];
+
+export const emoPrefSelectStep = (tour) => [
+	{
+		id: 'intro',
+		attachTo: { element: '.jumbotron', on: 'bottom' },
+		beforeShowPromise: function () {
+			return new Promise(function (resolve) {
+				setTimeout(function () {
+					window.scrollTo(0, 0);
+					resolve();
+				}, 200);
+			});
+		},
+		buttons: [dynamicNextButton(tour)],
+		classes: 'custom-class-name-1 custom-class-name-2',
+		highlightClass: 'highlight',
+		scrollTo: false,
+		cancelIcon: {
+			enabled: true,
+		},
+		title: 'Selecting a movie',
+		text: ['In this step you will find and select a movie you will watch.']
+	}
+]
 
 export const recommendationInspectionSteps = (tour) => [
 	{
@@ -370,7 +410,7 @@ export const emoFinalizeStep = (tour) => [
 			enabled: true,
 		},
 		title: 'Finalizing Emotion Preference',
-		text: 'Once you are happy with the recommendations, you can finalize the emotion preference by clicking on thefinalize button.'
+		text: 'Once you are happy with the recommendations, you can finalize the emotion preference by clicking on the finalize button.'
 	}
 
 ]
