@@ -333,6 +333,7 @@ const EmotionPreferences = (props) => {
 
 	const handleSelectionOnboarding = (isSelectionStep, movies) => {
 		if (isSelectionStep) {
+			Shepherd.activeTour && Shepherd.activeTour.cancel();
 			tour.current = new Shepherd.Tour(tourOptions);
 			tour.current.addSteps(emoPrefSelectStep(tour.current));
 			tour.current.addSteps(recommendationInspectionSteps(tour.current));

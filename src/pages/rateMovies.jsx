@@ -1,14 +1,14 @@
-import "shepherd.js/dist/css/shepherd.css";
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { ShepherdTour, ShepherdTourContext } from 'react-shepherd';
+import "shepherd.js/dist/css/shepherd.css";
 import { get, getNextStudyStep, post, put } from '../utils/api-middleware';
+import { ratingSteps, tourOptions } from '../utils/onboarding';
 import HeaderJumbotron from '../widgets/headerJumbotron';
 import MovieGrid from '../widgets/movieGrid';
 import NextButton from '../widgets/nextButton';
-import { ShepherdTour, ShepherdTourContext } from 'react-shepherd'
-import { ratingSteps, tourOptions } from '../utils/onboarding';
 
 export const Content = (props) => {
 	const itemsPerPage = 24;
@@ -70,15 +70,7 @@ export const Content = (props) => {
 	}
 
 	const fetchMovies = async () => {
-		// const offset = (currentPage - 1) * itemsPerPage * 2;
 		const limit = itemsPerPage * 2;
-		// get('ers/movies/?skip=' + offset + '&limit=' + limit)
-		// 	.then((response): Promise<movie[]> => response.json())
-		// 	.then((newmovies: movie[]) => {
-		// 		updateSeenItems(newmovies.map(item => item.movie_id));
-		// 		setMovies([...movies, ...newmovies]);
-		// 	})
-		// 	.catch((error) => console.log(error));
 		const nextpageids = pickRandomMovies(movieids, limit);
 		getMoviesByIDs(nextpageids);
 	}
@@ -87,9 +79,6 @@ export const Content = (props) => {
 		get('ers/movies/ids/')
 			.then((response): Promise<movie[]> => response.json())
 			.then((newmovies: movie[]) => {
-				// console.log('ids', newmovies);
-				// console.log('Total pages', Math.ceil(newmovies.length / itemsPerPage));
-				// setMovieIds(newmovies);
 				const firstpageitems = pickRandomMovies(newmovies, itemsPerPage * 2);
 				getMoviesByIDs(firstpageitems);
 			})
@@ -97,12 +86,9 @@ export const Content = (props) => {
 	}
 
 	const getMoviesByIDs = async (ids) => {
-		// console.log('requesting movies', ids);
 		post('ers/movies/', ids)
 			.then((response): Promise<movie[]> => response.json())
 			.then((newmovies: movie[]) => {
-				// console.log(newmovies);
-				// console.log(studyStep);
 				updateSeenItems(newmovies.map(item => item.movie_id));
 				setMovies([...movies, ...newmovies]);
 			})
@@ -115,7 +101,6 @@ export const Content = (props) => {
 			let randomMovie = moviearr.splice(Math.floor(Math.random() * moviearr.length), 1);
 			randomMovies.push(...randomMovie);
 		}
-		// console.log('random movies', randomMovies);
 		setMovieIds(moviearr);
 		return randomMovies;
 	}
@@ -123,16 +108,8 @@ export const Content = (props) => {
 	useEffect(() => {
 		getNextStudyStep(userdata.study_id, stepid)
 			.then((value) => {
-				// console.log('userdata', userdata);
-				// console.log('stepid', stepid);
-				// console.log('next step', value);
 				setStudyStep(value)
 			});
-		// .then(() => {
-		// 	console.log('stepdata', studyStep);
-		// getAllMovieIds();
-		// });
-		// fetchMovies();
 		start();
 	}, []);
 
@@ -154,11 +131,9 @@ export const Content = (props) => {
 	const submitHandler = (recType) => {
 		setLoading(true);
 		if (ratedMovies.length > 0) {
-			// console.log('submitting ratings', ratedMoviesData);
 			updateItemrating().then((isupdateSuccess): Promise<Boolean> => isupdateSuccess)
 				.then((isupdateSuccess) => {
 					if (isupdateSuccess) {
-						// console.log('submitting recommendations');
 						post('ers/recommendation/', {
 							user_id: userdata.id,
 							ratings: ratedMoviesData,
@@ -193,7 +168,6 @@ export const Content = (props) => {
 	}
 
 	const updateSeenItems = async (items) => {
-		// console.log('updateseen params', studyStep, userdata, currentPage, items);
 		put('user/' + userdata.id + '/seenitems/', {
 			'user_id': userdata.id,
 			'page_id': studyStep.id,
@@ -201,12 +175,10 @@ export const Content = (props) => {
 			'items': items
 		})
 			.then((response): Promise<success> => response.json())
-			.then((success: success) => { 
-				// console.log('LKOG', success); 
+			.then((success: success) => {
 			})
 			.catch((error) => console.log(error));
 	}
-
 
 	const updateCurrentPage = (page) => {
 		setCurrentPage(page);

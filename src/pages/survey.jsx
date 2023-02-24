@@ -35,6 +35,7 @@ export default function Survey(props) {
 				const pagevalidation = {};
 				pagevalidation[page.id] = false;
 				setServerValidation({ ...serverValidation, ...pagevalidation });
+				setNextButtonDisabled(true);
 			})
 			.catch((error) => console.log(error));
 	}

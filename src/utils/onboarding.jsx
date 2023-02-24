@@ -12,7 +12,6 @@ export const tourOptions = {
 			padding: 10,
 		}
 	}
-	// useModalOverlay: false
 };
 
 const backButton = {
@@ -32,8 +31,6 @@ const doneButton = {
 	text: 'Done',
 	type: 'next'
 }
-
-const tourButtons = [backButton, nextButton];
 
 const dynamicBackButton = (tour) => {
 	return {
@@ -62,15 +59,15 @@ const dynamicDoneButton = (tour) => {
 	}
 }
 
+const tourButtons = [backButton, nextButton];
+const finalStepButtons = [backButton, doneButton];
 const dynamicTourButtons = (tour) => {
 	return [dynamicBackButton(tour), dynamicNextButton(tour)];
 }
-
-const finalStepButtons = [backButton, doneButton];
-
 const dynamicFinalStepButtons = (tour) => {
 	return [dynamicBackButton(tour), dynamicDoneButton(tour)]
 }
+
 
 export const ratingSteps = [
 	{
@@ -85,7 +82,6 @@ export const ratingSteps = [
 			});
 		},
 		buttons: [nextButton],
-		// classes: 'shepherd-theme-custom custom-class-name-2',
 		highlightClass: 'highlight',
 		scrollTo: false,
 		cancelIcon: {
@@ -174,7 +170,6 @@ export const ratingSteps = [
 		beforeShowPromise: function () {
 			return new Promise(function (resolve) {
 				setTimeout(function () {
-					// window.scrollTo(0, 600);
 					resolve();
 				}, 200);
 			});
@@ -204,7 +199,6 @@ export const emoPrefSteps = (tour) => [
 			});
 		},
 		buttons: [dynamicNextButton(tour)],
-		classes: 'custom-class-name-1 custom-class-name-2',
 		highlightClass: 'highlight',
 		scrollTo: false,
 		cancelIcon: {
@@ -228,7 +222,6 @@ export const emoPrefSelectStep = (tour) => [
 			});
 		},
 		buttons: [dynamicNextButton(tour)],
-		classes: 'custom-class-name-1 custom-class-name-2',
 		highlightClass: 'highlight',
 		scrollTo: false,
 		cancelIcon: {
@@ -245,14 +238,12 @@ export const recommendationInspectionSteps = (tour) => [
 		attachTo: { element: '.movieListPanelOverlay', on: 'right' },
 		beforeShowPromise: function () {
 			return new Promise(function (resolve) {
-				// document.querySelector('.movieListPanelOverlay').style.display = 'block';
 				setTimeout(function () {
 					resolve();
 				}, 200);
 			})
 		},
 		buttons: dynamicTourButtons(tour),
-		classes: 'custom-class-name-1 custom-class-name-2',
 		highlightClass: 'highlight',
 		scrollTo: false,
 		cancelIcon: {
@@ -269,7 +260,6 @@ export const movieSelectStep = (tour, movieid) => [
 		attachTo: { element: '#selectButtonOverlay_' + movieid, on: 'right' },
 		beforeShowPromise: function () {
 			return new Promise(function (resolve) {
-				// document.querySelector('.moviePreviewPanelOverlay').style.display = 'block';
 				setTimeout(function () {
 					resolve();
 				}, 200);
@@ -294,7 +284,6 @@ export const moviePreviewStep = (tour) => [
 		attachTo: { element: '.moviePreviewPanelOverlay', on: 'left' },
 		beforeShowPromise: function () {
 			return new Promise(function (resolve) {
-				// document.querySelector('.moviePreviewPanelOverlay').style.display = 'block';
 				setTimeout(function () {
 					resolve();
 				}, 200);
@@ -318,7 +307,6 @@ export const emoToggleSteps = (tour) => [
 		attachTo: { element: '.emoToggleInputsOverlay', on: 'left' },
 		beforeShowPromise: function () {
 			return new Promise(function (resolve) {
-				// document.querySelector('.emoToggleInputsOverlay').style.display = 'block';
 				setTimeout(function () {
 					window.scrollTo(0, 150);
 					resolve();
@@ -344,7 +332,6 @@ export const emoToggleSteps = (tour) => [
 		beforeShowPromise: function () {
 			return new Promise(function (resolve) {
 				setTimeout(function () {
-					// window.scrollTo(0, 150);
 					resolve();
 				}, 200);
 			});
@@ -416,7 +403,6 @@ export const emoVizSteps = (tour) => [
 		attachTo: { element: '.emoVizOverlay', on: 'left' },
 		beforeShowPromise: function (resolve) {
 			return new Promise(function (resolve) {
-				// document.querySelector('.emoVizOverlay').style.display = 'block';
 				setTimeout(function () {
 					window.scrollTo(0, 150);
 					resolve();
@@ -424,7 +410,6 @@ export const emoVizSteps = (tour) => [
 			});
 		},
 		buttons: dynamicTourButtons(tour),
-		classes: 'custom-class-name-1 custom-class-name-2',
 		highlightClass: 'highlight',
 		scrollTo: false,
 		cancelIcon: {
