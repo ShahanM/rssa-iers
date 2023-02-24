@@ -70,7 +70,7 @@ export const Content = (props) => {
 	}
 
 	const fetchMovies = async () => {
-		const offset = (currentPage - 1) * itemsPerPage * 2;
+		// const offset = (currentPage - 1) * itemsPerPage * 2;
 		const limit = itemsPerPage * 2;
 		// get('ers/movies/?skip=' + offset + '&limit=' + limit)
 		// 	.then((response): Promise<movie[]> => response.json())
@@ -87,7 +87,8 @@ export const Content = (props) => {
 		get('ers/movies/ids/')
 			.then((response): Promise<movie[]> => response.json())
 			.then((newmovies: movie[]) => {
-				console.log('ids', newmovies);
+				// console.log('ids', newmovies);
+				// console.log('Total pages', Math.ceil(newmovies.length / itemsPerPage));
 				// setMovieIds(newmovies);
 				const firstpageitems = pickRandomMovies(newmovies, itemsPerPage * 2);
 				getMoviesByIDs(firstpageitems);
@@ -96,11 +97,12 @@ export const Content = (props) => {
 	}
 
 	const getMoviesByIDs = async (ids) => {
-		console.log('requesting movies', ids);
+		// console.log('requesting movies', ids);
 		post('ers/movies/', ids)
 			.then((response): Promise<movie[]> => response.json())
 			.then((newmovies: movie[]) => {
-				console.log(newmovies);
+				// console.log(newmovies);
+				// console.log(studyStep);
 				updateSeenItems(newmovies.map(item => item.movie_id));
 				setMovies([...movies, ...newmovies]);
 			})
@@ -113,22 +115,33 @@ export const Content = (props) => {
 			let randomMovie = moviearr.splice(Math.floor(Math.random() * moviearr.length), 1);
 			randomMovies.push(...randomMovie);
 		}
-		console.log('random movies', randomMovies);
+		// console.log('random movies', randomMovies);
 		setMovieIds(moviearr);
 		return randomMovies;
 	}
 
 	useEffect(() => {
 		getNextStudyStep(userdata.study_id, stepid)
-			.then((value) => { 
-				console.log('userdata', userdata);
-				console.log('stepid', stepid);
-				console.log('next step', value);
-				setStudyStep(value) });
+			.then((value) => {
+				// console.log('userdata', userdata);
+				// console.log('stepid', stepid);
+				// console.log('next step', value);
+				setStudyStep(value)
+			});
+		// .then(() => {
+		// 	console.log('stepdata', studyStep);
+		// getAllMovieIds();
+		// });
 		// fetchMovies();
-		getAllMovieIds();
 		start();
 	}, []);
+
+	useEffect(() => {
+		if (studyStep !== undefined && Object.keys(studyStep).length > 0) {
+			// console.log('stepdata in useffect', studyStep);
+			getAllMovieIds();
+		}
+	}, [studyStep]);
 
 	useEffect(() => {
 		if (recommendedMovies.length > 0) {
@@ -141,9 +154,11 @@ export const Content = (props) => {
 	const submitHandler = (recType) => {
 		setLoading(true);
 		if (ratedMovies.length > 0) {
+			// console.log('submitting ratings', ratedMoviesData);
 			updateItemrating().then((isupdateSuccess): Promise<Boolean> => isupdateSuccess)
 				.then((isupdateSuccess) => {
 					if (isupdateSuccess) {
+						// console.log('submitting recommendations');
 						post('ers/recommendation/', {
 							user_id: userdata.id,
 							ratings: ratedMoviesData,
@@ -151,12 +166,18 @@ export const Content = (props) => {
 							num_rec: 20
 						})
 							.then((response): Promise<movie[]> => response.json())
-							.then((movies: movie[]) => { setRecommendedMovies([...movies]); })
-							.catch((error) => { console.log(error); });
+							.then((movies: movie[]) => {
+								setRecommendedMovies([...movies]);
+								setLoading(false);
+							})
+							.catch((error) => {
+								console.log(error);
+								setLoading(false);
+							});
 					}
-				});
+				})
+				.catch((error) => { console.log(error); setLoading(false); });
 		}
-		setLoading(false);
 	}
 
 	const updateItemrating = async () => {
@@ -172,6 +193,7 @@ export const Content = (props) => {
 	}
 
 	const updateSeenItems = async (items) => {
+		// console.log('updateseen params', studyStep, userdata, currentPage, items);
 		put('user/' + userdata.id + '/seenitems/', {
 			'user_id': userdata.id,
 			'page_id': studyStep.id,
@@ -179,7 +201,9 @@ export const Content = (props) => {
 			'items': items
 		})
 			.then((response): Promise<success> => response.json())
-			.then((success: success) => { console.log('LKOG', success); })
+			.then((success: success) => { 
+				// console.log('LKOG', success); 
+			})
 			.catch((error) => console.log(error));
 	}
 
@@ -194,8 +218,27 @@ export const Content = (props) => {
 				<HeaderJumbotron title={studyStep.step_name} content={studyStep.step_description} />
 			</Row>
 			<Row>
-					<MovieGrid ratingCallback={rateMoviesHandler} userid={userdata.id} movies={movies}
-						pagingCallback={updateCurrentPage} itemsPerPage={itemsPerPage} dataCallback={fetchMovies} />
+				{loading &&
+					<div style={{
+						position: "absolute", width: "1320px",
+						height: "698px", zIndex: "999",
+						backgroundColor: "rgba(25, 15, 0, 0.9)"
+					}}>
+						<h2 style={{
+							margin: "300px auto",
+							color: "white"
+						}}>
+							Please wait while the system prepares your recommendations
+							<div className="loaderStage">
+								<div className="dot-floating" style={{
+									margin: "1.5em auto"
+								}}></div>
+							</div>
+						</h2>
+					</div>
+				}
+				<MovieGrid ratingCallback={rateMoviesHandler} userid={userdata.id} movies={movies}
+					pagingCallback={updateCurrentPage} itemsPerPage={itemsPerPage} dataCallback={fetchMovies} />
 			</Row>
 			<Row>
 				<div className="jumbotron jumbotron-footer" style={{ display: "flex" }}>
@@ -217,7 +260,6 @@ const RankHolder = (props) => {
 		</div>
 	)
 }
-
 
 export const RateMovies = (props) => {
 

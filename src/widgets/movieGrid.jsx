@@ -20,7 +20,8 @@ export default function MovieGrid(props) {
 	}
 
 	const renderNext = () => {
-		if (currentPage % 2 === 0 && currentPage * props.itemsPerPage < props.movies.length) {
+		// console.log('Current page', currentPage);
+		if (currentPage * props.itemsPerPage < props.movies.length) {
 			props.dataCallback();
 		}
 		if (props.pagingCallback) {
