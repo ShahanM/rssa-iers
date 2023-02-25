@@ -189,6 +189,7 @@ const Content = (props) => {
 		setLoading(true);
 		post('ers/updaterecommendations/', {
 			user_id: props.user.id,
+			user_condition: props.user.condition,
 			input_type: "discrete",
 			emotion_input: emoinput,
 			ratings: ratings,
@@ -249,7 +250,9 @@ const Content = (props) => {
 									emotions={emotionToggles}
 									onReset={resetToggles}
 									isDone={isToggleDone}
-									onFinalize={finalizeToggles} infoCallback={infoHandler} />
+									onFinalize={finalizeToggles}
+									infoCallback={infoHandler}
+									defaultLabel={props.defaultEmoWeightLabel} />
 							</Row>
 						}
 					</div>
@@ -303,9 +306,10 @@ const EmotionPreferences = (props) => {
 	tour.current = new Shepherd.Tour(tourOptions);
 
 	const [studyStep, setStudyStep] = useState({});
-	const condition = 1; // TODO: get condition from backend
+	const condition = userdata.condition;
 	const emoVizEnabled = studyConditions[condition].emoVizEnabled;
 	const emoTogglesEnabled = studyConditions[condition].emoTogglesEnabled;
+	const defaultEmoWeightLabel = studyConditions[condition].defaultEmoWeightLabel;
 
 	useEffect(() => {
 		getNextStudyStep(userdata.study_id, stepid)
@@ -329,6 +333,10 @@ const EmotionPreferences = (props) => {
 				emoFinalizeStep(tour.current));
 		}
 		tour.current.start();
+
+		return () => {
+			Shepherd.activeTour && Shepherd.activeTour.cancel();
+		}
 	}, []);
 
 	const handleSelectionOnboarding = (isSelectionStep, movies) => {
@@ -358,6 +366,7 @@ const EmotionPreferences = (props) => {
 			<Content nagivationCallback={navigateHandler}
 				emoTogglesEnabled={emoTogglesEnabled}
 				emoVizEnabled={emoVizEnabled}
+				defaultEmoWeightLabel={defaultEmoWeightLabel}
 				onboardingCallback={handleSelectionOnboarding}
 				studyStep={studyStep} user={userdata} />
 			<ShepherdTour tour={tour.current} steps={[]} />

@@ -1,8 +1,9 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState, useRef } from 'react';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { ShepherdTour, ShepherdTourContext } from 'react-shepherd';
+import Shepherd from 'shepherd.js';
 import "shepherd.js/dist/css/shepherd.css";
 import { get, getNextStudyStep, post, put } from '../utils/api-middleware';
 import { ratingSteps, tourOptions } from '../utils/onboarding';
@@ -32,10 +33,12 @@ export const Content = (props) => {
 
 	const [studyStep, setStudyStep] = useState({});
 
-	const tour = useContext(ShepherdTourContext);
+	const tour = useRef();
+	// const tour = useContext(ShepherdTourContext);
+	tour.current = new Shepherd.Tour(tourOptions);
 
 	function start() {
-		tour.start();
+		tour.current.start();
 	}
 
 	const rateMoviesHandler = (newRating, movieid) => {
@@ -110,7 +113,12 @@ export const Content = (props) => {
 			.then((value) => {
 				setStudyStep(value)
 			});
+		tour.current.addSteps(ratingSteps);
 		start();
+
+		return () => {
+			Shepherd.activeTour && Shepherd.activeTour.cancel();
+		};
 	}, []);
 
 	useEffect(() => {
@@ -136,6 +144,7 @@ export const Content = (props) => {
 					if (isupdateSuccess) {
 						post('ers/recommendation/', {
 							user_id: userdata.id,
+							user_condition: userdata.condition,
 							ratings: ratedMoviesData,
 							rec_type: recType,
 							num_rec: 20
@@ -252,7 +261,7 @@ export const RateMovies = (props) => {
 
 	return (
 		<div>
-			<ShepherdTour steps={ratingSteps} tourOptions={tourOptions}>
+			<ShepherdTour steps={[]}>
 				<Content navigationCallback={handleNavigate} />
 			</ShepherdTour>
 		</div>

@@ -68,7 +68,7 @@ export default function EmotionToggle(props) {
 									</ToggleButton>
 									<ToggleButton id={emotion + "ignore"} value={"ignore"} disabled={isDone}
 										className={emotionValues[emotion] === 'ignore' ? 'ersToggleBtnChecked' : 'ersToggleBtn'}>
-										Don't Care
+										{props.defaultLabel}
 									</ToggleButton>
 								</ToggleButtonGroup>
 							</Col>

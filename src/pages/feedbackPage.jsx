@@ -69,7 +69,6 @@ export default function FeedbackPage(props) {
 			.then((response): Promise<isvalidated> => response.json())
 			.then((isvalidated: isvalidated) => {
 				if (isvalidated === true) {
-					console.log(userdata, studyStep.id);
 					navigate(props.next, {
 						state: {
 							user: userdata,
