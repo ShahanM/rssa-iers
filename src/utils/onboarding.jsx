@@ -154,7 +154,7 @@ export const ratingSteps = (tour) => [
 				}, 200);
 			});
 		},
-		buttons: dynamicTourButtons,
+		buttons: dynamicTourButtons(tour),
 		classes: 'custom-class-name-1 custom-class-name-2',
 		highlightClass: 'highlight',
 		scrollTo: false,
