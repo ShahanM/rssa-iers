@@ -69,7 +69,7 @@ const dynamicFinalStepButtons = (tour) => {
 }
 
 
-export const ratingSteps = [
+export const ratingSteps = (tour) => [
 	{
 		id: 'intro',
 		attachTo: { element: '.jumbotron', on: 'bottom' },
@@ -81,7 +81,7 @@ export const ratingSteps = [
 				}, 200);
 			});
 		},
-		buttons: [nextButton],
+		buttons: [dynamicNextButton(tour)],
 		highlightClass: 'highlight',
 		scrollTo: false,
 		cancelIcon: {
@@ -101,7 +101,7 @@ export const ratingSteps = [
 				}, 200);
 			});
 		},
-		buttons: tourButtons,
+		buttons: dynamicTourButtons(tour),
 		classes: 'custom-class-name-1 custom-class-name-2',
 		highlightClass: 'highlight',
 		scrollTo: false,
@@ -122,7 +122,7 @@ export const ratingSteps = [
 				}, 200);
 			});
 		},
-		buttons: tourButtons,
+		buttons: dynamicTourButtons(tour),
 		classes: 'custom-class-name-1 custom-class-name-2',
 		highlightClass: 'highlight',
 		scrollTo: false,
@@ -154,7 +154,7 @@ export const ratingSteps = [
 				}, 200);
 			});
 		},
-		buttons: tourButtons,
+		buttons: dynamicTourButtons,
 		classes: 'custom-class-name-1 custom-class-name-2',
 		highlightClass: 'highlight',
 		scrollTo: false,
@@ -174,7 +174,7 @@ export const ratingSteps = [
 				}, 200);
 			});
 		},
-		buttons: finalStepButtons,
+		buttons: dynamicFinalStepButtons(tour),
 		classes: 'custom-class-name-1 custom-class-name-2',
 		highlightClass: 'highlight',
 		scrollTo: false,

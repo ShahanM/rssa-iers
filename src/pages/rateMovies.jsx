@@ -113,7 +113,7 @@ export const Content = (props) => {
 			.then((value) => {
 				setStudyStep(value)
 			});
-		tour.current.addSteps(ratingSteps);
+		tour.current.addSteps(ratingSteps(tour.current));
 		start();
 
 		return () => {
