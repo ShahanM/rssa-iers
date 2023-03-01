@@ -1,8 +1,8 @@
-import React, { useContext, useEffect, useState, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { ShepherdTour, ShepherdTourContext } from 'react-shepherd';
+import { ShepherdTour } from 'react-shepherd';
 import Shepherd from 'shepherd.js';
 import "shepherd.js/dist/css/shepherd.css";
 import { get, getNextStudyStep, post, put } from '../utils/api-middleware';
@@ -34,7 +34,6 @@ export const Content = (props) => {
 	const [studyStep, setStudyStep] = useState({});
 
 	const tour = useRef();
-	// const tour = useContext(ShepherdTourContext);
 	tour.current = new Shepherd.Tour(tourOptions);
 
 	function start() {
@@ -123,7 +122,6 @@ export const Content = (props) => {
 
 	useEffect(() => {
 		if (studyStep !== undefined && Object.keys(studyStep).length > 0) {
-			// console.log('stepdata in useffect', studyStep);
 			getAllMovieIds();
 		}
 	}, [studyStep]);
@@ -195,29 +193,29 @@ export const Content = (props) => {
 
 	return (
 		<Container>
+			{loading &&
+				<div style={{
+					position: "absolute", width: "1320px",
+					height: "698px", zIndex: "999",
+					backgroundColor: "rgba(25, 15, 0, 0.9)"
+				}}>
+					<h2 style={{
+						margin: "300px auto",
+						color: "white"
+					}}>
+						Please wait while the system prepares your recommendations
+						<div className="loaderStage">
+							<div className="dot-floating" style={{
+								margin: "1.5em auto"
+							}}></div>
+						</div>
+					</h2>
+				</div>
+			}
 			<Row>
 				<HeaderJumbotron title={studyStep.step_name} content={studyStep.step_description} />
 			</Row>
 			<Row>
-				{loading &&
-					<div style={{
-						position: "absolute", width: "1320px",
-						height: "698px", zIndex: "999",
-						backgroundColor: "rgba(25, 15, 0, 0.9)"
-					}}>
-						<h2 style={{
-							margin: "300px auto",
-							color: "white"
-						}}>
-							Please wait while the system prepares your recommendations
-							<div className="loaderStage">
-								<div className="dot-floating" style={{
-									margin: "1.5em auto"
-								}}></div>
-							</div>
-						</h2>
-					</div>
-				}
 				<MovieGrid ratingCallback={rateMoviesHandler} userid={userdata.id} movies={movies}
 					pagingCallback={updateCurrentPage} itemsPerPage={itemsPerPage} dataCallback={fetchMovies} />
 			</Row>

@@ -21,48 +21,105 @@ export default function InformedConsentModal(props) {
 		< Modal show={props.show} dialogClassName="modal-80w" style={{ zIndex: "2050" }
 		}>
 			<Modal.Header>
-				<Modal.Title>Consent: taking part in the study</Modal.Title>
+				<Modal.Title>
+					Testing an Interactive Movie Recommender System Using
+					Emotions for Diversification
+				</Modal.Title>
 			</Modal.Header>
 			<Modal.Body>
-				<p style={{ marginBottom: "0" }}><strong>Voluntary Consent</strong></p>
+				<p className='informedConsent-title'>
+					Key Information About the Research Study
+				</p>
 				<p>
-					Participation is voluntary, and you have the option to not participate.
+					<span className='informedConsent-bold'>
+						Voluntary Consent:&nbsp;
+					</span>
+					Dr. Bart Knijnenburg is inviting you to volunteer for a
+					research study. Dr. Knijnenburg is an assistant professor
+					at Clemson University. He will conduct the study with Lijie
+					and Mehtab (both graduate students at Clemson University).
 				</p>
 
-				<p style={{ marginBottom: "0" }}><strong>Participation Time</strong></p>
 				<p>
-					It will take you about 15 to 20 minutes to be this study.
+					<span className='informedConsent-bold'>
+						Alternative to Participation:&nbsp;
+					</span>
+					Participation is voluntary, and the only alternative is to
+					not participate. You will not be punished in any way if you
+					decide not to be in the study or to stop taking part in the
+					study.
 				</p>
-				<p style={{ marginBottom: "0" }}><strong>Risks and discomforts</strong></p>
 				<p>
-					We do not know of any risks or discomforts to you in this research study.
-				</p>
-
-				<p style={{ marginBottom: "0" }}><strong>Possible Benefits</strong></p>
-				<p>
-					This study will help create technology that will help users leverage
-					recommendations to explore, learn, and develop their unique personal
-					preferences.
+					If you decide not to take part or to stop taking part in
+					this study, it will not affect you in any way.
 				</p>
 
-				<p style={{ marginBottom: "0" }}><strong>Incentives</strong></p>
 				<p>
-					You must complete all steps in the study to get a compensation of $2.75.
+					<span className='informedConsent-bold'>
+						Study Purpose:&nbsp;
+					</span>
+					The purpose of this research is to evaluate a movie
+					recommender system and better understand your
+					experiences with the system through your responses to
+					the post-task questionnaire.
 				</p>
 
-				<p style={{ marginBottom: "0" }}><strong>Protection of Privacy and Confidentiality</strong></p>
 				<p>
-					The results of this study may be published in scientific journals, professional``
-					publications, or educational presentations.
-					<br /><br />
-					The information collected during the study could be used for future research
-					studies or distributed to another investigator for future research studies
-					without additional informed consent from the participants or legally
-					authorized representative. No identifiable information will be collected during
-					the study.
+					<span className='informedConsent-bold'>
+						Activities and Procedures:&nbsp;
+					</span>
+					Your part in this study will be viewing some
+					recommendations and completing a quick post-task survey.
+					It will take you about 10-15 minutes to be in this study,
+					but please make yourself available for 20 minutes just in
+					case.
 				</p>
 
-				<p style={{ marginBottom: "0" }}><strong>Contact Information</strong></p>
+				<p>
+					<span className='informedConsent-bold'>
+						Risks and Benefits:&nbsp;
+					</span>
+					We do not know of any risks or discomforts to you in this
+					study. The only benefit to you is the learning experience
+					from participating in a research study. The benefit to
+					society is the contribution to scientific knowledge.
+				</p>
+
+				<p className='informedConsent-title'>Incentives</p>
+				<p>
+					Participants who complete all tasks will be compensated
+					with $2.75. Successful and careful completion of the tasks
+					is a prerequisite for payment.
+				</p>
+
+				<p className='informedConsent-title'>
+					Audio/Video Recording and Photographs
+				</p>
+				<p>
+					This session will not be recorded.
+				</p>
+
+				<p className='informedConsent-title'>
+					Protection of Privacy and Confidentiality
+				</p>
+				<p>
+					No identifiable information will be collected during the study.
+					The anonymous information collected in this study could be used
+					for future research studies or distributed to another
+					investigator for future research studies without additional
+					informed consent from the participants or legally authorized
+					representative.
+				</p>
+				<p>
+					The results of this study may be published in scientific
+					journals, professional publications, or educational
+					presentations. Published results will not include
+					identifiable information.
+				</p>
+
+				<p className='informedConsent-title'>
+					Contact Information
+				</p>
 				<p>
 					If you have any questions or concerns about your rights in this research study,
 					please contact the Clemson University Office of Research Compliance (ORC) at
@@ -71,20 +128,24 @@ export default function InformedConsentModal(props) {
 					866-297-3071. The Clemson IRB will not be able to answer some study-specific
 					questions. However, you may contact the Clemson IRB if the research staff cannot
 					be reached or if you wish to speak with someone other than the research staff.
+				</p>
+				<p>
 					If you have any study related questions or if any problem arise, please contact
-					Lijie Guo at <a href="mailto:<lijieg>@clemson.edu">&lt;lijieg&gt;@clemson.edu</a>.
+					Lijie <a href="mailto:lydiahsu7@gmail.com">lydiahsu7@gmail.com</a>.
 				</p>
 
-				<p style={{ marginBottom: "0" }}><strong>Consent</strong></p>
-				<p>
-					By participation in the study, you indicate that you have read the information
-					wirtten abovem been allowed to ask any questions, and you are voluntarily
-					choosing to take part in this research. You do not give up any legal rights by
-					taking part in this research study.
+				<p className='informedConsent-title'>
+					Consent
 				</p>
-				<Form.Check
-					label="I have read and understand this study and my rights above. My participation in this
-                            study is voluntary. I voluntarily agree to participate in this research study."
+				<p className='informedConsent-bold'>
+					By participating in the study, you indicate that you have
+					read the information written above, been allowed to ask any
+					questions, and you are voluntarily choosing to take part in
+					this research.
+				</p>
+				<Form.Check style={{ fontWeight: "500", marginTop: "9px" }}
+					label="I have read and understood this consent form and I agree to participate in this
+					research study"
 					onChange={(evt) => setIsConsentGiven(evt.target.checked)}
 					default={false} />
 

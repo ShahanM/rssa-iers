@@ -750,3 +750,19 @@ div.badge div span {
 	overflow: hidden;
 
 }
+
+p.informedConsent-title {
+	margin-bottom: 9px;
+	font-weight: 700;
+	text-transform: uppercase;
+}
+
+p.informedConsent-text {
+	margin-bottom: 0;
+	font-weight: 300;
+}
+
+.informedConsent-bold {
+	margin-bottom: 0;
+	font-weight: 500;
+}
