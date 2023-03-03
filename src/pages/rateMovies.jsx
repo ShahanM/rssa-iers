@@ -1,12 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
-import { useLocation, useNavigate } from 'react-router-dom';
-// import { ShepherdTour } from 'react-shepherd';
-// import Shepherd from 'shepherd.js';
-// import "shepherd.js/dist/css/shepherd.css";
-import { get, getNextStudyStep, post, put } from '../utils/api-middleware';
-// import { ratingSteps, tourOptions } from '../utils/onboarding';
+import { useNavigate } from 'react-router-dom';
+import { get, post } from '../utils/api-middleware';
 import HeaderJumbotron from '../widgets/headerJumbotron';
 import MovieGrid from '../widgets/movieGrid';
 import NextButton from '../widgets/nextButton';
@@ -18,9 +14,8 @@ export const Content = (props) => {
 		step_name: "Rate Movies",
 		step_description: "Rate 10 movies to get recommendations"
 	}
+	const studyCondition = 1;
 	const itemsPerPage = 24;
-	// const userdata = useLocation().state.user;
-	// const stepid = useLocation().state.studyStep;
 
 	const [ratedMoviesData, setRatedMoviesData] = useState([]);
 	const [ratedMovies, setRatedMovies] = useState([]);
@@ -36,16 +31,6 @@ export const Content = (props) => {
 	const [currentPage, setCurrentPage] = useState(1);
 
 	const [buttonDisabled, setButtonDisabled] = useState(true);
-	const [studyCondition, setStudyCondition] = useState(1);	
-
-	// const [studyStep, setStudyStep] = useState({});
-
-	// const tour = useRef();
-	// tour.current = new Shepherd.Tour(tourOptions);
-
-	// function start() {
-	// 	tour.current.start();
-	// }
 
 	const rateMoviesHandler = (newRating, movieid) => {
 		const isNew = !ratedMoviesData.some(item => item.item_id === movieid);
@@ -98,7 +83,6 @@ export const Content = (props) => {
 		post('ers/movies/', ids)
 			.then((response): Promise<movie[]> => response.json())
 			.then((newmovies: movie[]) => {
-				// updateSeenItems(newmovies.map(item => item.movie_id));
 				setMovies([...movies, ...newmovies]);
 			})
 			.catch((error) => console.log(error));
@@ -114,23 +98,8 @@ export const Content = (props) => {
 		return randomMovies;
 	}
 
-	// useEffect(() => {
-		// getNextStudyStep(userdata.study_id, stepid)
-		// 	.then((value) => {
-		// 		setStudyStep(value)
-		// 	});
-		// tour.current.addSteps(ratingSteps(tour.current));
-		// start();
-
-		// return () => {
-		// Shepherd.activeTour && Shepherd.activeTour.cancel();
-		// };
-	// }, []);
-
 	useEffect(() => {
-		// if (studyStep !== undefined && Object.keys(studyStep).length > 0) {
 		getAllMovieIds();
-		// }
 	}, []);
 
 	useEffect(() => {
@@ -144,9 +113,6 @@ export const Content = (props) => {
 	const submitHandler = (recType) => {
 		setLoading(true);
 		if (ratedMovies.length > 0) {
-			// updateItemrating().then((isupdateSuccess): Promise<Boolean> => isupdateSuccess)
-			// .then((isupdateSuccess) => {
-			// if (isupdateSuccess) {
 			post('ers/recommendation/', {
 				user_id: userid,
 				user_condition: studyCondition,
@@ -164,35 +130,7 @@ export const Content = (props) => {
 					setLoading(false);
 				});
 		}
-		// })
-		// .catch((error) => { console.log(error); setLoading(false); });
-		// }
 	}
-
-	// const updateItemrating = async () => {
-	// 	return put('user/' + userdata.id + '/itemrating/', {
-	// 		'user_id': userdata.id,
-	// 		'page_id': studyStep.id,
-	// 		'page_level': currentPage,
-	// 		'ratings': ratedMoviesData
-	// 	})
-	// 		.then((response): Promise<ratedItems[]> => response.json())
-	// 		.then((ratedItems: ratedItems) => { return ratedItems.length > 0; })
-	// 		.catch((error) => { console.log(error); return false });
-	// }
-
-	// const updateSeenItems = async (items) => {
-	// 	put('user/' + userdata.id + '/seenitems/', {
-	// 		'user_id': userdata.id,
-	// 		'page_id': studyStep.id,
-	// 		'page_level': currentPage,
-	// 		'items': items
-	// 	})
-	// 		.then((response): Promise<success> => response.json())
-	// 		.then((success: success) => {
-	// 		})
-	// 		.catch((error) => console.log(error));
-	// }
 
 	const updateCurrentPage = (page) => {
 		setCurrentPage(page);
@@ -268,9 +206,7 @@ export const RateMovies = (props) => {
 
 	return (
 		<div>
-			{/* <ShepherdTour steps={[]}> */}
 			<Content navigationCallback={handleNavigate} />
-			{/* </ShepherdTour> */}
 		</div>
 	);
 }

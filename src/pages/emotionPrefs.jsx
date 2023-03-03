@@ -4,28 +4,17 @@ import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 import Modal from "react-bootstrap/Modal";
 import Row from "react-bootstrap/Row";
-import { useLocation, useNavigate } from "react-router-dom";
-// import { ShepherdTour } from 'react-shepherd';
-// import Shepherd from 'shepherd.js';
-import { get, post, put } from '../utils/api-middleware';
-import { emotionsDict, studyConditions } from '../utils/constants';
 import Spinner from 'react-bootstrap/Spinner';
-// import {
-// emoFinalizeStep, emoPrefDone, emoPrefSelectStep, emoPrefSteps,
-// emoToggleSteps, emoVizSteps, moviePreviewStep, movieSelectStep,
-// recommendationInspectionSteps, tourOptions
-// } from '../utils/onboarding';
+import { useLocation, useNavigate } from "react-router-dom";
+import { post } from '../utils/api-middleware';
+import { emotionsDict, studyConditions } from '../utils/constants';
+import { ParameterInput } from '../widgets/algocontrols/parameterInput';
 import EmotionToggle from "../widgets/emotionToggle";
 import HeaderJumbotron from '../widgets/headerJumbotron';
-// import { InstructionModal } from '../widgets/instructionModal';
-import Form from 'react-bootstrap/Form';
-import InputGroup from 'react-bootstrap/InputGroup';
 import MovieEmotionPreviewPanel from '../widgets/movieEmotionPreviewPanel';
 import MovieListPanel from "../widgets/movieListPanel";
 import MovieListPanelItem from "../widgets/movieListPanelItem";
 import NextButton, { FooterButton } from '../widgets/nextButton';
-import Dropdown from 'react-bootstrap/Dropdown';
-import DropdownButton from 'react-bootstrap/DropdownButton';
 
 
 const WarningDialog = (props) => {
@@ -34,11 +23,7 @@ const WarningDialog = (props) => {
 	const handleClose = () => setShow(false);
 
 	useEffect(() => {
-		if (props.show) {
-			setShow(true);
-		} else {
-			setShow(false);
-		}
+		setShow(props.show);
 	}, [props.show]);
 
 	return (
@@ -69,6 +54,8 @@ const Content = (props) => {
 
 	const ratings = useLocation().state.ratings;
 	const recommendations = useLocation().state.recommendations;
+	const userid = props.user.id;
+	const numrec = 20;
 
 	const studyStep = {
 		step_name: "Rate Movies",
@@ -88,22 +75,21 @@ const Content = (props) => {
 	const [pageData, setPageData] = useState(undefined);
 	const [showWarning, setShowWarning] = useState(false);
 
-	const [conditionAlgo, setConditionAlgo] = useState(1);
-	const [itemPoolCount, setItemPoolCount] = useState(200);
-	const [divCount, setDivCount] = useState(50);
-	const [scaleVector, setScaleVector] = useState(false);
-	const [lowval, setLowval] = useState(0.3);
-	const [highval, setHighval] = useState(0.8);
-	const [algoExperiment, setAlgoExperiment] = useState(1);
-
 	const [lastRequestDuration, setLastRequestDuration] = useState(0);
 
-	useEffect(() => {
-		if (!props.emoTogglesEnabled) {
-			setIsToggleDone(true);
-		}
-	}, []);
-
+	const [updateParams, setUpdateParams] = useState({
+		user_id: userid,
+		condition_algo: 1,
+		input_type: "discrete",
+		emotion_input: Object.keys(emotionsDict).map((key, value) => ({
+			emotion: key, weight: 'ignore'})),
+		ratings: ratings,
+		num_rec: numrec,
+		scale_vector: false,
+		lowval: -0.3,
+		highval: 0.3,
+		algo: 'algo1'
+	});
 
 	useEffect(() => {
 		if (Object.values(emotionToggles).some(item => item.length > 0)) {
@@ -120,31 +106,36 @@ const Content = (props) => {
 				return undefined;
 			}).filter((item) => item !== undefined).join('; ');
 			setRecCriteria(emostr);
-			updateRecommendations(emoinput);
+
+			setUpdateParams(prevState => {
+				return {
+					...prevState,
+					emotion_input: emoinput
+				}
+			});
 		}
 	}, [emotionToggles]);
 
-	// const getStepPage = (studyid, stepid, pageid) => {
-	// 	let path = '';
-	// 	if (pageid !== null) {
-	// 		path = 'study/' + studyid + '/step/' + stepid + '/page/' + pageid + '/next';
-	// 	} else {
-	// 		path = 'study/' + studyid + '/step/' + stepid + '/page/first/';
-	// 	}
-	// 	get(path)
-	// 		.then((response): Promise<page> => response.json())
-	// 		.then((page: page) => {
-	// 			setPageData(page);
-	// 		})
-	// 		.catch((error) => console.log(error));
-
-	// }
-
-	// useEffect(() => {
-	// 	if (Object.keys(props.studyStep).length > 0) {
-	// 		getStepPage(props.user.study_id, props.studyStep.id, null);
-	// 	}
-	// }, [props.studyStep]);
+	useEffect(() => {
+		const updateRecommendations = () => {
+			setLoading(true);
+			const timenow = new Date().getTime();
+			post('ers/experimental/updaterecommendations/', updateParams)
+				.then((response): Promise<movie[]> => response.json())
+				.then((movies: movie[]) => {
+					setMovies(movies);
+					setLoading(false);
+					setLastRequestDuration(new Date().getTime() - timenow);
+				})
+				.catch((error) => {
+					console.log(error);
+					setLoading(false);
+				});
+		}
+		if (Object.keys(updateParams.emotion_input).length > 0) {
+			updateRecommendations(updateParams);
+		}
+	}, [updateParams]);
 
 	const handleHover = (isShown, activeMovie, action, panelid) => {
 		setIsShown(isShown);
@@ -171,7 +162,6 @@ const Content = (props) => {
 
 	const finalizeToggles = () => {
 		setShowWarning(true);
-		// finalizeEmotionPrefs();
 	}
 
 	const handleWarningDialog = (action) => {
@@ -184,135 +174,27 @@ const Content = (props) => {
 	}
 
 	const finalizeEmotionPrefs = () => {
-		const emoinput = Object.keys(emotionToggles).map(
-			(key) => ({
-				emotion: key,
-				weight: emotionToggles[key].length > 0
-					? emotionToggles[key] : 'ignore'
-			}));
 		setIsToggleDone(true);
-		// put('user/' + props.user.id + '/emotionprefs/', emoinput)
-		// 	.then((response) => {
-		// 	})
-		// 	.catch((error) => {
-		// 		console.log(error);
-		// 	});
-		// getStepPage(props.user.study_id, props.studyStep.id, pageData.id);
-		// props.onboardingCallback(true, movies);
 	}
 
 	const handleNext = () => {
-		// submitSelection(selectedMovieid);
-	}
 
-	const algoExpMap = {
-		1: 'algo1',
-		2: 'algo2',
-		3: 'algo3'
 	}
-	const updateRecommendations = (emoinput) => {
-		setLoading(true);
-		const timenow = new Date().getTime();
-		post('ers/experimental/updaterecommendations/', {
-			user_id: props.user.id,
-			condition_algo: conditionAlgo,
-			input_type: "discrete",
-			emotion_input: emoinput,
-			ratings: ratings,
-			num_rec: 20,
-			scale_vector: scaleVector,
-			lowval: lowval,
-			highval: highval,
-			algo: algoExpMap[algoExperiment]
-
-		})
-			.then((response): Promise<movie[]> => response.json())
-			.then((movies: movie[]) => {
-				setMovies(movies);
-				setLoading(false);
-				setLastRequestDuration(new Date().getTime() - timenow);
-			})
-			.catch((error) => {
-				console.log(error);
-				setLoading(false);
-			});
-	}
-
-	// const submitSelection = (movieid) => {
-	// 	setLoading(true);
-	// 	put('user/' + props.user.id + '/itemselect/', {
-	// 		'user_id': props.user.id,
-	// 		'page_id': props.studyStep.id,
-	// 		'selected_item': {
-	// 			'item_id': movieid,
-	// 			'rating': 99
-	// 		}
-	// 	}).then((response): Promise<value> => response.json())
-	// 		.then((selectedItem: value) => {
-	// 			if (selectedItem.item_id === parseInt(selectedMovieid) && selectedItem.rating === 99) {
-	// 				props.nagivationCallback(props.user, props.studyStep);
-	// 			}
-	// 		}).catch((error) => {
-	// 			console.log(error);
-	// 		});
-	// 	setLoading(false);
-	// }
 
 	const infoHandler = () => {
 		setHideInstruction(false);
 	}
 
-	const handleLowValInput = (event) => {
-		setLowval(event.target.value);
+	const updateHandler = (callbackParams) => {
+		console.log('updateHandler, callbackParams: ', callbackParams);
+		setUpdateParams(prevState => {
+			return {
+				...prevState,
+				...callbackParams
+			}
+		})
+		console.log('updateHandler, updateParams: ', updateParams);
 	}
-
-	const handleHighValInput = (event) => {
-		setHighval(event.target.value);
-	}
-
-	const handleAlgoSelect = (event) => {
-		const algo = parseInt(event.target.value);
-		if (algo === 1 && algoExperiment === 3) {
-			setAlgoExperiment(1);
-		} else if (algo === 2 && algoExperiment === 1) {
-			setAlgoExperiment(2);
-		}
-
-		setConditionAlgo(algo);
-	}
-
-	const handleItemPoolCount = (event) => {
-		setItemPoolCount(event.target.value);
-	}
-
-	const handleDivCount = (event) => {
-		setDivCount(event.target.value);
-	}
-
-	const handleAlgoExperiment = (event) => {
-		const algo = parseInt(event.target.value);
-		setAlgoExperiment(algo);
-	}
-
-	const handleScaleValue = (event) => {
-		const scale = parseInt(event.target.value);
-		if (scale === 1) {
-			setScaleVector(true);
-		} else {
-			setScaleVector(false);
-		}
-	}
-
-	const handleUpdate = () => {
-		const emoinput = Object.keys(emotionToggles).map(
-			(key) => ({
-				emotion: key,
-				weight: emotionToggles[key].length > 0
-					? emotionToggles[key] : 'ignore'
-			}));
-		updateRecommendations(emoinput);
-	}
-
 
 	return (
 		<Container>
@@ -324,117 +206,14 @@ const Content = (props) => {
 				}
 			</Row>
 			<WarningDialog show={showWarning} confirmCallback={handleWarningDialog} />
-			{/* <InstructionModal show={!hideInstruction} onHide={() => setHideInstruction(true)} /> */}
 			<Row style={{ height: "fit-content" }}>
 				<Col id="emotionPanel">
 					<div className="emoPrefControlPanel">
 						<Row>
-							<InputGroup className="mb-3"
-							>
-								<InputGroup.Text id="inputGroup-sizing-sm">
-									Algo Condition
-								</InputGroup.Text>
-								<Form.Select aria-label="Algo Condition"
-									onChange={handleAlgoSelect}
-									value={conditionAlgo}>
-									<option value="1" >
-										TopN
-									</option>
-									<option value="2" >
-										DiverseN
-									</option>
-								</Form.Select>
-							</InputGroup>
-							<InputGroup className="mb-3"
-								onChange={handleItemPoolCount}>
-								<InputGroup.Text id="inputGroup-sizing-sm">
-									Item Pool Count
-								</InputGroup.Text>
-								<Form.Control
-									placeholder={itemPoolCount}
-									aria-label="itempoolcount"
-									aria-describedby="inputGroup-sizing-sm"
-								/>
-							</InputGroup>
-							{conditionAlgo === 2 &&
-								<InputGroup className="mb-3"
-									onChange={handleDivCount}>
-									<InputGroup.Text id="inputGroup-sizing-sm">
-										Diversity Sampling Count
-									</InputGroup.Text>
-									<Form.Control
-										placeholder={divCount}
-										aria-label="diversitysamplingcount"
-										aria-describedby="inputGroup-sizing-sm"
-									/>
-								</InputGroup>
-							}
-							<InputGroup className="mb-3">
-								<InputGroup.Text id="inputGroup-sizing-sm">
-									Ranking Strategy
-								</InputGroup.Text>
-								<Form.Select aria-label="Algo Experiment"
-									onChange={handleAlgoExperiment}
-									value={algoExperiment}>
-									{conditionAlgo === 1 &&
-										<option value="1">
-											Emotion Distance
-										</option>
-									}
-									{conditionAlgo === 2 &&
-										<option value="2">
-											Diversify on unspecified
-										</option>
-									}
-									<option value="3" >
-										Weighted Ranking
-									</option>
-								</Form.Select>
-							</InputGroup>
-							<InputGroup className="mb-3">
-								<InputGroup.Text id="inputGroup-sizing-sm">
-									Enable Scale Value
-								</InputGroup.Text>
-								<Form.Select aria-label="Scale Value"
-									onChange={handleScaleValue}
-									value={scaleVector ? 1 : 2}>
-									<option value="1">
-										Yes
-									</option>
-									<option value="2" >
-										No
-									</option>
-								</Form.Select>
-							</InputGroup>
-							<InputGroup className="mb-3" type="number"
-								onChange={handleLowValInput}>
-								<InputGroup.Text id="inputGroup-sizing-sm">
-									Low Value
-								</InputGroup.Text>
-								<Form.Control
-									placeholder={lowval}
-									aria-label="lowval"
-									aria-describedby="inputGroup-sizing-sm"
-								/>
-							</InputGroup>
-							<InputGroup className="mb-3"
-								onChange={handleHighValInput}
-								default={highval}>
-								<InputGroup.Text id="inputGroup-sizing-default">
-									High Value
-								</InputGroup.Text>
-								<Form.Control
-									placeholder={highval}
-									aria-label="highval"
-									aria-describedby="inputGroup-sizing-default"
-								/>
-							</InputGroup>
-							<Button variant="ers" onClick={handleUpdate}>
-								Update
-							</Button>
+							<ParameterInput updateCallback={updateHandler} />
 						</Row>
-						<Row style={{marginTop: "18px"}}>
-							<p>Last recommendation request took {lastRequestDuration/1000} seconds</p>
+						<Row style={{ marginTop: "18px" }}>
+							<p>Last recommendation request took {lastRequestDuration / 1000} seconds</p>
 						</Row>
 						{props.emoTogglesEnabled &&
 							<Row>
@@ -444,7 +223,7 @@ const Content = (props) => {
 									isDone={isToggleDone}
 									onFinalize={finalizeToggles}
 									infoCallback={infoHandler}
-									defaultLabel={conditionAlgo === 1? 'Ignore' : 'Diversify'} />
+									defaultLabel={updateParams.condition_algo === 1 ? 'Ignore' : 'Diversify'} />
 							</Row>
 						}
 					</div>
@@ -487,7 +266,7 @@ const Content = (props) => {
 				<div className="jumbotron jumbotron-footer">
 					{props.emoTogglesEnabled && !isToggleDone ?
 						<FooterButton className="toggleFinalizeButton" variant="ersDone"
-							onClick={() => finalizeToggles()} text="Finalize" />
+							onClick={() => finalizeToggles()} text="Back to Rating Page" />
 						:
 						<NextButton className="nextButton" disabled={buttonDisabled && !loading}
 							onClick={handleNext} loading={loading} />
@@ -502,79 +281,19 @@ const Content = (props) => {
 const EmotionPreferences = (props) => {
 
 	const userdata = useLocation().state.user;
-	// const stepid = useLocation().state.studyStep;
 
-	const navigate = useNavigate();
-	// const tour = useRef();
-	// tour.current = new Shepherd.Tour(tourOptions);
-
-	// const [studyStep, setStudyStep] = useState({});
 	const condition = userdata.condition;
 	const emoVizEnabled = studyConditions[condition].emoVizEnabled;
 	const emoTogglesEnabled = studyConditions[condition].emoTogglesEnabled;
 	const defaultEmoWeightLabel = studyConditions[condition].defaultEmoWeightLabel;
 
-	// useEffect(() => {
-	// getNextStudyStep(userdata.study_id, stepid)
-	// 	.then((value) => {
-	// 		setStudyStep(value);
-
-	// 	});
-	// tour.current.addSteps(emoPrefSteps(tour.current));
-	// tour.current.addSteps(recommendationInspectionSteps(tour.current));
-	// tour.current.addSteps(moviePreviewStep(tour.current));
-	// if (emoVizEnabled) {
-	// tour.current.addSteps(
-	// emoVizSteps(tour.current)
-	// );
-	// }
-	// if (emoTogglesEnabled) {
-	// tour.current.addSteps(
-	// emoToggleSteps(tour.current)
-	// );
-	// tour.current.addSteps(
-	// emoFinalizeStep(tour.current));
-	// }
-	// tour.current.start();
-
-	// return () => {
-	// Shepherd.activeTour && Shepherd.activeTour.cancel();
-	// }
-	// }, []);
-
-	// const handleSelectionOnboarding = (isSelectionStep, movies) => {
-	// if (isSelectionStep) {
-	// Shepherd.activeTour && Shepherd.activeTour.cancel();
-	// tour.current = new Shepherd.Tour(tourOptions);
-	// tour.current.addSteps(emoPrefSelectStep(tour.current));
-	// tour.current.addSteps(recommendationInspectionSteps(tour.current));
-	// tour.current.addSteps(movieSelectStep(tour.current, movies[0].movie_id));
-	// tour.current.addSteps(emoPrefDone(tour.current));
-	// tour.current.start();
-	// }
-	// }
-
-	// function navigateHandler(userdata, studyStep) {
-	// 	navigate(props.next,
-	// 		{
-	// 			state: {
-	// 				user: userdata,
-	// 				studyStep: studyStep.id
-	// 			}
-	// 		});
-	// }
-
 	return (
 		<div>
 			<Content
-				// nagivationCallback={navigateHandler}
 				emoTogglesEnabled={emoTogglesEnabled}
 				emoVizEnabled={emoVizEnabled}
 				defaultEmoWeightLabel={defaultEmoWeightLabel}
-				// onboardingCallback={handleSelectionOnboarding}
-				// studyStep={studyStep} 
 				user={userdata} />
-			{/* <ShepherdTour tour={tour.current} steps={[]} /> */}
 		</div>
 	)
 }

@@ -27,7 +27,7 @@
       "react-app/jest"
     ]
   },
-  "homepage": "https://rssa.recsys.dev/ierss",
+  "homepage": "https://rssa.recsys.dev/iers-algo-experiments",
   "browserslist": {
     "production": [
       ">0.2%",

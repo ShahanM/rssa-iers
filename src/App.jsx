@@ -10,7 +10,7 @@ import { Container } from 'react-bootstrap';
 function App() {
 	return (
 		<div className="App">
-			<Router basename='/ierss'>
+			<Router basename='/iers-algo-experiments'>
 				<header className="App-header">
 					<Navbar id="topnav" bg="light">
 						<Navbar.Brand style={{ marginLeft: "1em", fontWeight: "450" }}>Movie Recommender Study</Navbar.Brand>
