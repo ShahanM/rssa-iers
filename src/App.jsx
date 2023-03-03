@@ -19,7 +19,7 @@ function App() {
 				<Container>
 					<Suspense fallback={<h1>Loading</h1>}>
 						<Routes>
-							<Route path="/" element={<RateMovies />} />
+							<Route path="/" element={<RateMovies next="/recommendations" />} />
 							<Route path="/recommendations" element={<EmotionPreferences />} />
 						</Routes>
 					</Suspense>

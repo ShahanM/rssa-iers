@@ -1,17 +1,31 @@
-import React, { useEffect, useState } from 'react';
-import Button from 'react-bootstrap/Button';
+import React, { useEffect, useRef, useState } from 'react';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
-import Spinner from 'react-bootstrap/Spinner';
-import { useNavigate } from 'react-router-dom';
-import { API } from '../constants';
+import { useLocation, useNavigate } from 'react-router-dom';
+// import { ShepherdTour } from 'react-shepherd';
+// import Shepherd from 'shepherd.js';
+// import "shepherd.js/dist/css/shepherd.css";
+import { get, getNextStudyStep, post, put } from '../utils/api-middleware';
+// import { ratingSteps, tourOptions } from '../utils/onboarding';
+import HeaderJumbotron from '../widgets/headerJumbotron';
 import MovieGrid from '../widgets/movieGrid';
+import NextButton from '../widgets/nextButton';
 
 
-export default function RateMovies() {
-	let userid = 1;
+export const Content = (props) => {
+	const userid = 1;
+	const studyStep = {
+		step_name: "Rate Movies",
+		step_description: "Rate 10 movies to get recommendations"
+	}
+	const itemsPerPage = 24;
+	// const userdata = useLocation().state.user;
+	// const stepid = useLocation().state.studyStep;
+
 	const [ratedMoviesData, setRatedMoviesData] = useState([]);
 	const [ratedMovies, setRatedMovies] = useState([]);
+
+	const [movieids, setMovieIds] = useState([]);
 
 	const [movies, setMovies] = useState([]);
 
@@ -22,9 +36,16 @@ export default function RateMovies() {
 	const [currentPage, setCurrentPage] = useState(1);
 
 	const [buttonDisabled, setButtonDisabled] = useState(true);
+	const [studyCondition, setStudyCondition] = useState(1);	
 
-	const itemsPerPage = 24;
-	const navigate = useNavigate();
+	// const [studyStep, setStudyStep] = useState({});
+
+	// const tour = useRef();
+	// tour.current = new Shepherd.Tour(tourOptions);
+
+	// function start() {
+	// 	tour.current.start();
+	// }
 
 	const rateMoviesHandler = (newRating, movieid) => {
 		const isNew = !ratedMoviesData.some(item => item.item_id === movieid);
@@ -58,56 +79,80 @@ export default function RateMovies() {
 	}
 
 	const fetchMovies = async () => {
-		const offset = (currentPage - 1) * itemsPerPage * 2;
 		const limit = itemsPerPage * 2;
-		fetch(API + 'ers/movies/?skip=' + offset + '&limit=' + limit, {
-			method: 'GET',
-			header: {
-				'Content-Type': 'application/json',
-				"Access-Control-Allow-Headers": "*",
-				"Access-Control-Allow-Origin": "*",
-				"Access-Control-Allow-Methods": "*"
-			}
-		})
+		const nextpageids = pickRandomMovies(movieids, limit);
+		getMoviesByIDs(nextpageids);
+	}
+
+	const getAllMovieIds = async () => {
+		get('ers/movies/ids/')
 			.then((response): Promise<movie[]> => response.json())
-			.then((newmovies: movie[]) => { setMovies([...movies, ...newmovies]); })
+			.then((newmovies: movie[]) => {
+				const firstpageitems = pickRandomMovies(newmovies, itemsPerPage * 2);
+				getMoviesByIDs(firstpageitems);
+			})
 			.catch((error) => console.log(error));
 	}
 
+	const getMoviesByIDs = async (ids) => {
+		post('ers/movies/', ids)
+			.then((response): Promise<movie[]> => response.json())
+			.then((newmovies: movie[]) => {
+				// updateSeenItems(newmovies.map(item => item.movie_id));
+				setMovies([...movies, ...newmovies]);
+			})
+			.catch((error) => console.log(error));
+	}
+
+	const pickRandomMovies = (moviearr: int[], limit) => {
+		let randomMovies = [];
+		for (let i = 0; i < limit; i++) {
+			let randomMovie = moviearr.splice(Math.floor(Math.random() * moviearr.length), 1);
+			randomMovies.push(...randomMovie);
+		}
+		setMovieIds(moviearr);
+		return randomMovies;
+	}
+
+	// useEffect(() => {
+		// getNextStudyStep(userdata.study_id, stepid)
+		// 	.then((value) => {
+		// 		setStudyStep(value)
+		// 	});
+		// tour.current.addSteps(ratingSteps(tour.current));
+		// start();
+
+		// return () => {
+		// Shepherd.activeTour && Shepherd.activeTour.cancel();
+		// };
+	// }, []);
+
 	useEffect(() => {
-		fetchMovies();
+		// if (studyStep !== undefined && Object.keys(studyStep).length > 0) {
+		getAllMovieIds();
+		// }
 	}, []);
 
 	useEffect(() => {
 		if (recommendedMovies.length > 0) {
-			console.log("got recommended movies");
-			navigate('/recommendations',
-				{
-					state: {
-						recommendations: recommendedMovies,
-						ratings: ratedMoviesData
-					}
-				});
+			props.navigationCallback(recommendedMovies,
+				ratedMoviesData, userid, studyCondition);
 		}
-	}, [recommendedMovies, ratedMoviesData, navigate]);
+	}, [recommendedMovies, ratedMoviesData]);
+
 
 	const submitHandler = (recType) => {
 		setLoading(true);
 		if (ratedMovies.length > 0) {
-			fetch(API + 'ers/recommendation/', {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-					"Access-Control-Allow-Headers": "*",
-					"Access-Control-Allow-Origin": "*",
-					"Access-Control-Allow-Methods": "*"
-				},
-				body: JSON.stringify({
-					user_id: userid,
-					ratings: ratedMoviesData,
-					rec_type: recType,
-					num_rec: 20
-				})
+			// updateItemrating().then((isupdateSuccess): Promise<Boolean> => isupdateSuccess)
+			// .then((isupdateSuccess) => {
+			// if (isupdateSuccess) {
+			post('ers/recommendation/', {
+				user_id: userid,
+				user_condition: studyCondition,
+				ratings: ratedMoviesData,
+				rec_type: recType,
+				num_rec: 20
 			})
 				.then((response): Promise<movie[]> => response.json())
 				.then((movies: movie[]) => {
@@ -119,7 +164,35 @@ export default function RateMovies() {
 					setLoading(false);
 				});
 		}
+		// })
+		// .catch((error) => { console.log(error); setLoading(false); });
+		// }
 	}
+
+	// const updateItemrating = async () => {
+	// 	return put('user/' + userdata.id + '/itemrating/', {
+	// 		'user_id': userdata.id,
+	// 		'page_id': studyStep.id,
+	// 		'page_level': currentPage,
+	// 		'ratings': ratedMoviesData
+	// 	})
+	// 		.then((response): Promise<ratedItems[]> => response.json())
+	// 		.then((ratedItems: ratedItems) => { return ratedItems.length > 0; })
+	// 		.catch((error) => { console.log(error); return false });
+	// }
+
+	// const updateSeenItems = async (items) => {
+	// 	put('user/' + userdata.id + '/seenitems/', {
+	// 		'user_id': userdata.id,
+	// 		'page_id': studyStep.id,
+	// 		'page_level': currentPage,
+	// 		'items': items
+	// 	})
+	// 		.then((response): Promise<success> => response.json())
+	// 		.then((success: success) => {
+	// 		})
+	// 		.catch((error) => console.log(error));
+	// }
 
 	const updateCurrentPage = (page) => {
 		setCurrentPage(page);
@@ -127,17 +200,27 @@ export default function RateMovies() {
 
 	return (
 		<Container>
-			<Row>
-				<div className="jumbotron">
-					<h1 className="header">Indicate your preferences</h1>
-					<p>Use the blue button on the right to scroll through
-						the gallery of movies and rate at least 10 movies
-						that you have already watched. Once you have rated 10
-						movies, the system will be able to give you
-						recommendations.
-						Keep in mind, you can click on the blue button on the
-						right to get more movies to rate!</p>
+			{loading &&
+				<div style={{
+					position: "absolute", width: "1320px",
+					height: "698px", zIndex: "999",
+					backgroundColor: "rgba(25, 15, 0, 0.9)"
+				}}>
+					<h2 style={{
+						margin: "300px auto",
+						color: "white"
+					}}>
+						Please wait while the system prepares your recommendations
+						<div className="loaderStage">
+							<div className="dot-floating" style={{
+								margin: "1.5em auto"
+							}}></div>
+						</div>
+					</h2>
 				</div>
+			}
+			<Row>
+				<HeaderJumbotron title={studyStep.step_name} content={studyStep.step_description} />
 			</Row>
 			<Row>
 				<MovieGrid ratingCallback={rateMoviesHandler} userid={userid} movies={movies}
@@ -145,30 +228,51 @@ export default function RateMovies() {
 			</Row>
 			<Row>
 				<div className="jumbotron jumbotron-footer" style={{ display: "flex" }}>
-					<div className="rankHolder">
-						<span> Ranked Movies: </span>
-						<span><i>{ratedMovieCount}</i></span>
-						<span><i>of {10}</i></span>
-					</div>
-					<Button variant="ers" size="lg" style={{ height: "fit-content", marginTop: "1em" }}
-						className="next-button footer-btn" disabled={buttonDisabled && !loading}
-						onClick={() => submitHandler(0)}>
-						{!loading ? 'Next'
-							:
-							<>
-								<Spinner
-									as="span"
-									animation="grow"
-									size="sm"
-									role="status"
-									aria-hidden="true"
-								/>
-								Loading...
-							</>
-						}
-					</Button>
+					<RankHolder count={ratedMovieCount} />
+					<NextButton disabled={buttonDisabled && !loading}
+						loading={loading} onClick={() => submitHandler(0)} />
 				</div>
 			</Row>
 		</Container>
 	);
 }
+
+const RankHolder = (props) => {
+	return (
+		<div className="rankHolder">
+			<span> Ranked Movies: </span>
+			<span><i>{props.count}</i></span>
+			<span><i>of {10}</i></span>
+		</div>
+	)
+}
+
+export const RateMovies = (props) => {
+
+	const navigate = useNavigate();
+
+	function handleNavigate(recommendedMovies,
+		ratedMoviesData, userid, condition) {
+		navigate(props.next,
+			{
+				state: {
+					recommendations: recommendedMovies,
+					ratings: ratedMoviesData,
+					user: {
+						id: userid,
+						condition: condition
+					}
+				}
+			});
+	}
+
+	return (
+		<div>
+			{/* <ShepherdTour steps={[]}> */}
+			<Content navigationCallback={handleNavigate} />
+			{/* </ShepherdTour> */}
+		</div>
+	);
+}
+
+export default RateMovies;
