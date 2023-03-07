@@ -84,13 +84,14 @@ export const ParameterInput = (props) => {
 		const params = {
 			condition_algo: conditionAlgo,
 			scale_vector: scaleVector,
-			lowval: lowval,
-			highval: highval,
+			low_val: parseFloat(lowval),
+			high_val: parseFloat(highval),
 			algo: algoExpMap[algoExperiment],
-			dist_mthod: distMethod, 
+			dist_mthod: distMethod,
 			diversity_criterion: divCriterion,
 		}
 		props.updateCallback(params);
+		console.log('Source', params);
 	}
 
 	return (
@@ -110,12 +111,12 @@ export const ParameterInput = (props) => {
 					</option>
 				</Form.Select>
 			</InputGroup>
-			<InputGroup className="mb-3"
-				onChange={handleItemPoolCount}>
+			<InputGroup className="mb-3">
 				<InputGroup.Text id="inputGroup-sizing-sm">
 					Item Pool Count
 				</InputGroup.Text>
 				<Form.Control
+					onChange={handleItemPoolCount}
 					placeholder={itemPoolCount}
 					aria-label="itempoolcount"
 					aria-describedby="inputGroup-sizing-sm"
@@ -142,12 +143,12 @@ export const ParameterInput = (props) => {
 			</InputGroup>
 			{conditionAlgo === 2 &&
 				<>
-					<InputGroup className="mb-3"
-						onChange={handleDivCount}>
+					<InputGroup className="mb-3">
 						<InputGroup.Text id="inputGroup-sizing-sm">
 							Diversity Sampling Count
 						</InputGroup.Text>
 						<Form.Control
+							onChange={handleDivCount}
 							placeholder={divCount}
 							aria-label="diversitysamplingcount"
 							aria-describedby="inputGroup-sizing-sm"
@@ -207,24 +208,24 @@ export const ParameterInput = (props) => {
 					</option>
 				</Form.Select>
 			</InputGroup>
-			<InputGroup className="mb-3" type="number"
-				onChange={handleLowValInput}>
+			<InputGroup className="mb-3" type="number">
 				<InputGroup.Text id="inputGroup-sizing-sm">
 					Low Value
 				</InputGroup.Text>
 				<Form.Control
+					onChange={handleLowValInput}
 					placeholder={lowval}
 					aria-label="lowval"
 					aria-describedby="inputGroup-sizing-sm"
 				/>
 			</InputGroup>
 			<InputGroup className="mb-3"
-				onChange={handleHighValInput}
 				default={highval}>
 				<InputGroup.Text id="inputGroup-sizing-default">
 					High Value
 				</InputGroup.Text>
 				<Form.Control
+					onChange={handleHighValInput}
 					placeholder={highval}
 					aria-label="highval"
 					aria-describedby="inputGroup-sizing-default"
