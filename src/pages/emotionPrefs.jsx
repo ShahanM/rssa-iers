@@ -88,7 +88,9 @@ const Content = (props) => {
 		scale_vector: false,
 		lowval: -0.3,
 		highval: 0.3,
-		algo: 'algo1'
+		algo: 'algo1',
+		dist_method: 'euclidean',
+		diversity_criterion: 'all',
 	});
 
 	useEffect(() => {
@@ -227,7 +229,6 @@ const Content = (props) => {
 							</Row>
 						}
 					</div>
-
 				</Col>
 				<Col id="moviePanel">
 					{loading ?

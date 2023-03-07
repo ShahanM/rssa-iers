@@ -12,6 +12,8 @@ export const ParameterInput = (props) => {
 	const [lowval, setLowval] = useState(-0.3);
 	const [highval, setHighval] = useState(0.3);
 	const [algoExperiment, setAlgoExperiment] = useState(1);
+	const [distMethod, setDistMethod] = useState(1);
+	const [divCriterion, setDivCriterion] = useState(1);
 
 
 	const algoExpMap = {
@@ -68,13 +70,25 @@ export const ParameterInput = (props) => {
 		}
 	}
 
+	const handleDistMethod = (event) => {
+		const method = parseInt(event.target.value);
+		setDistMethod(method);
+	}
+
+	const handleDivCriterion = (event) => {
+		const crit = parseInt(event.target.value);
+		setDivCriterion(crit);
+	}
+
 	const handleUpdate = () => {
 		const params = {
 			condition_algo: conditionAlgo,
 			scale_vector: scaleVector,
 			lowval: lowval,
 			highval: highval,
-			algo: algoExpMap[algoExperiment]
+			algo: algoExpMap[algoExperiment],
+			distMethod: distMethod, 
+			divcrit: divCriterion,
 		}
 		props.updateCallback(params);
 	}
@@ -107,18 +121,54 @@ export const ParameterInput = (props) => {
 					aria-describedby="inputGroup-sizing-sm"
 				/>
 			</InputGroup>
+			<InputGroup className="mb-3" type="number"
+				onChange={handleDistMethod}>
+				<InputGroup.Text id="inputGroup-sizing-sm">
+					Distance Method
+				</InputGroup.Text>
+				<Form.Select aria-label="Distance Method"
+					placeholder={distMethod}
+					aria-describedby="inputGroup-sizing-sm">
+					<option value="1" >
+						Euclidean
+					</option>
+					<option value="2" >
+						City Block
+					</option>
+					<option value="3" >
+						Square Root Cityblock
+					</option>
+				</Form.Select>
+			</InputGroup>
 			{conditionAlgo === 2 &&
-				<InputGroup className="mb-3"
-					onChange={handleDivCount}>
-					<InputGroup.Text id="inputGroup-sizing-sm">
-						Diversity Sampling Count
-					</InputGroup.Text>
-					<Form.Control
-						placeholder={divCount}
-						aria-label="diversitysamplingcount"
-						aria-describedby="inputGroup-sizing-sm"
-					/>
-				</InputGroup>
+				<>
+					<InputGroup className="mb-3"
+						onChange={handleDivCount}>
+						<InputGroup.Text id="inputGroup-sizing-sm">
+							Diversity Sampling Count
+						</InputGroup.Text>
+						<Form.Control
+							placeholder={divCount}
+							aria-label="diversitysamplingcount"
+							aria-describedby="inputGroup-sizing-sm"
+						/>
+					</InputGroup>
+					<InputGroup className="mb-3">
+						<InputGroup.Text id="inputGroup-sizing-sm">
+							Diversification Criterion
+						</InputGroup.Text>
+						<Form.Select aria-label="Diversification Criterion"
+							onChange={handleDivCriterion}
+							value={divCriterion}>
+							<option value="1" >
+								All
+							</option>
+							<option value="2" >
+								Unspecified
+							</option>
+						</Form.Select>
+					</InputGroup>
+				</>
 			}
 			<InputGroup className="mb-3">
 				<InputGroup.Text id="inputGroup-sizing-sm">
@@ -134,7 +184,7 @@ export const ParameterInput = (props) => {
 					}
 					{conditionAlgo === 2 &&
 						<option value="2">
-							Diversify on unspecified
+							Emotion Distance
 						</option>
 					}
 					<option value="3" >
