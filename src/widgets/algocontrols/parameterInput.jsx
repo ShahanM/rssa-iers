@@ -122,25 +122,66 @@ export const ParameterInput = (props) => {
 					aria-describedby="inputGroup-sizing-sm"
 				/>
 			</InputGroup>
-			<InputGroup className="mb-3" type="number"
-				onChange={handleDistMethod}>
+			<InputGroup className="mb-3">
 				<InputGroup.Text id="inputGroup-sizing-sm">
-					Distance Method
+					Ranking Strategy
 				</InputGroup.Text>
-				<Form.Select aria-label="Distance Method"
-					placeholder={distMethod}
-					aria-describedby="inputGroup-sizing-sm">
-					<option value="1" >
-						Euclidean
-					</option>
-					<option value="2" >
-						City Block
-					</option>
+				<Form.Select aria-label="Algo Experiment"
+					onChange={handleAlgoExperiment}
+					value={algoExperiment}>
+					{conditionAlgo === 1 &&
+						<option value="1">
+							Emotion Distance
+						</option>
+					}
+					{conditionAlgo === 2 &&
+						<option value="2">
+							Emotion Distance
+						</option>
+					}
 					<option value="3" >
-						Square Root Cityblock
+						Weighted Ranking
 					</option>
 				</Form.Select>
 			</InputGroup>
+			{(algoExperiment === 2 || algoExperiment === 1) &&
+				<>
+					<InputGroup className="mb-3" type="number"
+						onChange={handleDistMethod}>
+						<InputGroup.Text id="inputGroup-sizing-sm">
+							Distance Method
+						</InputGroup.Text>
+						<Form.Select aria-label="Distance Method"
+							placeholder={distMethod}
+							aria-describedby="inputGroup-sizing-sm">
+							<option value="1" >
+								Euclidean
+							</option>
+							<option value="2" >
+								City Block
+							</option>
+							<option value="3" >
+								Square Root Cityblock
+							</option>
+						</Form.Select>
+					</InputGroup>
+					<InputGroup className="mb-3">
+						<InputGroup.Text id="inputGroup-sizing-sm">
+							Enable Scale Value
+						</InputGroup.Text>
+						<Form.Select aria-label="Scale Value"
+							onChange={handleScaleValue}
+							value={scaleVector ? 1 : 2}>
+							<option value="1">
+								Yes
+							</option>
+							<option value="2" >
+								No
+							</option>
+						</Form.Select>
+					</InputGroup>
+				</>
+			}
 			{conditionAlgo === 2 &&
 				<>
 					<InputGroup className="mb-3">
@@ -171,43 +212,6 @@ export const ParameterInput = (props) => {
 					</InputGroup>
 				</>
 			}
-			<InputGroup className="mb-3">
-				<InputGroup.Text id="inputGroup-sizing-sm">
-					Ranking Strategy
-				</InputGroup.Text>
-				<Form.Select aria-label="Algo Experiment"
-					onChange={handleAlgoExperiment}
-					value={algoExperiment}>
-					{conditionAlgo === 1 &&
-						<option value="1">
-							Emotion Distance
-						</option>
-					}
-					{conditionAlgo === 2 &&
-						<option value="2">
-							Emotion Distance
-						</option>
-					}
-					<option value="3" >
-						Weighted Ranking
-					</option>
-				</Form.Select>
-			</InputGroup>
-			<InputGroup className="mb-3">
-				<InputGroup.Text id="inputGroup-sizing-sm">
-					Enable Scale Value
-				</InputGroup.Text>
-				<Form.Select aria-label="Scale Value"
-					onChange={handleScaleValue}
-					value={scaleVector ? 1 : 2}>
-					<option value="1">
-						Yes
-					</option>
-					<option value="2" >
-						No
-					</option>
-				</Form.Select>
-			</InputGroup>
 			<InputGroup className="mb-3" type="number">
 				<InputGroup.Text id="inputGroup-sizing-sm">
 					Low Value
