@@ -1,4 +1,4 @@
-export const API = process.env.NODE_ENV !== "production" ? "https://rssa.recsys.dev/newrs/api/v1/"
+export const API = process.env.NODE_ENV === "production" ? "https://rssa.recsys.dev/newrs/api/v1/"
 	: "http://localhost:8000/";
 
 export const CORSHeaders = {
@@ -32,7 +32,7 @@ export function get(path: string) {
 }
 
 export function getNextStudyStep(studyid, stepid) {
-	return get('/study/' + studyid + '/step/' + stepid + '/next')
+	return get('study/' + studyid + '/step/' + stepid + '/next')
 		.then((response): Promise<step> => response.json())
 		.then((step: step) => {
 			return step;
