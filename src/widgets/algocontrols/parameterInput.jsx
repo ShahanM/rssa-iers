@@ -87,8 +87,8 @@ export const ParameterInput = (props) => {
 			lowval: lowval,
 			highval: highval,
 			algo: algoExpMap[algoExperiment],
-			distMethod: distMethod, 
-			divcrit: divCriterion,
+			dist_mthod: distMethod, 
+			diversity_criterion: divCriterion,
 		}
 		props.updateCallback(params);
 	}
