@@ -5,7 +5,7 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import { useNavigate } from 'react-router-dom';
 import { get, post } from '../utils/api-middleware';
-import InformedConsentModal from '../widgets/informedConsent';
+import InformedConsentModal from '../widgets/dialogs/informedConsent';
 
 export default function Welcome(props) {
 
@@ -33,7 +33,7 @@ export default function Welcome(props) {
 					}
 				});
 		}
-	}, [userdata, navigate, studyStep]);
+	}, [userdata, navigate, studyStep, props.next]);
 
 	useEffect(() => {
 		get('study/' + studyID)
@@ -42,9 +42,9 @@ export default function Welcome(props) {
 				setStudy(studyres);
 			});
 		get('study/' + studyID + '/step/first/')
-			.then((response): Promise<studyStep> => response.json())
-			.then((studyStep: studyStep) => {
-				setStudyStep(studyStep);
+			.then((response): Promise<StudyStepRes> => response.json())
+			.then((studyStepRes: studyStepRes) => {
+				setStudyStep(studyStepRes);
 			})
 
 	}, []);
@@ -79,30 +79,43 @@ export default function Welcome(props) {
 					<Card.Body className="instructionblurb">
 						<Card.Title>What can you expect?</Card.Title>
 						<p>
-							This is a study that aims to test a new recommender system for movies. Your participation in
-							this study will be valued.
+							In this study you will test a new recommender system
+							for movies.
 						</p>
 						<p>
-							It will take you about 10-15 minutes to complete the four steps of the study:
+							There are four steps to the study:
 						</p>
 						<ol>
-							<li>Complete a pre-survey.</li>
-							<li>Rate a few movies you are familiar with to let the recommender system know about movie preference.</li>
-							<li>Interact with the movie recommender system, then pick one movie you will watch.</li>
+							<li>
+								Complete a pre-survey.
+							</li>
+							<li>
+								Rate a few movies you are familiar with to let
+								recommender system know about your movie
+								preferences.
+							</li>
+							<li>
+								Interact with the movie recommender system, then
+								pick one movie you would most like to watch.
+							</li>
 							<li>Complete a post-survey.</li>
 						</ol>
 
-						<p>Thanks,<br />
-							Research Team</p>
+						<p>
+							Thanks,<br />
+							Research Team
+						</p>
 					</Card.Body>
 				</Card>
 			</Row>
 
-			<InformedConsentModal show={show} consentCallback={consentCallbackHandler} />
+			<InformedConsentModal show={show}
+				consentCallback={consentCallbackHandler} />
 
 			<Row>
 				<div className="jumbotron jumbotron-footer">
-					<Button variant="ers" size="lg" className="footer-btn" onClick={showInformedConsent}>
+					<Button variant="ers" size="lg" className="footer-btn"
+						onClick={showInformedConsent}>
 						Get started
 					</Button>
 				</div>

@@ -1,8 +1,9 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Suspense } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import Navbar from 'react-bootstrap/Navbar';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './App.css';
+import { WarningDialog } from './widgets/dialogs/warningDialog';
 import DemographyPage from './pages/demographyPage';
 import EmotionPreferences from './pages/emotionPrefs';
 import FeedbackPage from './pages/feedbackPage';
@@ -12,8 +13,35 @@ import Survey from './pages/survey';
 import Welcome from './pages/welcome';
 
 function App() {
+
+	const [showWarning, setShowWarning] = useState(false);
+
+	useEffect(() => {
+		const handleResize = () => {
+			if (window.innerWidth < 768) {
+				console.log('small', window.innerWidth);
+				setShowWarning(true);
+			} else {
+				console.log('large', window.innerWidth);
+				setShowWarning(false);
+			}
+		}
+		window.addEventListener('resize', handleResize);
+		return () => window.removeEventListener('resize', handleResize);
+	}, []);
+
 	return (
 		<div className="App">
+			{showWarning &&
+				<WarningDialog
+					show={showWarning}
+					title="Warning"
+					message="This study requires your browser to be at least 
+					<strong><underline>768px wide</underline></strong>. Please resize your browser window or use a 
+					device with a larger screen."
+					disableHide={true}
+				/>
+			}
 			<Router basename='/ierss'>
 				<header className="App-header">
 					<Navbar id="topnav" bg="light" style={{ width: "100%" }}>

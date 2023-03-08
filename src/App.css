@@ -112,6 +112,11 @@
 	border-width: 0;
 }
 
+.warning-header-ers {
+	background-color: #f9b05c;
+	font-weight: 400;
+}
+
 .grid-container {
 	display: grid;
 	grid-template-columns: auto auto auto auto auto auto;

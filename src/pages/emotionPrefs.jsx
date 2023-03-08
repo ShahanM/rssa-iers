@@ -16,7 +16,7 @@ import {
 } from '../utils/onboarding';
 import EmotionToggle from "../widgets/emotionToggle";
 import HeaderJumbotron from '../widgets/headerJumbotron';
-import { InstructionModal } from '../widgets/instructionModal';
+import { InstructionModal } from '../widgets/dialogs/instructionModal';
 import MovieEmotionPreviewPanel from '../widgets/movieEmotionPreviewPanel';
 import MovieListPanel from "../widgets/movieListPanel";
 import MovieListPanelItem from "../widgets/movieListPanelItem";
