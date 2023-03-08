@@ -50,14 +50,6 @@ export const ParameterInput = (props) => {
 
 	const handleAlgoExperiment = (event) => {
 		const algo = parseInt(event.target.value);
-		// console.log(algo);
-		// if (algo === 3) {
-		// 	setLowval(-0.125);
-		// 	setHighval(0.125);
-		// } else {
-		// 	setLowval(-0.3);
-		// 	setHighval(0.3);
-		// }
 		setAlgoExperiment(algo);
 	}
 

@@ -65,14 +65,10 @@ const Content = (props) => {
 	const [movies, setMovies] = useState(recommendations);
 	const [isShown, setIsShown] = useState(false);
 	const [activeMovie, setActiveMovie] = useState(recommendations[0]);
-	const [buttonDisabled, setButtonDisabled] = useState(true);
 	const [loading, setLoading] = useState(false);
 	const [emotionToggles, setEmotionToggles] = useState(emotionsDict);
 	const [isToggleDone, setIsToggleDone] = useState(false);
-	const [selectedMovieid, setSelectedMovieid] = useState(null);
-	const [hideInstruction, setHideInstruction] = useState(true);
 	const [recCriteria, setRecCriteria] = useState('')
-	const [pageData, setPageData] = useState(undefined);
 	const [showWarning, setShowWarning] = useState(false);
 
 	const [lastRequestDuration, setLastRequestDuration] = useState(0);
@@ -82,7 +78,8 @@ const Content = (props) => {
 		condition_algo: 1,
 		input_type: "discrete",
 		emotion_input: Object.keys(emotionsDict).map((key, value) => ({
-			emotion: key, weight: 'ignore'})),
+			emotion: key, weight: 'ignore'
+		})),
 		ratings: ratings,
 		num_rec: numrec,
 		scale_vector: false,
@@ -153,17 +150,8 @@ const Content = (props) => {
 		});
 	}
 
-	const handleSelection = (movieid) => {
-		setSelectedMovieid(movieid);
-		setButtonDisabled(false);
-	}
-
 	const resetToggles = () => {
 		setEmotionToggles(emotionsDict);
-	}
-
-	const finalizeToggles = () => {
-		setShowWarning(true);
 	}
 
 	const handleWarningDialog = (action) => {
@@ -171,7 +159,7 @@ const Content = (props) => {
 			setShowWarning(false);
 		} else if (action === 'confirm') {
 			setShowWarning(false);
-			finalizeEmotionPrefs();
+			props.navigationCallback();
 		}
 	}
 
@@ -179,33 +167,23 @@ const Content = (props) => {
 		setIsToggleDone(true);
 	}
 
-	const handleNext = () => {
-
-	}
-
-	const infoHandler = () => {
-		setHideInstruction(false);
-	}
-
 	const updateHandler = (callbackParams) => {
-		console.log('updateHandler, callbackParams: ', callbackParams);
 		setUpdateParams(prevState => {
 			return {
 				...prevState,
 				...callbackParams
 			}
 		})
-		console.log('updateHandler, updateParams: ', updateParams);
+	}
+
+	const backToTheStart = () => {
+		setShowWarning(true);
 	}
 
 	return (
 		<Container>
 			<Row>
-				{pageData !== undefined ?
-					<HeaderJumbotron title={pageData.page_name} content={pageData.page_instruction} />
-					:
-					<HeaderJumbotron title={studyStep.step_name} content={studyStep.step_description} />
-				}
+				<HeaderJumbotron title={studyStep.step_name} content={studyStep.step_description} />
 			</Row>
 			<WarningDialog show={showWarning} confirmCallback={handleWarningDialog} />
 			<Row style={{ height: "fit-content" }}>
@@ -223,8 +201,6 @@ const Content = (props) => {
 									emotions={emotionToggles}
 									onReset={resetToggles}
 									isDone={isToggleDone}
-									onFinalize={finalizeToggles}
-									infoCallback={infoHandler}
 									defaultLabel={updateParams.condition_algo === 1 ? 'Ignore' : 'Diversify'} />
 							</Row>
 						}
@@ -251,7 +227,6 @@ const Content = (props) => {
 						render={(props) => <MovieListPanelItem {...props}
 							pick={isToggleDone} />}
 						hoverHandler={handleHover}
-						selectionHandler={handleSelection}
 					/>
 				</Col>
 				<Col id="moviePosterPreview">
@@ -265,13 +240,8 @@ const Content = (props) => {
 			</Row >
 			<Row>
 				<div className="jumbotron jumbotron-footer">
-					{props.emoTogglesEnabled && !isToggleDone ?
-						<FooterButton className="toggleFinalizeButton" variant="ersDone"
-							onClick={() => finalizeToggles()} text="Back to Rating Page" />
-						:
-						<NextButton className="nextButton" disabled={buttonDisabled && !loading}
-							onClick={handleNext} loading={loading} />
-					}
+					<FooterButton className="toggleFinalizeButton" variant="ersDone"
+						onClick={() => backToTheStart()} text="Back to Rating Page" />
 				</div>
 			</Row>
 		</Container >
@@ -282,11 +252,16 @@ const Content = (props) => {
 const EmotionPreferences = (props) => {
 
 	const userdata = useLocation().state.user;
+	const navigate = useNavigate();
 
 	const condition = userdata.condition;
 	const emoVizEnabled = studyConditions[condition].emoVizEnabled;
 	const emoTogglesEnabled = studyConditions[condition].emoTogglesEnabled;
 	const defaultEmoWeightLabel = studyConditions[condition].defaultEmoWeightLabel;
+
+	function handleNavigate() {
+		navigate(props.next);
+	}
 
 	return (
 		<div>
@@ -294,6 +269,7 @@ const EmotionPreferences = (props) => {
 				emoTogglesEnabled={emoTogglesEnabled}
 				emoVizEnabled={emoVizEnabled}
 				defaultEmoWeightLabel={defaultEmoWeightLabel}
+				navigationCallback={handleNavigate}
 				user={userdata} />
 		</div>
 	)
