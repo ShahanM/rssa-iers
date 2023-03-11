@@ -20,6 +20,7 @@ export default function Survey(props) {
 	const [surveyAnswers, setSurveyAnswers] = useState({});
 	const [serverValidation, setServerValidation] = useState({});
 	const [studyStep, setStudyStep] = useState({});
+	const [showUnanswered, setShowUnanswered] = useState(false);
 
 	const getsurveypage = (studyid, stepid, pageid) => {
 		let path = '';
@@ -32,6 +33,7 @@ export default function Survey(props) {
 			.then((response): Promise<page> => response.json())
 			.then((page: page) => {
 				setPageData(page);
+				setShowUnanswered(false);
 				const pagevalidation = {};
 				pagevalidation[page.id] = false;
 				setServerValidation({ ...serverValidation, ...pagevalidation });
@@ -59,19 +61,24 @@ export default function Survey(props) {
 					studyStep: studyStep.id
 				}
 			});
-		} else{
+		} else {
 			window.scrollTo(0, 0);
 		}
 		setLoading(false);
 	}, [pageData, navigate, userdata, studyStep, props.next]);
 
 	const next = () => {
-		setLoading(true);
-		if (pageData.id !== null) {
-			if (serverValidation[pageData.id] === false) {
-				submitAndValidate();
-			} else {
-				getsurveypage(userdata.study_id, studyStep.id, pageData.id);
+		if (nextButtonDisabled) {
+			setShowUnanswered(true);
+		} else {
+			setLoading(true);
+			if (pageData.id !== null) {
+				if (serverValidation[pageData.id] === false) {
+					submitAndValidate();
+				} else {
+					console.log('getting new set of questions.');
+					getsurveypage(userdata.study_id, studyStep.id, pageData.id);
+				}
 			}
 		}
 	}
@@ -115,13 +122,14 @@ export default function Survey(props) {
 				{Object.entries(pageData).length !== 0 ?
 					<SurveyTemplate surveyquestions={pageData.questions}
 						surveyquestiongroup={pageData.page_name}
+						showUnanswered={showUnanswered}
 						submitCallback={submitHandler} />
 					: ''
 				}
 			</Row>
 			<Row>
 				<div className="jumbotron jumbotron-footer">
-					<NextButton disabled={nextButtonDisabled}
+					<NextButton disabled={false} variant={nextButtonDisabled ? 'ers-disabled' : 'ers'}
 						loading={loading} onClick={() => next()} />
 				</div>
 			</Row>

@@ -3,8 +3,10 @@ import Spinner from 'react-bootstrap/Spinner';
 
 export default function NextButton(props) {
 
+	const variant = props.variant ? props.variant : "ers";
+
 	return (
-		<Button variant="ers" size="lg" className="nextButton footer-btn"
+		<Button variant={variant} size="lg" className="nextButton footer-btn"
 			disabled={props.disabled} onClick={props.onClick}>
 			{!props.loading ? 'Next'
 				:

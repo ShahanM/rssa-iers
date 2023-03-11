@@ -60,6 +60,31 @@
 	border-width: 0;
 }
 
+.btn-ers-disabled {
+	background-color: #c0c0c0ee;
+	color: #4a4b4b;
+	border-width: 0;
+	cursor: default;
+}
+.btn-ers-disabled:hover {
+	background-color: #c0c0c0ee;
+	color: #4a4b4b;
+	border-width: 0;
+	cursor: default;
+}
+.btn-ers-disabled:active {
+	background-color: #c0c0c0ee !important;
+	color: #4a4b4b !important;
+	border-width: 0 !important;
+	cursor: default !important;
+}
+.btn-ers-disabled:focus-visible {
+	background-color: #c0c0c0ee;
+	color: #4a4b4b;
+	border-width: 0;
+	cursor: default;
+}
+
 .btn-lg {
 	padding: 0.75rem 1rem;
 	font-size: 1rem;
@@ -321,6 +346,17 @@
 	border-left-width: 3px;
 	border-left: green;
 	border-left-color: green;
+	border-left-style: solid;
+	margin: 18px auto 9px auto;
+	width: 720px;
+	text-align: left;
+}
+
+.survey-question-block-unanswered {
+	padding: 3px 9px 0 18px;
+	border-left-width: 3px;
+	border-left: red;
+	border-left-color: red;
 	border-left-style: solid;
 	margin: 18px auto 9px auto;
 	width: 720px;
