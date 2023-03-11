@@ -307,9 +307,20 @@
 
 .survey-question-block {
 	padding: 3px 9px 0 18px;
-	border-left: black;
 	border-left-width: 3px;
+	border-left: darkgray;
 	border-left-color: darkgray;
+	border-left-style: solid;
+	margin: 18px auto 9px auto;
+	width: 720px;
+	text-align: left;
+}
+
+.survey-question-block-responded {
+	padding: 3px 9px 0 18px;
+	border-left-width: 3px;
+	border-left: green;
+	border-left-color: green;
 	border-left-style: solid;
 	margin: 18px auto 9px auto;
 	width: 720px;
