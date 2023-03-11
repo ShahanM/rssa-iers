@@ -59,9 +59,11 @@ export default function Survey(props) {
 					studyStep: studyStep.id
 				}
 			});
+		} else{
+			window.scrollTo(0, 0);
 		}
 		setLoading(false);
-	}, [pageData, navigate, userdata, studyStep]);
+	}, [pageData, navigate, userdata, studyStep, props.next]);
 
 	const next = () => {
 		setLoading(true);
