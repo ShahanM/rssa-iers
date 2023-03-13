@@ -113,10 +113,12 @@ export const Content = (props) => {
 				setStudyStep(value)
 			});
 		tour.current.addSteps(ratingSteps(tour.current));
+		document.getElementById('pageOverlay').style.display = 'block';
 		start();
 
 		return () => {
 			Shepherd.activeTour && Shepherd.activeTour.cancel();
+			document.getElementById('pageOverlay').style.display = 'none';
 		};
 	}, []);
 
@@ -193,6 +195,7 @@ export const Content = (props) => {
 
 	return (
 		<Container>
+			
 			{loading &&
 				<div style={{
 					position: "absolute", width: "1320px",

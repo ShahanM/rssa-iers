@@ -55,7 +55,10 @@ const dynamicDoneButton = (tour) => {
 		classes: 'shepherd-button-primary',
 		text: 'Done',
 		type: 'next',
-		action: tour.complete
+		action: function (resolve) {
+			document.getElementById('pageOverlay').style.display = 'none';
+			tour.complete();
+		}
 	}
 }
 

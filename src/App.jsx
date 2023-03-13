@@ -42,6 +42,7 @@ function App() {
 					disableHide={true}
 				/>
 			}
+			<div id="pageOverlay" style={{ position: "absolute", width: "100%", height: "127%", zIndex: "999", display: "none" }}></div>
 			<Router basename='/ierss'>
 				<header className="App-header">
 					<Navbar id="topnav" bg="light" style={{ width: "100%" }}>
