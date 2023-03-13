@@ -1,7 +1,7 @@
 export const tourOptions = {
 	defaultStepOptions: {
 		cancelIcon: {
-			enabled: true
+			enabled: false
 		},
 		classes: 'shepherd-theme-arrows shadow-md bg-purple-dark',
 		scrollTo: { behavior: 'smooth', block: 'center' },
@@ -85,7 +85,7 @@ export const ratingSteps = (tour) => [
 		highlightClass: 'highlight',
 		scrollTo: false,
 		cancelIcon: {
-			enabled: true,
+			enabled: false,
 		},
 		title: 'Indicating your preferences',
 		text: ['In this step you will rate movies. Please read these instructions carefully before you start.']
@@ -106,7 +106,7 @@ export const ratingSteps = (tour) => [
 		highlightClass: 'highlight',
 		scrollTo: false,
 		cancelIcon: {
-			enabled: true,
+			enabled: false,
 		},
 		title: 'Rating movies',
 		text: ['The gallery shows the movies you can rate. Please only rate movies that you are familiar with.']
@@ -127,7 +127,7 @@ export const ratingSteps = (tour) => [
 		highlightClass: 'highlight',
 		scrollTo: false,
 		cancelIcon: {
-			enabled: true,
+			enabled: false,
 		},
 		title: 'Navigating the gallery',
 		text: [`Ran out of movies you are familiar with? You can request more 
@@ -159,7 +159,7 @@ export const ratingSteps = (tour) => [
 		highlightClass: 'highlight',
 		scrollTo: false,
 		cancelIcon: {
-			enabled: true,
+			enabled: false,
 		},
 		title: 'Minimum number of ratings',
 		text: ["Please rate at least 10 movies, to get your recommendations."]
@@ -179,7 +179,7 @@ export const ratingSteps = (tour) => [
 		highlightClass: 'highlight',
 		scrollTo: false,
 		cancelIcon: {
-			enabled: true,
+			enabled: false,
 		},
 		title: 'Next Step',
 		text: ["Finally, click on the button to get your recommendations."]
