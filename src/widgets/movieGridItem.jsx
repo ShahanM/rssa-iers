@@ -21,7 +21,7 @@ export default function MovieGridItem(props) {
 						starSpacing="1px"
 						changeRating={props.handleRating}
 						numberOfStars={5}
-						name={props.movieItem.movie_id} />
+						name={props.movieItem.movie_id.toString()} />
 				</div>
 			</div>
 			<div className="grid-item-label" style={{ position: "absolute" }}>
