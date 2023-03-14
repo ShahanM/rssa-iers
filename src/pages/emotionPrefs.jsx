@@ -9,14 +9,15 @@ import { ShepherdTour } from 'react-shepherd';
 import Shepherd from 'shepherd.js';
 import { get, getNextStudyStep, post, put } from '../utils/api-middleware';
 import { emotionsDict, studyConditions } from '../utils/constants';
+import { LoadingScreen } from '../utils/loadingScreen';
 import {
 	emoFinalizeStep, emoPrefDone, emoPrefSelectStep, emoPrefSteps,
 	emoToggleSteps, emoVizSteps, moviePreviewStep, movieSelectStep,
 	recommendationInspectionSteps, tourOptions
 } from '../utils/onboarding';
+import { InstructionModal } from '../widgets/dialogs/instructionModal';
 import EmotionToggle from "../widgets/emotionToggle";
 import HeaderJumbotron from '../widgets/headerJumbotron';
-import { InstructionModal } from '../widgets/dialogs/instructionModal';
 import MovieEmotionPreviewPanel from '../widgets/movieEmotionPreviewPanel';
 import MovieListPanel from "../widgets/movieListPanel";
 import MovieListPanelItem from "../widgets/movieListPanelItem";
@@ -66,7 +67,7 @@ const Content = (props) => {
 	const recommendations = useLocation().state.recommendations;
 
 	const [movies, setMovies] = useState(recommendations);
-	const [isShown, setIsShown] = useState(false);
+	const [isShown, setIsShown] = useState(true);
 	const [activeMovie, setActiveMovie] = useState(recommendations[0]);
 	const [buttonDisabled, setButtonDisabled] = useState(true);
 	const [loading, setLoading] = useState(false);
@@ -151,7 +152,6 @@ const Content = (props) => {
 
 	const finalizeToggles = () => {
 		setShowWarning(true);
-		// finalizeEmotionPrefs();
 	}
 
 	const handleWarningDialog = (action) => {
@@ -259,7 +259,6 @@ const Content = (props) => {
 
 				</Col>
 				<Col id="moviePanel">
-					<div className="movieListPanelOverlay" style={{ position: "absolute", width: "423px", height: "690px", zIndex: "999", display: "None" }}></div>
 					<MovieListPanel id="leftPanel"
 						movieList={movies.slice(0, 7)}
 						panelTitle={'Recommendations'}
@@ -300,12 +299,12 @@ const EmotionPreferences = (props) => {
 
 	const userdata = useLocation().state.user;
 	const stepid = useLocation().state.studyStep;
+	const recs = useLocation().state.recommendations;
 
 	const navigate = useNavigate();
 	const tour = useRef();
-	tour.current = new Shepherd.Tour(tourOptions);
 
-	const [studyStep, setStudyStep] = useState({});
+	const [studyStep, setStudyStep] = useState(undefined);
 	const condition = userdata.condition;
 	const emoVizEnabled = studyConditions[condition].emoVizEnabled;
 	const emoTogglesEnabled = studyConditions[condition].emoTogglesEnabled;
@@ -317,27 +316,58 @@ const EmotionPreferences = (props) => {
 				setStudyStep(value);
 
 			});
-		tour.current.addSteps(emoPrefSteps(tour.current));
-		tour.current.addSteps(recommendationInspectionSteps(tour.current));
-		tour.current.addSteps(moviePreviewStep(tour.current));
-		if (emoVizEnabled) {
-			tour.current.addSteps(
-				emoVizSteps(tour.current)
-			);
-		}
-		if (emoTogglesEnabled) {
-			tour.current.addSteps(
-				emoToggleSteps(tour.current)
-			);
-			tour.current.addSteps(
-				emoFinalizeStep(tour.current));
-		}
-		tour.current.start();
+	}, []);
 
+	useEffect(() => {
+		if (studyStep !== undefined) {
+			if (emoTogglesEnabled) {
+				Shepherd.activeTour && Shepherd.activeTour.cancel();
+				if (tour.current === undefined) {
+					tour.current = new Shepherd.Tour(tourOptions);
+					tour.current.addSteps(emoPrefSteps(tour.current));
+					tour.current.addSteps(recommendationInspectionSteps(tour.current));
+					tour.current.addSteps(moviePreviewStep(tour.current));
+					if (emoVizEnabled) {
+						tour.current.addSteps(
+							emoVizSteps(tour.current)
+						);
+					}
+
+					tour.current.addSteps(
+						emoToggleSteps(tour.current, defaultEmoWeightLabel === 'Diversify')
+					);
+					tour.current.addSteps(
+						emoFinalizeStep(tour.current));
+
+					tour.current.start();
+				}
+			} else {
+				// FIXME: this is a duplicated code.
+				// split this into two parts: inro and the final step
+				// handleSelectionOnboarding(true, recs);
+				const selectButton = document.getElementById('selectButton_' + recs[0].movie_id);
+				Shepherd.activeTour && Shepherd.activeTour.cancel();
+				tour.current = new Shepherd.Tour(tourOptions);
+
+				if (selectButton) {
+					tour.current.addSteps(emoPrefSelectStep(tour.current));
+					tour.current.addSteps(recommendationInspectionSteps(tour.current));
+					tour.current.addSteps(moviePreviewStep(tour.current));
+					if (emoVizEnabled) {
+						tour.current.addSteps(
+							emoVizSteps(tour.current)
+						);
+					}
+					tour.current.addSteps(movieSelectStep(tour.current, recs[0].movie_id));
+					tour.current.addSteps(emoPrefDone(tour.current));
+					tour.current.start();
+				}
+			}
+		}
 		return () => {
 			Shepherd.activeTour && Shepherd.activeTour.cancel();
 		}
-	}, []);
+	}, [studyStep]);
 
 	const handleSelectionOnboarding = (isSelectionStep, movies) => {
 		if (isSelectionStep) {
@@ -362,16 +392,21 @@ const EmotionPreferences = (props) => {
 	}
 
 	return (
-		<div>
-			<Content nagivationCallback={navigateHandler}
-				emoTogglesEnabled={emoTogglesEnabled}
-				emoVizEnabled={emoVizEnabled}
-				defaultEmoWeightLabel={defaultEmoWeightLabel}
-				onboardingCallback={handleSelectionOnboarding}
-				studyStep={studyStep} user={userdata} />
+		<>
+			{
+				studyStep === undefined ?
+					<LoadingScreen loading={!studyStep} />
+					:
+					<Content nagivationCallback={navigateHandler}
+						emoTogglesEnabled={emoTogglesEnabled}
+						emoVizEnabled={emoVizEnabled}
+						defaultEmoWeightLabel={defaultEmoWeightLabel}
+						onboardingCallback={handleSelectionOnboarding}
+						studyStep={studyStep} user={userdata} />
+			}
 			<ShepherdTour tour={tour.current} steps={[]} />
-		</div>
+		</>
 	)
-}
 
+}
 export default EmotionPreferences;

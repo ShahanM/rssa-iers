@@ -3,6 +3,7 @@ import Image from "react-bootstrap/Image";
 import ListGroup from "react-bootstrap/ListGroup";
 
 
+
 export default function MovieListPanelItem(props) {
 
 	return (
@@ -23,9 +24,7 @@ export default function MovieListPanelItem(props) {
 			</div>
 			{props.pick ?
 				<>
-					<div>
-						<div id={"selectButtonOverlay_" + props.movie.movie_id} style={{ position: "absolute", display: "None", zIndex: "999", width: "72px", height: "38px"}}>
-						</div>
+					<div id={"selectButton_" + props.movie.movie_id}>
 						{props.movie.movie_id === props.selectedid ?
 							<Button variant="ersDone">Selected</Button>
 							:

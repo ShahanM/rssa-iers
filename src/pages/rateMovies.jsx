@@ -6,6 +6,7 @@ import { ShepherdTour } from 'react-shepherd';
 import Shepherd from 'shepherd.js';
 import "shepherd.js/dist/css/shepherd.css";
 import { get, getNextStudyStep, post, put } from '../utils/api-middleware';
+import { LoadingScreen } from '../utils/loadingScreen';
 import { ratingSteps, tourOptions } from '../utils/onboarding';
 import HeaderJumbotron from '../widgets/headerJumbotron';
 import MovieGrid from '../widgets/movieGrid';
@@ -40,8 +41,10 @@ export const Content = (props) => {
 		tour.current.start();
 	}
 
-	const rateMoviesHandler = (newRating, movieid) => {
-		const isNew = !ratedMoviesData.some(item => item.item_id === movieid);
+	const rateMoviesHandler = (newRating, idstr) => {
+		const movieid = parseInt(idstr);
+		const isNew = !ratedMoviesData.some(item =>
+			item.item_id === movieid);
 		let updatevisited = [];
 		let updaterated = [];
 		if (isNew) {
@@ -113,12 +116,10 @@ export const Content = (props) => {
 				setStudyStep(value)
 			});
 		tour.current.addSteps(ratingSteps(tour.current));
-		document.getElementById('pageOverlay').style.display = 'block';
 		start();
 
 		return () => {
 			Shepherd.activeTour && Shepherd.activeTour.cancel();
-			document.getElementById('pageOverlay').style.display = 'none';
 		};
 	}, []);
 
@@ -194,42 +195,28 @@ export const Content = (props) => {
 	}
 
 	return (
-		<Container>
-			
-			{loading &&
-				<div style={{
-					position: "absolute", width: "1320px",
-					height: "698px", zIndex: "999",
-					backgroundColor: "rgba(25, 15, 0, 0.9)"
-				}}>
-					<h2 style={{
-						margin: "300px auto",
-						color: "white"
-					}}>
-						Please wait while the system prepares your recommendations
-						<div className="loaderStage">
-							<div className="dot-floating" style={{
-								margin: "1.5em auto"
-							}}></div>
+		<>
+			{loading ?
+				<LoadingScreen loading={loading} />
+				:
+				<Container>
+					<Row>
+						<HeaderJumbotron title={studyStep.step_name} content={studyStep.step_description} />
+					</Row>
+					<Row>
+						<MovieGrid ratingCallback={rateMoviesHandler} userid={userdata.id} movies={movies}
+							pagingCallback={updateCurrentPage} itemsPerPage={itemsPerPage} dataCallback={fetchMovies} />
+					</Row>
+					<Row>
+						<div className="jumbotron jumbotron-footer" style={{ display: "flex" }}>
+							<RankHolder count={ratedMovieCount} />
+							<NextButton disabled={buttonDisabled && !loading}
+								loading={loading} onClick={() => submitHandler(0)} />
 						</div>
-					</h2>
-				</div>
+					</Row>
+				</Container>
 			}
-			<Row>
-				<HeaderJumbotron title={studyStep.step_name} content={studyStep.step_description} />
-			</Row>
-			<Row>
-				<MovieGrid ratingCallback={rateMoviesHandler} userid={userdata.id} movies={movies}
-					pagingCallback={updateCurrentPage} itemsPerPage={itemsPerPage} dataCallback={fetchMovies} />
-			</Row>
-			<Row>
-				<div className="jumbotron jumbotron-footer" style={{ display: "flex" }}>
-					<RankHolder count={ratedMovieCount} />
-					<NextButton disabled={buttonDisabled && !loading}
-						loading={loading} onClick={() => submitHandler(0)} />
-				</div>
-			</Row>
-		</Container>
+		</>
 	);
 }
 

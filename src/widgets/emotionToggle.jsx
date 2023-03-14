@@ -42,7 +42,7 @@ export default function EmotionToggle(props) {
 	return (
 		<Container>
 			<div style={{ marginBottom: "3px", display: "inline-flex", marginTop: "27px" }}>
-				<h4>Your taste on movie emotions</h4>
+				<h4>Adjust your emotion preferences</h4>
 				<FcAbout size={30} className="infoIcon"
 					style={{ marginTop: "-18px", marginLeft: "9px" }}
 					onClick={props.infoCallback} />
@@ -60,11 +60,11 @@ export default function EmotionToggle(props) {
 									onChange={(evt) => handleToggle(emotion, evt)}>
 									<ToggleButton id={emotion + "_low"} value={"low"} disabled={isDone}
 										className={emotionValues[emotion] === 'low' ? 'ersToggleBtnChecked' : 'ersToggleBtn'}>
-										Low
+										Less
 									</ToggleButton>
 									<ToggleButton id={emotion + "_high"} value={"high"} disabled={isDone}
 										className={emotionValues[emotion] === 'high' ? 'ersToggleBtnChecked' : 'ersToggleBtn'}>
-										High
+										More
 									</ToggleButton>
 									<ToggleButton id={emotion + "ignore"} value={"ignore"} disabled={isDone}
 										className={emotionValues[emotion] === 'ignore' ? 'ersToggleBtnChecked' : 'ersToggleBtn'}>

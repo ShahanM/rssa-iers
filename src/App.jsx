@@ -18,7 +18,7 @@ function App() {
 
 	useEffect(() => {
 		const handleResize = () => {
-			if (window.innerWidth < 768) {
+			if (window.innerWidth < 720) {
 				console.log('small', window.innerWidth);
 				setShowWarning(true);
 			} else {
@@ -37,12 +37,11 @@ function App() {
 					show={showWarning}
 					title="Warning"
 					message="This study requires your browser to be at least 
-					<strong><underline>768px wide</underline></strong>. Please resize your browser window or use a 
+					<strong><underline>720 pixels wide</underline></strong>. Please resize your browser window or use a 
 					device with a larger screen."
 					disableHide={true}
 				/>
 			}
-			<div id="pageOverlay" style={{ position: "absolute", width: "100%", height: "127%", zIndex: "999", display: "none" }}></div>
 			<Router basename='/ierss'>
 				<header className="App-header">
 					<Navbar id="topnav" bg="light" style={{ width: "100%" }}>

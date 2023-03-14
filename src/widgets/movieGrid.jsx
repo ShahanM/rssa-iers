@@ -33,7 +33,6 @@ export default function MovieGrid(props) {
 		<Container className="gallery">
 			<Row>
 				<Col md={12}>
-					<div className="galleryOverlay" style={{ position: "absolute", width: "722px", height: "624px", zIndex: "999", display: "none" }}></div>
 					{(currentPage * props.itemsPerPage <= props.movies.length) ?
 						<div className="grid-container">
 							{props.movies.slice((currentPage - 1) * props.itemsPerPage, currentPage * props.itemsPerPage).map(currentMovie => (
@@ -47,8 +46,7 @@ export default function MovieGrid(props) {
 					}
 				</Col>
 			</Row>
-			<Row className='galleryFooter'>
-				<div className="galleryFooterOverlay" style={{ position: "absolute", width: "750px", height: "81px", zIndex: "999", display: "none" }}></div>
+			<Row className="galleryFooter">
 				<Col md={3}>
 					<div className="btnDiv">
 						<Button id="gallery-left-btn" disabled={currentPage === 1} variant="ers" onClick={renderPrev}>
