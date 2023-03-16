@@ -13,9 +13,14 @@ export default function MovieEmotionPreviewPanel(props) {
 			</Row>
 			<hr />
 			{props.emoVizEnabled &&
-				<Row className="floatLeft">
-					<EmotionStats movie={props.movie} />
-				</Row>
+				<>
+					<Row className="floatLeft">
+						<EmotionStats movie={props.movie} />
+					</Row>
+					<Row style={{marginTop: "18px", fontWeight: "600"}}>
+						<p>Emotional signature</p>
+					</Row>
+				</>
 			}
 		</Container>
 	)

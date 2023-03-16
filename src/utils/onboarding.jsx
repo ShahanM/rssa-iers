@@ -97,35 +97,36 @@ export const ratingSteps = (tour) => [
 		null, dynamicFinalStepButtons(tour))
 ]
 
-export const emoPrefSteps = (tour) => [
+export const emoPrefSteps = (tour) =>
 	tourStepsSchema('.jumbotron', 'bottom', 'intro', 'Interacting with the Recommender System',
 		['Please carefully read the instructions.'],
-		0, [dynamicNextButton(tour)])
-];
+		0, [dynamicNextButton(tour)]);
 
-export const emoPrefSelectStep = (tour) => [
+export const emoPrefSelectStep = (tour) =>
 	tourStepsSchema('.jumbotron', 'bottom', 'intro', 'Selecting a movie',
-		['In this step you will find and select a movie you will watch.'],
+		['In this step you will find and select one movie you would most like to watch. Please carefully read the instructions.'],
 		0, [dynamicNextButton(tour)])
-]
 
-export const recommendationInspectionSteps = (tour) => [
+
+export const recommendationInspectionSteps = (tour) =>
 	tourStepsSchema('.recommendationsListContainer', 'right', 'recommendations', 'Inspecting recommendations',
 		['This list contains your recommendations. You can hover over each movie to see more details about it in the panel on the right.'],
 		null, dynamicTourButtons(tour))
-]
 
-export const movieSelectStep = (tour, movieid) => [
-	tourStepsSchema('#selectButton_' + movieid, 'right', 'movieSelect', 'Choosing a movie',
-		['Once you have found a movie that you would watch, click on the select button to choose it.'],
+export const resommendationSelectionInspection = (tour) =>
+	tourStepsSchema('.recommendationsListContainer', 'right', 'recommendations', 'Inspecting recommendations',
+		['Now that we have your final recommendations, please inspect them once more before making a selection.'],
 		null, dynamicTourButtons(tour))
-]
 
-export const moviePreviewStep = (tour) => [
+export const movieSelectStep = (tour, movieid) =>
+	tourStepsSchema('#selectButton_' + movieid, 'right', 'movieSelect', 'Choosing a movie',
+		['Once you have decided which move you would most like to watch, click on its Select button to choose it.'],
+		null, dynamicTourButtons(tour))
+
+export const moviePreviewStep = (tour) =>
 	tourStepsSchema('.moviePreviewCard', 'left', 'moviePreview', 'Inspecting recommendations',
 		['This panel contains the movie details such as the movie poster and synopsis.'],
 		null, dynamicTourButtons(tour))
-]
 
 export const emoToggleSteps = (tour, isDiversify) => [
 	tourStepsSchema('.emoToggleInputs', 'left', 'emoInput', 'Indicating your taste in movie emotions',
@@ -142,20 +143,19 @@ export const emoToggleSteps = (tour, isDiversify) => [
 		null, dynamicTourButtons(tour))
 ]
 
-export const emoPrefDone = (tour) => [
+export const emoPrefDone = (tour) =>
 	tourStepsSchema('.nextButton', 'bottom', 'emoDone', 'Completing the step',
-		['Once you have chosen a movie, you can complete the step by clicking on the next button.'],
+		['Once you have made your decision you can continue by clicking on this button.'],
 		300, dynamicFinalStepButtons(tour))
-]
 
-export const emoFinalizeStep = (tour) => [
+export const emoFinalizeStep = (tour) =>
 	tourStepsSchema('.toggleFinalizeButton', 'left', 'emoFinalize', 'Finalizing Emotion Preference',
 		['Please carefully inspect and adjust the recommendations until you are satisfied with them. Once you are happy with the recommendations, you can finalize the settings by clicking on this button.'],
 		300, dynamicFinalStepButtons(tour))
-]
 
-export const emoVizSteps = (tour) => [
+
+export const emoVizSteps = (tour) =>
 	tourStepsSchema('.emoStatbars', 'left', 'emoViz', 'Emotional Signature',
 		['This graph shows the extent to which we expect the following emotions to be evoked by the movie (based on movie review data).'],
 		150, dynamicTourButtons(tour))
-]
+

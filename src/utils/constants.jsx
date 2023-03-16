@@ -1,12 +1,12 @@
 export const emotionsDict = {
-	'Joy': '',
-	'Trust': '',
-	'Fear': '',
-	'Surprise': '',
-	'Sadness': '',
-	'Disgust': '',
-	'Anger': '',
-	'Anticipation': ''
+	'Joy': 'ignore',
+	'Trust': 'ignore',
+	'Fear': 'ignore',
+	'Surprise': 'ignore',
+	'Sadness': 'ignore',
+	'Disgust': 'ignore',
+	'Anger': 'ignore',
+	'Anticipation': 'ignore'
 }
 
 export const studyConditions = {

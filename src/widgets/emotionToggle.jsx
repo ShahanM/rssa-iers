@@ -41,12 +41,29 @@ export default function EmotionToggle(props) {
 
 	return (
 		<Container>
-			<div style={{ marginBottom: "3px", display: "inline-flex", marginTop: "27px" }}>
-				<h4>Adjust your emotion preferences</h4>
-				<FcAbout size={30} className="infoIcon"
-					style={{ marginTop: "-18px", marginLeft: "9px" }}
-					onClick={props.infoCallback} />
-			</div>
+			<Row>
+				<div style={{ marginBottom: "3px", display: "inline-flex", marginTop: "27px" }}>
+					<h5>Adjust your emotion preferences</h5>
+					<FcAbout size={24} className="infoIcon"
+						style={{ marginTop: "-13px", marginLeft: "9px" }}
+						onClick={props.infoCallback} />
+				</div>
+			</Row>
+			<Row>
+				<p style={{textAlign: "left"}}>
+					Indicate whether you want the recommended movies to evoke
+					less or more of a certain emotion, or to
+					{props.defaultLabel === "Ignore" ?
+						<span>
+							ignore the emotion in weighing the recommendations.
+						</span>
+						:
+						<span>
+							diversify the recommendations along that emotional dimension.
+						</span>
+					}
+				</p>
+			</Row>
 			<Row className="emoToggleInputs">
 				<div className="emoToggleInputsOverlay" style={{ position: "absolute", width: "410px", height: "320px", zIndex: "999", display: "None" }}></div>
 				{
@@ -66,7 +83,7 @@ export default function EmotionToggle(props) {
 										className={emotionValues[emotion] === 'high' ? 'ersToggleBtnChecked' : 'ersToggleBtn'}>
 										More
 									</ToggleButton>
-									<ToggleButton id={emotion + "ignore"} value={"ignore"} disabled={isDone}
+									<ToggleButton id={emotion + "_ignore"} value={"ignore"} disabled={isDone}
 										className={emotionValues[emotion] === 'ignore' ? 'ersToggleBtnChecked' : 'ersToggleBtn'}>
 										{props.defaultLabel}
 									</ToggleButton>

@@ -20,8 +20,6 @@ export const WarningDialog = (props) => {
 	const [show, setShow] = useState(false);
 	const handleClose = () => !props.disableHide && setShow(false);
 
-
-
 	const htmlparser = (html) => {
 		const clean = DOMPurify.sanitize(props.message);
 		const parsed = parse(clean);
@@ -48,13 +46,13 @@ export const WarningDialog = (props) => {
 				{!props.disableHide &&
 					<Modal.Footer>
 						{props.cancelCallback &&
-							<Button variant="ersCancel" onClick={() => props.cancelCallback}>
+							<Button variant="ersCancel" onClick={() => props.cancelCallback()}>
 								Close
 							</Button>
 						}
 						<Button variant="ers" onClick={
 							props.confirmCallback ?
-								() => props.confirmCallback
+								() => props.confirmCallback()
 								: handleClose
 						}>
 							{props.confirmText || "Confirm"}
