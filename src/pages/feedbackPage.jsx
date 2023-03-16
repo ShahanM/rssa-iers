@@ -96,7 +96,7 @@ export default function FeedbackPage(props) {
 					<Card.Body>
 						<Card.Title>Did anything go wrong while using the system?</Card.Title>
 						<Form.Group className="mb-3" controlId="responseText">
-							<Form.Label>We appreciate the feedback.</Form.Label>
+							<Form.Label>If nothing went wrong, please write “No” in the box below.</Form.Label>
 							<Form.Control as="textarea" rows={3} onChange={(evt) =>
 								storeText(evt)} />
 						</Form.Group>

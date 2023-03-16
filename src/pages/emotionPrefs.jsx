@@ -275,7 +275,10 @@ const Content = (props) => {
 	}
 
 	const infoHandler = () => {
-		setHideInstruction(false);
+		// setHideInstruction(false);
+		Shepherd.activeTour && Shepherd.activeTour.current.cancel();
+		init_emo_tour();
+		tour.current.start();
 	}
 
 	return (
