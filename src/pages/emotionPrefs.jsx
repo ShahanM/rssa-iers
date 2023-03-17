@@ -31,7 +31,7 @@ const PageHeader = (props) => {
 	const [pageData, setPageData] = useState(props.pageData);
 	const [studyStep, setStudyStep] = useState(props.stepData);
 
-	useEffect(() => { setPageData(props.data) }, [props.data]);
+	useEffect(() => { setPageData(props.pageData) }, [props.pageData]);
 	useEffect(() => { setStudyStep(props.stepData) }, [props.stepData]);
 
 	return (
