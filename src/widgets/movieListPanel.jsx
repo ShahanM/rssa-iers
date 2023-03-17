@@ -53,7 +53,8 @@ export default function MovieListPanel(props) {
 								</div>
 							)
 						})
-					: <p style={{ padding: "1.8em" }}>No emotion preference selected</p>
+					: ""
+					// <p style={{ padding: "1.8em" }}>No emotion preference selected</p>
 				}
 			</div>
 			<ListGroup as="ul">
