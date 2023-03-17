@@ -75,7 +75,7 @@ export const ratingSteps = (tour) => [
 		<strong><u>only</u></strong> 
 		rate movies that you are 
 		<strong><u>familiar</u></strong> 
-		with. <br> (If have not seen a movie or you aren't sure you’ve seen it, 
+		with. <br> (If you have not seen a movie or you aren't sure you’ve seen it, 
 		please skip it and rate a different one.)`],
 		210, dynamicTourButtons(tour)),
 	tourStepsSchema('.galleryFooter', 'left', 'galleryFooter', 'Navigating the gallery',
