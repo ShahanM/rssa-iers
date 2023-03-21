@@ -161,6 +161,9 @@ export default function InformedConsentModal(props) {
 					<Form.Select aria-label="Algo Experiment"
 						onChange={(evt) => setCondition(evt.target.value)}
 						value={condition}>
+						<option value="0" >
+							0
+						</option>
 						<option value="1" >
 							1
 						</option>
