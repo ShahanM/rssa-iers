@@ -49,10 +49,11 @@ export default function Welcome(props) {
 
 	}, []);
 
-	const consentCallbackHandler = (consent) => {
+	const consentCallbackHandler = (consent, condition) => {
 		if (consent) {
+			const url = condition === 0 ? 'user/consent/' : 'user/consent/' + condition + '/';
 			const conditions = study.conditions.map(con => con.id);
-			post('user/consent/', {
+			post(url, {
 				study_id: study.id,
 				study_conditions: conditions,
 				user_type: 'ersStudy'

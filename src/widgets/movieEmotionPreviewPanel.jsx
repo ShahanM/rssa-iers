@@ -18,7 +18,7 @@ export default function MovieEmotionPreviewPanel(props) {
 						<EmotionStats movie={props.movie} />
 					</Row>
 					<Row style={{marginTop: "18px", fontWeight: "600"}}>
-						<p>Emotional signature</p>
+						<h5>Emotional signature</h5>
 					</Row>
 				</>
 			}

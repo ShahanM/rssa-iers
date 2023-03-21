@@ -52,7 +52,7 @@ export default function EmotionToggle(props) {
 			<Row>
 				<p style={{textAlign: "left"}}>
 					Indicate whether you want the recommended movies to evoke
-					less or more of a certain emotion, or to
+					less or more of a certain emotion, or to 
 					{props.defaultLabel === "Ignore" ?
 						<span>
 							ignore the emotion in weighing the recommendations.

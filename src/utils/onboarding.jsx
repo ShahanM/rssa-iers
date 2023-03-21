@@ -98,7 +98,7 @@ export const ratingSteps = (tour) => [
 ]
 
 export const emoPrefSteps = (tour) =>
-	tourStepsSchema('.jumbotron', 'bottom', 'intro', 'Interacting with the Recommender System',
+	tourStepsSchema('.jumbotron', 'bottom', 'intro', 'Interacting with the recommender system',
 		['Please carefully read the instructions.'],
 		0, [dynamicNextButton(tour)]);
 
@@ -115,12 +115,12 @@ export const recommendationInspectionSteps = (tour) =>
 
 export const resommendationSelectionInspection = (tour) =>
 	tourStepsSchema('.recommendationsListContainer', 'right', 'recommendations', 'Inspecting recommendations',
-		['Now that we have your final recommendations, please inspect them once more before making a selection.'],
+		['Now that we have your recommendations, please inspect them before making a selection.'],
 		null, dynamicTourButtons(tour))
 
 export const movieSelectStep = (tour, movieid) =>
 	tourStepsSchema('#selectButton_' + movieid, 'right', 'movieSelect', 'Choosing a movie',
-		['Once you have decided which move you would most like to watch, click on its Select button to choose it.'],
+		['Once you have decided which move you would most like to watch, click on its “Select” button to choose it.'],
 		null, dynamicTourButtons(tour))
 
 export const moviePreviewStep = (tour) =>
@@ -138,7 +138,7 @@ export const emoToggleSteps = (tour, isDiversify) => [
 				: `<li>“Ignore” means that you are indifferent about this emotion</li></ol>`) +
 			`When you select a toggle, the recommendations will change accordingly.`],
 		150, dynamicTourButtons(tour)),
-	tourStepsSchema('.emoToggleResetBtn', 'bottom', 'emoReset', 'Resetting Emotion Preference',
+	tourStepsSchema('.emoToggleResetBtn', 'bottom', 'emoReset', 'Resetting emotion preference',
 		['You can reset your emotion preferences to the default values by clicking on this reset button.'],
 		null, dynamicTourButtons(tour))
 ]
@@ -149,13 +149,13 @@ export const emoPrefDone = (tour) =>
 		300, dynamicFinalStepButtons(tour))
 
 export const emoFinalizeStep = (tour) =>
-	tourStepsSchema('.toggleFinalizeButton', 'left', 'emoFinalize', 'Finalizing Emotion Preference',
+	tourStepsSchema('.toggleFinalizeButton', 'left', 'emoFinalize', 'Finalizing emotion preference',
 		['Please carefully inspect and adjust the recommendations until you are satisfied with them. Once you are happy with the recommendations, you can finalize the settings by clicking on this button.'],
 		300, dynamicFinalStepButtons(tour))
 
 
 export const emoVizSteps = (tour) =>
-	tourStepsSchema('.emoStatbars', 'left', 'emoViz', 'Emotional Signature',
+	tourStepsSchema('.emoStatbars', 'left', 'emoViz', 'Emotional signature',
 		['This graph shows the extent to which we expect the following emotions to be evoked by the movie (based on movie review data).'],
 		150, dynamicTourButtons(tour))
 
