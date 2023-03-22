@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Container } from "react-bootstrap";
-import Col from "react-bootstrap/Col";
-import Row from "react-bootstrap/Row";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Container } from 'react-bootstrap';
+import Col from 'react-bootstrap/Col';
+import Row from 'react-bootstrap/Row';
+import Spinner from 'react-bootstrap/Spinner';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { ShepherdTour } from 'react-shepherd';
 import Shepherd from 'shepherd.js';
 import "shepherd.js/dist/css/shepherd.css";
@@ -309,6 +310,17 @@ const Content = (props) => {
 					</div>
 				</Col>
 				<Col id="moviePanel">
+					{loading ?
+						<div className="movieListPanelOverlay" style={{
+							position: "absolute", width: "415px", marginTop: "120px",
+							height: "100%", borderRadius: "5px",
+							zIndex: "999", display: "block", backgroundColor: "rgba(72, 72, 72, 0.8)"
+						}}>
+							<Spinner animation="border" role="status" style={{ margin: "300px auto", color: "white" }}>
+								<span className="sr-only">Loading...</span>
+							</Spinner>
+						</div>
+						: ""}
 					<MovieListPanel id="leftPanel"
 						movieList={movies.slice(0, 7)}
 						panelTitle={'Recommendations'}
@@ -319,6 +331,7 @@ const Content = (props) => {
 						hoverHandler={handleHover}
 						selectionHandler={handleSelection}
 					/>
+
 				</Col>
 				<Col id="moviePosterPreview">
 					<div className="d-flex mx-auto moviePreviewPanel">

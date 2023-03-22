@@ -6,6 +6,7 @@ export default function MovieListPanel(props) {
 
 	const [selectedid, setSelectedid] = useState(props.selectedid);
 
+
 	const changeRating = (newRating, movieid) => {
 		let panelid = props.id;
 		props.ratingHandler(panelid, newRating, movieid);

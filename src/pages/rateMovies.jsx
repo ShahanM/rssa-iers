@@ -34,6 +34,8 @@ export const Content = (props) => {
 
 	const [studyStep, setStudyStep] = useState({});
 
+	const [timerStamp, setTimerStamp] = useState(Date.now());
+
 	const tour = useRef();
 	tour.current = new Shepherd.Tour(tourOptions);
 
@@ -131,14 +133,18 @@ export const Content = (props) => {
 
 	useEffect(() => {
 		if (recommendedMovies.length > 0) {
-			props.navigationCallback(recommendedMovies,
-				ratedMoviesData, userdata, studyStep);
+			let timerFunc = setTimeout(() => {
+				props.navigationCallback(recommendedMovies,
+					ratedMoviesData, userdata, studyStep);
+			}, 10000 - (Date.now() - timerStamp));
+			return () => clearTimeout(timerFunc);
 		}
-	}, [recommendedMovies, ratedMoviesData]);
+	}, [loading, recommendedMovies, ratedMoviesData, timerStamp]);
 
 
 	const submitHandler = (recType) => {
 		setLoading(true);
+		setTimerStamp(Date.now());
 		if (ratedMovies.length > 0) {
 			updateItemrating().then((isupdateSuccess): Promise<Boolean> => isupdateSuccess)
 				.then((isupdateSuccess) => {
@@ -153,7 +159,7 @@ export const Content = (props) => {
 							.then((response): Promise<movie[]> => response.json())
 							.then((movies: movie[]) => {
 								setRecommendedMovies([...movies]);
-								setLoading(false);
+								// setLoading(false);
 							})
 							.catch((error) => {
 								console.log(error);
