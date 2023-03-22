@@ -38,3 +38,11 @@ export function getNextStudyStep(studyid, stepid) {
 			return step;
 		})
 }
+
+export function getNextStepPage(studyid, stepid, pageid) {
+	return get('study/' + studyid + '/step/' + stepid + '/page/' + pageid + '/next')
+		.then((response): Promise<page> => response.json())
+		.then((page: page) => {
+			return page;
+		})
+}

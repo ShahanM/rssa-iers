@@ -7,7 +7,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { ShepherdTour } from 'react-shepherd';
 import Shepherd from 'shepherd.js';
 import "shepherd.js/dist/css/shepherd.css";
-import { get, getNextStudyStep, post, put } from '../utils/api-middleware';
+import { get, getNextStepPage, getNextStudyStep, post, put } from '../utils/api-middleware';
 import { emotionsDict, studyConditions } from '../utils/constants';
 import { LoadingScreen } from '../utils/loadingScreen';
 import {
@@ -27,24 +27,27 @@ import NextButton, { FooterButton } from '../widgets/nextButton';
 import { WarningDialog } from '../widgets/dialogs/warningDialog';
 
 
-const PageHeader = (props) => {
+// const PageHeader = (props) => {
 
-	const [pageData, setPageData] = useState(props.pageData);
-	const [studyStep, setStudyStep] = useState(props.stepData);
+// 	const [pageData, setPageData] = useState(props.pageData);
+// 	const [studyStep, setStudyStep] = useState(props.stepData);
 
-	useEffect(() => { setPageData(props.pageData) }, [props.pageData]);
-	useEffect(() => { setStudyStep(props.stepData) }, [props.stepData]);
+// 	useEffect(() => { setPageData(props.pageData) }, [props.pageData]);
+// 	useEffect(() => { setStudyStep(props.stepData) }, [props.stepData]);
 
-	return (
-		<Row>
-			{pageData !== undefined ?
-				<HeaderJumbotron title={pageData.page_name} content={pageData.page_instruction} />
-				:
-				<HeaderJumbotron title={studyStep.step_name} content={studyStep.step_description} />
-			}
-		</Row >
-	)
-}
+// 	console.log('page data', pageData);
+// 	console.log('study step', studyStep);
+
+// 	return (
+// 		<Row>
+// 			{pageData !== undefined ?
+// 				<HeaderJumbotron title={pageData.page_name} content={pageData.page_instruction} />
+// 				:
+// 				<HeaderJumbotron title={studyStep.step_name} content={studyStep.step_description} />
+// 			}
+// 		</Row >
+// 	)
+// }
 
 const Content = (props) => {
 
@@ -66,8 +69,11 @@ const Content = (props) => {
 	const [selectedMovieid, setSelectedMovieid] = useState(null);
 	const [hideInstruction, setHideInstruction] = useState(true);
 	const [recCriteria, setRecCriteria] = useState('')
-	const [pageData, setPageData] = useState(undefined);
+
 	const [showWarning, setShowWarning] = useState(false);
+
+	const [pageData, setPageData] = useState(props.pageData);
+	useEffect(() => { setPageData(props.pageData) }, [props.pageData]);
 
 	const tour = useRef();
 	tour.current = new Shepherd.Tour(tourOptions);
@@ -118,12 +124,10 @@ const Content = (props) => {
 	}
 
 	useEffect(() => {
-		if (!emoTogglesEnabled) {
-			setIsToggleDone(true);
-		}
 		if (emoTogglesEnabled) {
 			init_emo_tour();
 		} else {
+			setIsToggleDone(true);
 			init_selection_tour();
 		}
 		tour.current.start();
@@ -149,27 +153,29 @@ const Content = (props) => {
 		}
 	}, [emotionToggles]);
 
-	const getStepPage = (studyid, stepid, pageid) => {
-		let path = '';
-		if (pageid !== null) {
-			path = 'study/' + studyid + '/step/' + stepid + '/page/' + pageid + '/next';
-		} else {
-			path = 'study/' + studyid + '/step/' + stepid + '/page/first/';
-		}
-		get(path)
-			.then((response): Promise<page> => response.json())
-			.then((page: page) => {
-				setPageData(page);
+	const updateRecommendations = (emoinput) => {
+		setLoading(true);
+		const topmovie = movies[0];
+		post('ers/updaterecommendations/', {
+			user_id: props.user.id,
+			user_condition: props.user.condition,
+			input_type: "discrete",
+			emotion_input: emoinput,
+			ratings: ratings,
+			num_rec: 20
+		})
+			.then((response): Promise<movie[]> => response.json())
+			.then((movies: movie[]) => {
+				setMovies(movies);
+				if (topmovie.movie_id !== movies[0].movie_id)
+					setActiveMovie(movies[0]);
+				setLoading(false);
 			})
-			.catch((error) => console.log(error));
-
+			.catch((error) => {
+				console.log(error);
+				setLoading(false);
+			});
 	}
-
-	useEffect(() => {
-		if (Object.keys(props.studyStep).length > 0) {
-			getStepPage(props.user.study_id, props.studyStep.id, null);
-		}
-	}, [props.studyStep]);
 
 	const handleHover = (isShown, activeMovie, action, panelid) => {
 		setIsShown(isShown);
@@ -223,36 +229,12 @@ const Content = (props) => {
 			});
 		const emopanel = document.getElementById('emotionPanel');
 		emopanel.style.opacity = '0.5';
-		getStepPage(props.user.study_id, props.studyStep.id, pageData.id);
+		getNextStepPage(props.user.study_id, props.studyStep.id, pageData.id);
 		handleSelectionOnboarding(true, movies);
 	}
 
 	const handleNext = () => {
 		submitSelection(selectedMovieid);
-	}
-
-	const updateRecommendations = (emoinput) => {
-		setLoading(true);
-		const topmovie = movies[0];
-		post('ers/updaterecommendations/', {
-			user_id: props.user.id,
-			user_condition: props.user.condition,
-			input_type: "discrete",
-			emotion_input: emoinput,
-			ratings: ratings,
-			num_rec: 20
-		})
-			.then((response): Promise<movie[]> => response.json())
-			.then((movies: movie[]) => {
-				setMovies(movies);
-				if (topmovie.movie_id !== movies[0].movie_id)
-					setActiveMovie(movies[0]);
-				setLoading(false);
-			})
-			.catch((error) => {
-				console.log(error);
-				setLoading(false);
-			});
 	}
 
 	const submitSelection = (movieid) => {
@@ -284,7 +266,10 @@ const Content = (props) => {
 
 	return (
 		<Container>
-			<PageHeader pageData={pageData} stepData={props.studyStep} />
+			{/* <PageHeader pageData={pageData} stepData={props.studyStep} /> */}
+			<Row>
+				<HeaderJumbotron title={pageData.page_name} content={pageData.page_instruction} />
+			</Row >
 			<WarningDialog show={showWarning} title={"Are you sure?"}
 				message={`Finalizing will freeze your current emotion settings. 
 					<br />
@@ -365,6 +350,8 @@ const EmotionPreferences = (props) => {
 
 	const navigate = useNavigate();
 	const [studyStep, setStudyStep] = useState(undefined);
+	const [pageData, setPageData] = useState(undefined);
+
 
 	useEffect(() => {
 		getNextStudyStep(userdata.study_id, stepid)
@@ -372,6 +359,24 @@ const EmotionPreferences = (props) => {
 				setStudyStep(value);
 			});
 	}, []);
+
+	useEffect(() => {
+		const getStepPage = (studyid, stepid) => {
+			const emoTogglesEnabled = studyConditions[userdata.condition].emoTogglesEnabled;
+			let path = 'study/' + studyid + '/step/' + stepid + '/page/';
+			path += emoTogglesEnabled ? 'first/' : 'last/';
+			get(path)
+				.then((response): Promise<page> => response.json())
+				.then((page: page) => {
+					setPageData(page);
+				})
+				.catch((error) => console.log(error));
+		}
+
+		if (studyStep !== undefined && Object.keys(studyStep).length > 0) {
+			getStepPage(studyStep.study_id, studyStep.id);
+		}
+	}, [studyStep, userdata]);
 
 	function navigateHandler(userdata, studyStep) {
 		navigate(props.next,
@@ -386,12 +391,13 @@ const EmotionPreferences = (props) => {
 	return (
 		<>
 			{
-				studyStep === undefined ?
+				(studyStep === undefined || pageData === undefined) ?
 					<LoadingScreen loading={!studyStep} />
 					:
 					<ShepherdTour steps={[]}>
 						<Content nagivationCallback={navigateHandler}
-							studyStep={studyStep} user={userdata} />
+							studyStep={studyStep} user={userdata}
+							pageData={pageData} />
 					</ShepherdTour>
 
 			}

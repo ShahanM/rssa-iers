@@ -1,12 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import ToggleButton from 'react-bootstrap/ToggleButton';
 import ToggleButtonGroup from 'react-bootstrap/ToggleButtonGroup';
-import { emotionsDict } from '../utils/constants';
 import { FcAbout } from "react-icons/fc";
+import { emotionsDict } from '../utils/constants';
 
 
 export default function EmotionToggle(props) {
@@ -50,15 +50,15 @@ export default function EmotionToggle(props) {
 				</div>
 			</Row>
 			<Row>
-				<p style={{textAlign: "left"}}>
+				<p style={{ textAlign: "left" }}>
 					Indicate whether you want the recommended movies to evoke
-					less or more of a certain emotion, or to 
+					less or more of a certain emotion, or to
 					{props.defaultLabel === "Ignore" ?
-						<span>
+						<span style={{ marginLeft: "0.5ex" }}>
 							ignore the emotion in weighing the recommendations.
 						</span>
 						:
-						<span>
+						<span style={{ marginLeft: "0.5ex" }}>
 							diversify the recommendations along that emotional dimension.
 						</span>
 					}
