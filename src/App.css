@@ -328,7 +328,9 @@
 }
 
 .sidePanelThumbnail {
-	width: 45px;
+	max-width: 45px;
+
+	min-height: 67px;
 }
 
 
