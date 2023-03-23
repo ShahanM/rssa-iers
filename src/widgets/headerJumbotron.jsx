@@ -1,5 +1,5 @@
-import DOMPurify from "dompurify"
-import parse from "html-react-parser"
+import DOMPurify from "dompurify";
+import parse from "html-react-parser";
 
 export default function HeaderJumbotron(props) {
 
@@ -9,8 +9,8 @@ export default function HeaderJumbotron(props) {
 	return (
 		<div className="jumbotron">
 			<h1 className="header">{props.title}</h1>
-			<div style={{ width: "fit-content", margin: "auto" }}>
-				<p style={{ textAlign: "left" }}>{parsed}</p>
+			<div style={{ width: "fit-content", margin: "auto", textAlign: "left" }}>
+				{parsed}
 			</div>
 		</div>
 	)

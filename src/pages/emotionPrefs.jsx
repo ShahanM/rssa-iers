@@ -36,7 +36,6 @@ const EmotionPreferences = (props) => {
 				})
 				.catch((error) => console.log(error));
 		}
-
 		if (studyStep !== undefined && Object.keys(studyStep).length > 0) {
 			getStepPage(studyStep.study_id, studyStep.id);
 		}

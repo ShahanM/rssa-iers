@@ -117,7 +117,6 @@ const EmoPrefsLayout = (props) => {
 	useEffect(() => {
 		const updateRecommendations = (emoinput) => {
 			setLoading(true);
-			const topmovie = movies[0];
 			post('ers/updaterecommendations/', {
 				user_id: userData.id,
 				user_condition: userData.condition,
@@ -129,8 +128,7 @@ const EmoPrefsLayout = (props) => {
 				.then((response): Promise<movie[]> => response.json())
 				.then((movies: movie[]) => {
 					setMovies(movies);
-					if (topmovie.movie_id !== movies[0].movie_id)
-						setActiveMovie(movies[0]);
+					setActiveMovie(movies[0]);
 					setLoading(false);
 				})
 				.catch((error) => {
@@ -155,7 +153,7 @@ const EmoPrefsLayout = (props) => {
 			setRecCriteria(emostr);
 			updateRecommendations(emoinput);
 		}
-	}, [emotionToggles, userData, ratings, movies]);
+	}, [emotionToggles, userData, ratings]);
 
 
 
