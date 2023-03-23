@@ -34,11 +34,6 @@ export default function EmotionToggle(props) {
 		props.onReset();
 	}
 
-	const handleSave = () => {
-		setIsDone(true);
-		props.onFinalize();
-	}
-
 	return (
 		<Container>
 			<Row>

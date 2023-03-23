@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
@@ -9,6 +9,8 @@ import MovieGridItem from './movieGridItem';
 
 export default function MovieGrid(props) {
 	const [currentPage, setCurrentPage] = useState(1);
+	const [movies, setMovies] = useState(props.movies);
+	useEffect(() => { setMovies(props.movies) }, [props.movies]);
 
 	const renderPrev = () => {
 		if (currentPage > 1) {
@@ -33,9 +35,9 @@ export default function MovieGrid(props) {
 		<Container className="gallery">
 			<Row>
 				<Col md={12}>
-					{(currentPage * props.itemsPerPage <= props.movies.length) ?
+					{(currentPage * props.itemsPerPage <= movies.length) ?
 						<div className="grid-container">
-							{props.movies.slice((currentPage - 1) * props.itemsPerPage, currentPage * props.itemsPerPage).map(currentMovie => (
+							{movies.slice((currentPage - 1) * props.itemsPerPage, currentPage * props.itemsPerPage).map(currentMovie => (
 								<MovieGridItem key={"TN_" + currentMovie.id} movieItem={currentMovie}
 									handleRating={props.ratingCallback} />
 							))}
