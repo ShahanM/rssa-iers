@@ -19,12 +19,13 @@ export const RateMoviesLayout = (props) => {
 	const [ratedMoviesData, setRatedMoviesData] = useState([]);
 	const [ratedMovies, setRatedMovies] = useState([]);
 	const [movies, setMovies] = useState([]);
+	
 	const [ratedMovieCount, setRatedMovieCount] = useState(0);
+	const [buttonDisabled, setButtonDisabled] = useState(true);
 
 	const [loading, setLoading] = useState(false);
 	const [currentPage, setCurrentPage] = useState(1);
 
-	const [buttonDisabled, setButtonDisabled] = useState(true);
 	const [timerStamp, setTimerStamp] = useState(Date.now());
 
 	const [studyStep, setStudyStep] = useState(props.studyStep);
@@ -57,7 +58,7 @@ export const RateMoviesLayout = (props) => {
 
 			let updaterated = newrefRatedMovies.find(item => item.movie_id === movieid);
 			updaterated.rating = newRating;
-			setRatedMovies(newrefMovies);
+			setRatedMovies(newrefRatedMovies);
 			setRatedMoviesData(newrefRatedMoviesData);
 		}
 			setMovies(newrefMovies);
