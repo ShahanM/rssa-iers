@@ -358,6 +358,10 @@
 	text-align: left;
 }
 
+.survey-question-block:nth-child(even) {
+	background: linear-gradient(0.25turn,  #f2f2f2bb,  #f2f2f299, white);
+}
+
 .survey-question-block-responded {
 	padding: 0 9px 0 9px;
 	border-left-width: 3px;
@@ -369,6 +373,10 @@
 	text-align: left;
 }
 
+.survey-question-responded:nth-child(even) {
+	background: linear-gradient(0.25turn,  #f2f2f2bb,  #f2f2f299, white);
+}
+
 .survey-question-block-unanswered {
 	padding: 0 9px 0 9px;
 	border-left-width: 3px;
@@ -378,6 +386,10 @@
 	margin: 9px auto 0 auto;
 	width: 720px;
 	text-align: left;
+}
+
+.survey-question-block:nth-child(even) {
+	background: linear-gradient(0.25turn,  #f2f2f2bb,  #f2f2f299, white);
 }
 
 .surveyQuestionText {
