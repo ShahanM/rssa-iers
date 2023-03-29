@@ -18,7 +18,7 @@ function App() {
 
 	useEffect(() => {
 		const handleResize = () => {
-			if (window.innerWidth < 720) {
+			if (window.innerWidth < 1000) {
 				console.log('small', window.innerWidth);
 				setShowWarning(true);
 			} else {
@@ -43,13 +43,13 @@ function App() {
 				/>
 			}
 			<Router basename='/ierss'>
-				<header className="App-header">
+				{/* <header className="App-header">
 					<Navbar id="topnav" bg="light" style={{ width: "100%" }}>
 						<Navbar.Brand style={{ marginLeft: "1em", fontWeight: "450", textAlign: 'center', height: "1.5em" }}>
 							Movie Recommender Study
 						</Navbar.Brand>
 					</Navbar>
-				</header>
+				</header> */}
 				<Suspense fallback={<h1>Loading</h1>}>
 					<Routes>
 						<Route path="/" element={<Welcome next="/studyoverview" />} />

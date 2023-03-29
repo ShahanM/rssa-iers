@@ -34,29 +34,31 @@ export default function MovieGrid(props) {
 	return (
 		<Container className="gallery">
 			<Row>
-				<Col md={12}>
+				{/* <Col md={12}> */}
+				<div className="grid-container">
 					{(currentPage * props.itemsPerPage <= movies.length) ?
-						<div className="grid-container">
+						<>
 							{movies.slice((currentPage - 1) * props.itemsPerPage, currentPage * props.itemsPerPage).map(currentMovie => (
 								<MovieGridItem key={"TN_" + currentMovie.id} movieItem={currentMovie}
 									handleRating={props.ratingCallback} />
 							))}
-						</div>
-						: <div style={{ minWidth: "918px", minHeight: "656px" }}>
+						</>
+						: <div style={{ minWidth: "918px", minHeight: "fit-parent" }}>
 							<Spinner animation="border" role="status" style={{ margin: "18% 50%", width: "54px", height: "54px" }} />
 						</div>
 					}
-				</Col>
+				</div>
+				{/* </Col> */}
 			</Row>
 			<Row className="galleryFooter">
-				<Col md={3}>
+				<Col>
 					<div className="btnDiv">
 						<Button id="gallery-left-btn" disabled={currentPage === 1} variant="ers" onClick={renderPrev}>
 							&lt;
 						</Button>
 					</div>
 				</Col>
-				<Col md={{ span: 3, offset: 5 }}>
+				<Col>
 					<div className="btnDiv">
 						<Button id="gallery-right-btn" disabled={currentPage * props.itemsPerPage === props.maxlength} variant="ers" onClick={renderNext}>
 							&gt;

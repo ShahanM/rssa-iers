@@ -30,6 +30,7 @@
 
 /* Gallery */
 .gallery {
+	width: -moz-fit-content;
 	width: fit-content;
 	margin: 0 auto;
 }
@@ -40,7 +41,7 @@
 }
 
 .gallery .btnDiv Button {
-	width: 230px;
+	width: 360px;
 	height: 54px;
 	margin: 0;
 }
@@ -146,8 +147,8 @@
 
 .grid-container {
 	display: grid;
-	grid-template-columns: auto auto auto auto auto auto;
-	grid-template-rows: auto auto auto auto;
+	grid-template-columns: auto auto auto auto auto auto auto auto;
+	grid-template-rows: auto auto auto;
 	justify-items: stretch;
 	overflow-x: hidden;
 	grid-column-gap: 0.25em;
@@ -229,15 +230,20 @@
 	border-radius: 0.3rem;
 }
 
+.jumbotron h1 {
+	font-size: 1.8rem;
+}
+
 .jumbotron-footer {
 	float: right;
 	width: 100%;
-	margin-top: 0.5em;
+	/* margin-top: 0.5em; */
 }
 
 .rankHolder {
+	width: -moz-fit-content;
 	width: fit-content;
-	margin: 18px auto 18px auto;
+	margin: 1.6em auto 0 auto;
 }
 
 .rankHolder span {
@@ -342,53 +348,54 @@
 }
 
 .survey-question-block {
-	padding: 3px 9px 0 18px;
+	padding: 0 9px 0 9px;
 	border-left-width: 3px;
 	border-left: darkgray;
 	border-left-color: darkgray;
 	border-left-style: solid;
-	margin: 18px auto 9px auto;
+	margin: 9px auto 0 auto;
 	width: 720px;
 	text-align: left;
 }
 
 .survey-question-block-responded {
-	padding: 3px 9px 0 18px;
+	padding: 0 9px 0 9px;
 	border-left-width: 3px;
 	border-left: green;
 	border-left-color: green;
 	border-left-style: solid;
-	margin: 18px auto 9px auto;
+	margin: 9px auto 0 auto;
 	width: 720px;
 	text-align: left;
 }
 
 .survey-question-block-unanswered {
-	padding: 3px 9px 0 18px;
+	padding: 0 9px 0 9px;
 	border-left-width: 3px;
 	border-left: red;
 	border-left-color: red;
 	border-left-style: solid;
-	margin: 18px auto 9px auto;
+	margin: 9px auto 0 auto;
 	width: 720px;
 	text-align: left;
 }
 
 .surveyQuestionText {
-	font-size: 1.3em;
+	font-size: 1rem;
+	margin-bottom: 0.5rem;
 }
 
 .surveyQuestion {
-	margin: 9px 0 0 18px;
+	margin: 3px 0 0 3px;
 }
 
 .radio-margin {
 	margin: auto;
-	margin-bottom: 9px;
+	margin-bottom: 3px;
 }
 
 .movieSurvey.surveyQuestion {
-	margin: 9px 0 9px 3px;
+	margin: 0px 0 0 3px;
 }
 
 .checkboxgroup {
@@ -406,10 +413,10 @@
 	background-color: #e0e0e0;
 	border-color: #707070;
 	color: #4a4b4b;
-	margin: 3px 9px 3px 9px;
+	margin: 0 9px 3px 9px;
 	border-radius: 3px;
-	height: 54px;
-	width: 99px;
+	height: 45px;
+	width: 90px;
 	display: inline-flex;
 }
 
@@ -436,6 +443,7 @@
 }
 
 .checkboxLbl {
+	font-size: 0.8rem;
 	text-align: center;
 	margin: auto;
 }
@@ -473,7 +481,7 @@ div.badge {
 }
 
 div.badge div {
-	display: inline-block;
+	/* display: inline-block; */
 	float: left;
 	text-transform: lowercase;
 	color: #FFF;
@@ -531,7 +539,7 @@ div.badge div span {
 }
 
 .galleryFooter {
-	margin-top: 15px;
+	margin-top: 0;
 }
 
 .shepherd-button-primary {
