@@ -42,13 +42,12 @@ const EmotionPreferences = (props) => {
 	}, [studyStep, userdata]);
 
 	function navigateHandler() {
-		navigate(props.next,
-			{
-				state: {
-					user: userdata,
-					studyStep: studyStep.id
-				}
-			});
+		navigate(props.next, {
+			state: {
+				user: userdata,
+				studyStep: studyStep.id
+			}
+		});
 	}
 
 	return (
