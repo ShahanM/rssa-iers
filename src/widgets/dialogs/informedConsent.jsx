@@ -40,7 +40,7 @@ export default function InformedConsentModal(props) {
 						Voluntary Consent:&nbsp;
 					</span>
 					Dr. Bart Knijnenburg is inviting you to volunteer for a
-					research study. Dr. Knijnenburg is an assistant professor
+					research study. Dr. Knijnenburg is an associate professor
 					at Clemson University. He will conduct the study with Lijie
 					and Mehtab (both graduate students at Clemson University).
 				</p>
@@ -101,7 +101,7 @@ export default function InformedConsentModal(props) {
 					Audio/Video Recording and Photographs
 				</p>
 				<p>
-					This session will not be recorded.
+					This session will not be audio/video recorded.
 				</p>
 
 				<p className='informedConsent-title'>

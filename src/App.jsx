@@ -37,7 +37,7 @@ function App() {
 					show={showWarning}
 					title="Warning"
 					message="This study requires your browser to be at least 
-					<strong><underline>720 pixels wide</underline></strong>. Please resize your browser window or use a 
+					<strong><underline>1000 pixels wide</underline></strong>. Please resize your browser window or use a 
 					device with a larger screen."
 					disableHide={true}
 				/>

@@ -2,6 +2,7 @@
 	text-align: center;
 	min-width: 960px;
 	overflow-x: scroll;
+	font-size: calc(6px + 1vmin);
 }
 
 .App-header {
