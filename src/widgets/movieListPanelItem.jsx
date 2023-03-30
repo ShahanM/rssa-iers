@@ -13,6 +13,7 @@ export default function MovieListPanelItem(props) {
 	return (
 		<ListGroup.Item as="div"
 			className={"d-flex justify-content-between align-items-center"}
+			style={{padding: "0.1rem"}}
 			onMouseEnter={(evt) => props.hoverHandler(evt, true, movie, "enter")}
 		>
 			<div>

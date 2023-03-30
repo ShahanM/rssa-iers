@@ -2,7 +2,15 @@
 	text-align: center;
 	min-width: 960px;
 	overflow-x: scroll;
-	font-size: calc(6px + 1vmin);
+	font-size: 13px;
+}
+
+.App p {
+	font-size: 13px;
+}
+
+.App h1 {
+	font-size: 1.5em;
 }
 
 .App-header {
@@ -231,9 +239,9 @@
 	border-radius: 0.3rem;
 }
 
-.jumbotron h1 {
+/* .jumbotron h1 {
 	font-size: 1.8rem;
-}
+} */
 
 .jumbotron-footer {
 	float: right;
@@ -292,7 +300,7 @@
 	color: #4a4b4b;
 	font-weight: 400;
 	font-size: small;
-	width: 90px;
+	width: 72px;
 }
 
 .ersToggleBtn.disabled {
@@ -322,7 +330,7 @@
 	font-size: small;
 	background-color: #f9b05c !important;
 	color: #4a4b4b !important;
-	width: 90px;
+	width: 72px;
 }
 
 .progress {

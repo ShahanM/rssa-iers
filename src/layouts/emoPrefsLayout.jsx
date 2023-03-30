@@ -279,7 +279,7 @@ const EmoPrefsLayout = (props) => {
 					{loading ?
 						<div className="movieListPanelOverlay" style={{
 							position: "absolute", width: "415px", marginTop: "120px",
-							height: "602px", borderRadius: "5px",
+							height: "504px", borderRadius: "5px",
 							zIndex: "999", display: "block", backgroundColor: "rgba(72, 72, 72, 0.8)"
 						}}>
 							<Spinner animation="border" role="status" style={{ margin: "300px auto", color: "white" }}>

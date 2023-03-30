@@ -58,7 +58,7 @@ export default function MovieListPanel(props) {
 					// <p style={{ padding: "1.8em" }}>No emotion preference selected</p>
 				}
 			</div>
-			<ListGroup as="ul" style={{ minHeight: "546px" }}>
+			<ListGroup as="ul" style={{ minHeight: "504px" }}>
 				{props.movieList.map((movie) => (
 					props.render({
 						key: movie.movie_id,
