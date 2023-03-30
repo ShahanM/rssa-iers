@@ -209,8 +209,10 @@ const EmoPrefsLayout = (props) => {
 			});
 		const emopanel = document.getElementById('emotionPanel');
 		emopanel.style.opacity = '0.5';
-		const page = getNextStepPage(userData.study_id, props.studyStep.id, pageData.id);
-		setPageData(page);
+		getNextStepPage(userData.study_id, props.studyStep.id, pageData.id)
+			.then((value) => {
+				setPageData(value);
+			});
 		handleSelectionOnboarding(true, movies);
 	}
 
