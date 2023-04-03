@@ -48,7 +48,7 @@ export function getNextStepPage(studyid, stepid, pageid) {
 }
 
 export function getPage(studyid, stepid, pageid) {
-	return get('study/' + studyid + '/step/' + stepid + 'page/' + pageid)
+	return get('study/' + studyid + '/step/' + stepid + '/page/' + pageid)
 		.then((response): Promise<page> => response.json())
 		.then((page: page) => {
 			return page;
