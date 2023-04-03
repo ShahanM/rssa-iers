@@ -278,7 +278,7 @@ const EmoPrefsLayout = (props) => {
 				<Col id="moviePanel">
 					{loading ?
 						<div className="movieListPanelOverlay" style={{
-							position: "absolute", width: "415px", marginTop: "120px",
+							position: "absolute", width: "415px", marginTop: "99px",
 							height: "504px", borderRadius: "5px",
 							zIndex: "999", display: "block", backgroundColor: "rgba(72, 72, 72, 0.8)"
 						}}>

@@ -39,6 +39,7 @@ export default function Welcome(props) {
 		get('study/' + studyID)
 			.then((response): Promise<studyres> => response.json())
 			.then((studyres: studyres) => {
+				console.log(studyres);
 				setStudy(studyres);
 			});
 		get('study/' + studyID + '/step/first/')

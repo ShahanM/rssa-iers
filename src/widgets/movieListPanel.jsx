@@ -26,7 +26,7 @@ export default function MovieListPanel(props) {
 		<Col id={props.id} className="recommendationsListContainer">
 			<div className="align-items-center justify-content-center"
 				style={{
-					height: "120px", padding: "9px 18px",
+					height: "99px", padding: "9px 18px",
 					textAlign: "center", borderRadius: "0.3rem 0.3rem 0 0",
 					backgroundColor: "#e9ecef"
 				}}>

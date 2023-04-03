@@ -8,7 +8,7 @@ export default function MovieEmotionPreviewPanel(props) {
 
 	return (
 		<Container>
-			<Row style={{ height: "300px" }}>
+			<Row style={{ height: "279px" }}>
 				<MoviePreviewCard className="moviePreviewCard" movie={props.movie} />
 			</Row>
 			<hr />

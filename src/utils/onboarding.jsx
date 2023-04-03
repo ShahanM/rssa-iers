@@ -1,3 +1,5 @@
+import { offset } from "@floating-ui/react"
+
 export const tourOptions = {
 	useModalOverlay: true,
 	defaultStepOptions: {
@@ -58,6 +60,9 @@ const tourStepsSchema = (attachElement, attachOn, id, title, text, scrollToY, bu
 				}, 200);
 			});
 		},
+		floatingUIOptions: {
+			middleware: [offset({ mainAxis: 5, crossAxis: 12 })]
+		},
 		modalOverlayOpeningPadding: 5,
 		modalOverlayOpeningRadius: { topLeft: 5, bottomLeft: 5, bottomRight: 5, topRight: 5 },
 		canClickTarget: false, buttons: buttons, highlightClass: 'highlight',
@@ -68,18 +73,18 @@ const tourStepsSchema = (attachElement, attachOn, id, title, text, scrollToY, bu
 
 export const ratingSteps = (tour) => [
 	tourStepsSchema('.jumbotron', 'bottom', 'intro', 'Indicating your preferences',
-		['In this step you will rate at least 10 moves you are familiar with.'],
+		[`<p>In this step you will rate at least 10 moves you are familiar with.</p>`],
 		0, [dynamicNextButton(tour)]),
 	tourStepsSchema('.gallery', 'right', 'gallery', 'Rating movies',
-		[`The gallery shows the movies you can rate. Please 
+		[`<p>The gallery shows the movies you can rate. Please 
 		<strong><u>only</u></strong> 
 		rate movies that you are 
 		<strong><u>familiar</u></strong> 
-		with. <br> (If you have not seen a movie or you aren't sure you’ve seen it, 
-		please skip it and rate a different one.)`],
+		with. <br> (If you have not seen a movie or you aren't sure you've seen it, 
+		please skip it and rate a different one.)</p>`],
 		210, dynamicTourButtons(tour)),
 	tourStepsSchema('.galleryFooter', 'left', 'galleryFooter', 'Navigating the gallery',
-		[`Ran out of movies you are familiar with? You can request more movies 
+		[`<p>Ran out of movies you are familiar with? You can request more movies 
 			by clicking on 
 			<Button style="background-color:#f9b05c;font-weight:400;
 			color: #4a4b4b;border-radius:3px;border:none;width:45px;">></Button>
@@ -87,75 +92,75 @@ export const ratingSteps = (tour) => [
 			Also, as you request more movies, you can always use the 
 			<Button style="background-color:#f9b05c;font-weight:400;
 			color:#4a4b4b; border-radius:3px;border:none;width:45px;"><</Button> 
-			button to go back.`],
+			button to go back.</p>`],
 		500, dynamicTourButtons(tour)),
 	tourStepsSchema('.rankHolder', 'left', 'minimumNumberOfRatings', 'Minimum number of ratings',
-		['To get your recommendations you must rate at least 10 movies you are familiar with, but feel free to rate more!'],
+		[`<p>To get your recommendations you must rate at least 10 movies you are familiar with, but feel free to rate more!</p>`],
 		null, dynamicTourButtons(tour)),
 	tourStepsSchema('.nextButton', 'bottom', 'nextstep', 'Next Step',
-		['Finally, click on this button to get your recommendations.'],
+		[`<p>Finally, click on this button to get your recommendations.</p>`],
 		null, dynamicFinalStepButtons(tour))
 ]
 
 export const emoPrefSteps = (tour) =>
 	tourStepsSchema('.jumbotron', 'bottom', 'intro', 'Interacting with the recommender system',
-		['Please carefully read the instructions.'],
+		[`<p>Please carefully read the instructions.</p>`],
 		0, [dynamicNextButton(tour)]);
 
 export const emoPrefSelectStep = (tour) =>
 	tourStepsSchema('.jumbotron', 'bottom', 'intro', 'Selecting a movie',
-		['In this step you will find and select one movie you would most like to watch. Please carefully read the instructions.'],
+		[`<p>In this step you will find and select one movie you would most like to watch. Please carefully read the instructions.</p>`],
 		0, [dynamicNextButton(tour)])
 
 
 export const recommendationInspectionSteps = (tour) =>
 	tourStepsSchema('.recommendationsListContainer', 'right', 'recommendations', 'Inspecting recommendations',
-		['This list contains your recommendations. You can hover over each movie to see more details about it in the panel on the right.'],
+		[`<p>This list contains your recommendations. You can hover over each movie to see more details about it in the panel on the right.</p>`],
 		null, dynamicTourButtons(tour))
 
 export const resommendationSelectionInspection = (tour) =>
 	tourStepsSchema('.recommendationsListContainer', 'right', 'recommendations', 'Inspecting recommendations',
-		['Now that we have your recommendations, please inspect them before making a selection.'],
+		[`<p>Now that we have your recommendations, please inspect them before making a selection.</p>`],
 		null, dynamicTourButtons(tour))
 
 export const movieSelectStep = (tour, movieid) =>
 	tourStepsSchema('#selectButton_' + movieid, 'right', 'movieSelect', 'Choosing a movie',
-		['Once you have decided which move you would most like to watch, click on its “Select” button to choose it.'],
+		[`<p>Once you have decided which move you would most like to watch, click on its “Select” button to choose it.</p>`],
 		null, dynamicTourButtons(tour))
 
 export const moviePreviewStep = (tour) =>
 	tourStepsSchema('.moviePreviewCard', 'left', 'moviePreview', 'Inspecting recommendations',
-		['This panel contains the movie details such as the movie poster and synopsis.'],
+		[`<p>This panel contains the movie details such as the movie poster and synopsis.<p>`],
 		null, dynamicTourButtons(tour))
 
 export const emoToggleSteps = (tour, isDiversify) => [
 	tourStepsSchema('.emoToggleInputs', 'left', 'emoInput', 'Indicating your taste in movie emotions',
-		[`You can control the emotions evoked by the recommended movies using these toggle buttons:<br><br>
+		[`<p>You can control the emotions evoked by the recommended movies using these toggle buttons:</p>
 		<ol><li>“Less” means you prefer movies with that evoke less of this emotion.</li>
 		<li>“More” means you prefer movies that evoke more of this emotion.</li>`
 			+ (isDiversify ?
 				`<li>“Diversify” means that you prefer an even mix of movies that evoke less vs. more of this emotion</li></ol>`
 				: `<li>“Ignore” means that you are indifferent about this emotion</li></ol>`) +
-			`When you select a toggle, the recommendations will change accordingly.`],
+			`<p>When you select a toggle, the recommendations will change accordingly.</p>`],
 		150, dynamicTourButtons(tour)),
 	tourStepsSchema('.emoToggleResetBtn', 'bottom', 'emoReset', 'Resetting emotion preference',
-		['You can reset your emotion preferences to the default values by clicking on this reset button.'],
+		[`<p>You can reset your emotion preferences to the default values by clicking on this reset button.</p>`],
 		null, dynamicTourButtons(tour))
 ]
 
 export const emoPrefDone = (tour) =>
 	tourStepsSchema('.nextButton', 'bottom', 'emoDone', 'Completing the step',
-		['Once you have made your decision you can continue by clicking on this button.'],
+		[`<p>Once you have made your decision you can continue by clicking on this button.</p>`],
 		300, dynamicFinalStepButtons(tour))
 
 export const emoFinalizeStep = (tour) =>
 	tourStepsSchema('.toggleFinalizeButton', 'left', 'emoFinalize', 'Finalizing emotion preference',
-		['Please carefully inspect and adjust the recommendations until you are satisfied with them. Once you are happy with the recommendations, you can finalize the settings by clicking on this button.'],
+		[`<p>Please carefully inspect and adjust the recommendations until you are satisfied with them. Once you are happy with the recommendations, you can finalize the settings by clicking on this button.</p>`],
 		300, dynamicFinalStepButtons(tour))
 
 
 export const emoVizSteps = (tour) =>
 	tourStepsSchema('.emoStatbars', 'left', 'emoViz', 'Emotional signature',
-		['This graph shows the extent to which we expect the following emotions to be evoked by the movie (based on movie review data).'],
+		[`<p>This graph shows the extent to which we expect the following emotions to be evoked by the movie (based on movie review data).</p>`],
 		150, dynamicTourButtons(tour))
 

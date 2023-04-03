@@ -10,7 +10,23 @@
 }
 
 .App h1 {
+	font-size: 1.6em;
+}
+
+.App h2 {
 	font-size: 1.5em;
+}
+
+.App h3 {
+	font-size: 1.4em;
+}
+
+.App h4 {
+	font-size: 1.3em;
+}
+
+.App h5  {
+	font-size: 1.2em;
 }
 
 .App-header {
@@ -859,3 +875,16 @@ p.informedConsent-text {
 	margin-bottom: 0;
 	font-weight: 500;
 }
+
+.onboarding-step {
+	font-size: 13px;
+}
+
+.shepherd-text p {
+	font-size: 13px;
+}
+
+.shepherd-text li {
+	font-size: 13px;
+}
+
