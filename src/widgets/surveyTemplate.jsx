@@ -2,6 +2,8 @@ import FormGroup from "react-bootstrap/FormGroup";
 import Row from "react-bootstrap/Row";
 import LikertBar from "./likertBar";
 import { useEffect, useState, useRef } from "react";
+import DOMPurify from "dompurify";
+import parse from "html-react-parser";
 
 export default function SurveyTemplate(props) {
 
@@ -23,6 +25,13 @@ export default function SurveyTemplate(props) {
 	useEffect(() => {
 		setShowUnanswered(props.showUnanswered);
 	}, [props.showUnanswered]);
+
+
+	const parseHTML = (htmlstr) => {
+		const clean = DOMPurify.sanitize(htmlstr);
+		const parsed = parse(clean);
+		return parsed;
+	}
 
 	// FIXME this only works the first time. Since, showUnanswered is not 
 	// updated, the useEffect is not called again. Fix this by using a
@@ -72,7 +81,7 @@ export default function SurveyTemplate(props) {
 						ref={i === smallestUnanswered ? topUnanswered : null}>
 						<div>
 							<p className="surveyQuestionText">
-								{question.question}
+								{parseHTML(question.question)}
 							</p>
 						</div>
 						<LikertBar surveyquestiongroup={props.surveyquestiongroup}
