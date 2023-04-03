@@ -6,7 +6,7 @@ import Spinner from 'react-bootstrap/Spinner';
 import { useLocation } from 'react-router-dom';
 import Shepherd from 'shepherd.js';
 import "shepherd.js/dist/css/shepherd.css";
-import { getNextStepPage, post, put } from '../utils/api-middleware';
+import { getNextStepPage, post, put, getPage } from '../utils/api-middleware';
 import { emotionsDict, studyConditions } from '../utils/constants';
 import {
 	emoFinalizeStep, emoPrefDone, emoPrefSelectStep, emoPrefSteps,
@@ -176,22 +176,16 @@ const EmoPrefsLayout = (props) => {
 		setButtonDisabled(false);
 	}
 
-	const resetToggles = () => {
-		setEmotionToggles(emotionsDict);
-	}
+	const resetToggles = () => { setEmotionToggles(emotionsDict); }
 
-	const finalizeToggles = () => {
-		setShowWarning(true);
-	}
+	const finalizeToggles = () => { setShowWarning(true); }
 
 	const confirmWarning = () => {
 		setShowWarning(false);
 		finalizeEmotionPrefs();
 	}
 
-	const cancelWarning = () => {
-		setShowWarning(false);
-	}
+	const cancelWarning = () => { setShowWarning(false); }
 
 	const finalizeEmotionPrefs = () => {
 		const emoinput = Object.keys(emotionToggles).map(
@@ -209,16 +203,18 @@ const EmoPrefsLayout = (props) => {
 			});
 		const emopanel = document.getElementById('emotionPanel');
 		emopanel.style.opacity = '0.5';
-		getNextStepPage(userData.study_id, props.studyStep.id, pageData.id)
+		// getNextStepPage(userData.study_id, props.studyStep.id, pageData.id)
+		// 	.then((value) => {
+		// 		setPageData(value);
+		// 	});
+		getPage(userData.study_id, props.studyStep.id, 19)
 			.then((value) => {
 				setPageData(value);
 			});
 		handleSelectionOnboarding(true, movies);
 	}
 
-	const handleNext = () => {
-		submitSelection(selectedMovieid);
-	}
+	const handleNext = () => { submitSelection(selectedMovieid); }
 
 	const submitSelection = (movieid) => {
 		setLoading(true);
@@ -252,9 +248,8 @@ const EmoPrefsLayout = (props) => {
 				<HeaderJumbotron title={pageData.page_name} content={pageData.page_instruction} />
 			</Row >
 			<WarningDialog show={showWarning} title={"Are you sure?"}
-				message={`Finalizing will freeze your current emotion settings. 
-					<br />
-					This action cannot be undone.`}
+				message={`<p>Finalizing will freeze your current emotion settings.</p> 
+					<p>This action cannot be undone.</p>`}
 				confirmCallback={confirmWarning}
 				confirmText={"Confirm"}
 				cancelCallback={cancelWarning} />

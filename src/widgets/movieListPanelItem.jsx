@@ -31,9 +31,9 @@ export default function MovieListPanelItem(props) {
 				<>
 					<div id={"selectButton_" + movie.movie_id}>
 						{movie.movie_id === props.selectedid ?
-							<Button variant="ersDone">Selected</Button>
+							<Button variant="ersDone" className="movielist-btn"> Selected</Button>
 							:
-							<Button variant="ers" onClick={() => props.selectionHandler(movie.movie_id)}>Select</Button>
+							<Button variant="ers" className="movielist-btn" onClick={() => props.selectionHandler(movie.movie_id)}>Select</Button>
 						}
 					</div>
 				</>

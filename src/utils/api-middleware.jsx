@@ -47,6 +47,14 @@ export function getNextStepPage(studyid, stepid, pageid) {
 		})
 }
 
+export function getPage(studyid, stepid, pageid) {
+	return get('study/' + studyid + '/step/' + stepid + 'page/' + pageid)
+		.then((response): Promise<page> => response.json())
+		.then((page: page) => {
+			return page;
+		})
+}
+
 export const imgurl = (identifier) => {
 	if (identifier === undefined || identifier === null) {
 		return 'https://rssa.recsys.dev/movie/poster/default_movie_icon.svg';

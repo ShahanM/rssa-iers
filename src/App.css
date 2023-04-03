@@ -888,3 +888,8 @@ p.informedConsent-text {
 	font-size: 13px;
 }
 
+.movielist-btn {
+	width: 58px;
+    font-size: 13px;
+    margin-right: 6px;
+}
