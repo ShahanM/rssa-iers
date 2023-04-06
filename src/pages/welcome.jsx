@@ -4,8 +4,12 @@ import Card from 'react-bootstrap/Card';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import { useNavigate } from 'react-router-dom';
-import { get, post } from '../utils/api-middleware';
+import {
+	createTestUser, createUser, getFirstStudyStep,
+	getStudy, sendLog
+} from '../utils/api-middleware';
 import InformedConsentModal from '../widgets/dialogs/informedConsent';
+import HeaderJumbotron from '../widgets/headerJumbotron';
 
 export default function Welcome(props) {
 
@@ -15,6 +19,7 @@ export default function Welcome(props) {
 	const [userdata, setUserdata] = useState({});
 	const [study, setStudy] = useState({});
 	const [studyStep, setStudyStep] = useState({});
+	const [starttime, setStarttime] = useState(Date.now());
 
 	const showInformedConsent = () => {
 		setShowInformedConsent(!show);
@@ -25,55 +30,66 @@ export default function Welcome(props) {
 	useEffect(() => {
 		const userProps = ['id', 'condition', 'user_type', 'seen_items'];
 		if (userProps.every(item => userdata.hasOwnProperty(item))) {
-			navigate(props.next,
-				{
-					state: {
-						user: userdata,
-						studyStep: studyStep.id
-					}
-				});
+			sendLog({
+				user_id: userdata.id,
+				study_id: studyID,
+				step_id: studyStep.id,
+				page_id: null,
+				time_spent: (new Date() - starttime),
+				interaction_type: 'user created',
+				interaction_target: 'study',
+				item_id: null,
+				rating: null
+			}, userdata).then(() => {
+				navigate(props.next,
+					{
+						state: {
+							user: userdata,
+							studyStep: studyStep.id
+						}
+					});
+			})
 		}
-	}, [userdata, navigate, studyStep, props.next]);
+	}, [userdata, navigate, studyStep, props.next, starttime]);
 
 	useEffect(() => {
-		get('study/' + studyID)
-			.then((response): Promise<studyres> => response.json())
-			.then((studyres: studyres) => {
-				console.log(studyres);
-				setStudy(studyres);
-			});
-		get('study/' + studyID + '/step/first/')
-			.then((response): Promise<StudyStepRes> => response.json())
-			.then((studyStepRes: studyStepRes) => {
-				setStudyStep(studyStepRes);
-			})
+		getStudy(studyID).then((studyres: studyres) => { setStudy(studyres); });
+		getFirstStudyStep(studyID).then((studyStepRes: studyStepRes) => {
+			setStudyStep(studyStepRes);
+		});
+		setStarttime(new Date());
 
 	}, []);
 
 	const consentCallbackHandler = (consent, condition) => {
 		if (consent) {
-			const url = condition === 0 ? 'user/consent/' : 'user/consent/' + condition + '/';
-			const conditions = study.conditions.map(con => con.id);
-			post(url, {
-				study_id: study.id,
-				study_conditions: conditions,
-				user_type: 'ersStudy'
-			})
-				.then((response): Promise<user> => response.json())
-				.then((user: user) => {
-					setUserdata(user);
-				})
-				.catch((error) => console.log(error));
+			if (condition === 0) {
+				createUser('ersStudy', study.id)
+					.then((response): Promise<user> => response.json())
+					.then((user: user) => {
+						setUserdata(user);
+					})
+					.catch((error) => console.log(error));
+			} else {
+				createTestUser('ersStudy', study.id, condition)
+					.then((response): Promise<user> => response.json())
+					.then((user: user) => {
+						setUserdata(user);
+					})
+					.catch((error) => console.log(error));
+			}
 		}
 	}
 
 	return (
 		<Container>
 			<Row>
-				<div className="jumbotron">
+				{/* <div className="jumbotron">
 					<h1 className="header">Welcome</h1>
 					<p>Welcome to the study on movie recommendation.</p>
-				</div>
+				</div> */}
+				<HeaderJumbotron title="Welcome"
+					content="Welcome to the study on movie recommendation." />
 			</Row>
 
 			<Row>
@@ -102,7 +118,6 @@ export default function Welcome(props) {
 							</li>
 							<li>Complete a post-survey.</li>
 						</ol>
-
 						<p>
 							Thanks,<br />
 							Research Team
@@ -113,7 +128,6 @@ export default function Welcome(props) {
 
 			<InformedConsentModal show={show}
 				consentCallback={consentCallbackHandler} />
-
 			<Row>
 				<div className="jumbotron jumbotron-footer">
 					<Button variant="ers" size="lg" className="footer-btn"

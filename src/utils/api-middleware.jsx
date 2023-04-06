@@ -8,27 +8,71 @@ export const CORSHeaders = {
 	'Access-Control-Allow-Methods': 'OPTIONS,PUT,POST,GET',
 };
 
-export function post(path: string, data: any) {
-	return bodyRequest('POST', path, data);
+function getHeaders(userdata) {
+	let headers = CORSHeaders;
+	if (userdata) {
+		headers = {
+			...CORSHeaders,
+			'study-id': userdata.study_id
+		}
+	}
+	return headers;
 }
 
-export function put(path: string, data: any) {
-	return bodyRequest('PUT', path, data);
+export function post(path: string, data: any, userdata) {
+	return bodyRequest('POST', path, data, getHeaders(userdata));
 }
 
-function bodyRequest(method: string, path: string, data: any) {
+export function put(path: string, data: any, userdata) {
+	console.log(getHeaders(userdata));
+	return bodyRequest('PUT', path, data, getHeaders(userdata));
+}
+
+function bodyRequest(method: string, path: string, data: any, headers) {
 	return fetch(API + path, {
 		method: method,
-		headers: CORSHeaders,
+		headers: headers,
 		body: JSON.stringify(data)
 	});
 }
 
-export function get(path: string) {
+export function get(path: string, userdata) {
 	return fetch(API + path, {
 		method: 'GET',
-		headers: CORSHeaders
+		headers: getHeaders(userdata)
 	});
+}
+
+export function createUser(userType, studyId) {
+	return post('user/consent/', {
+		study_id: studyId,
+		user_type: 'ersStudy'
+	}, { study_id: studyId })
+}
+
+// FIXME: This is a temporary function to create a test user
+// Get rid of this function once the backend is fixed
+export function createTestUser(userType, studyId, conditionId) {
+	return post('user/consent/' + conditionId + '/', {
+		study_id: studyId,
+		user_type: 'ersStudy'
+	}, { study_id: studyId })
+}
+
+export function getStudy(studyid) {
+	return get('study/' + studyid)
+		.then((response): Promise<studyres> => response.json())
+		.then((studyres: studyres) => {
+			return studyres;
+		});
+}
+
+export function getFirstStudyStep(studyid) {
+	return get('study/' + studyid + '/step/first/')
+		.then((response): Promise<StudyStepRes> => response.json())
+		.then((studyStepRes: studyStepRes) => {
+			return studyStepRes;
+		})
 }
 
 export function getNextStudyStep(studyid, stepid) {
@@ -52,6 +96,23 @@ export function getPage(studyid, stepid, pageid) {
 		.then((response): Promise<page> => response.json())
 		.then((page: page) => {
 			return page;
+		})
+}
+// user_id: int
+// study_id: int
+// step_id: int
+// page_id: Optional[int]
+// time_spent: int
+// interaction_type: str
+// interaction_target: str
+// item_id: Optional[int]
+// rating: Optional[int]
+
+export function sendLog(data, userdata) {
+	return put('user/' + userdata.id + '/log', data, userdata)
+		.then((response): Promise<log> => response.json())
+		.then((log: log) => {
+			return log;
 		})
 }
 

@@ -10,23 +10,23 @@
 }
 
 .App h1 {
-	font-size: 1.6em;
+	font-size: 1.6rem !important;
 }
 
 .App h2 {
-	font-size: 1.5em;
+	font-size: 1.5rem;
 }
 
 .App h3 {
-	font-size: 1.4em;
+	font-size: 1.4rem;
 }
 
 .App h4 {
-	font-size: 1.3em;
+	font-size: 1.3rem;
 }
 
 .App h5  {
-	font-size: 1.2em;
+	font-size: 1.25rem !important;
 }
 
 .App-header {
