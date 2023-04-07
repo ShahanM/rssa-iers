@@ -27,18 +27,6 @@ export function put(path: string, data: any, userdata) {
 	return bodyRequest('PUT', path, data, getHeaders(userdata));
 }
 
-export function submitResponse(responseType: string, userdata, pageid,
-	responses) {
-	const data = {
-		user_id: userdata.id,
-		study_id: userdata.study_id,
-		page_id: pageid,
-		responses: responses
-	}
-	const url = 'user/' + userdata.id + '/response/' + responseType + '/';
-	return put(url, data, userdata);
-}
-
 function bodyRequest(method: string, path: string, data: any, headers) {
 	return fetch(API + path, {
 		method: method,
@@ -109,6 +97,44 @@ export function getPage(studyid, stepid, pageid) {
 			return page;
 		})
 }
+
+const requestBodyMeta = (userdata, pageid) => {
+	return {
+		user_id: userdata.id,
+		study_id: userdata.study_id,
+		page_id: pageid
+	}
+}
+
+export function submitResponse(responseType: string, userdata, pageid,
+	responses) {
+	const data = {
+		...requestBodyMeta(userdata, pageid),
+		responses: responses
+	}
+	const url = 'user/' + userdata.id + '/response/' + responseType + '/';
+	return put(url, data, userdata);
+}
+
+export function updateSeen(userdata, studyStep, pagelevel, items){
+	const data = {
+		...requestBodyMeta(userdata, studyStep.id),
+		page_level: pagelevel,
+		items: items
+	}
+	const url = 'user/' + userdata.id + '/seenitems/';
+	return put(url, data, userdata);
+}
+
+export function updateRating(userdata, studyStep, pagelevel, ratings){
+	const data = {
+		...requestBodyMeta(userdata, studyStep.id),
+		page_level: pagelevel,
+		ratings: ratings
+	}
+	const url = 'user/' + userdata.id + '/itemrating/';
+	return put(url, data, userdata);
+}
 // user_id: int
 // study_id: int
 // step_id: int
@@ -122,15 +148,11 @@ export function getPage(studyid, stepid, pageid) {
 export function sendLog(userdata, studyStep, pageid: int, timespent: int, 
 	inttype: string, target: string, itemid: int, rating: int) {
 	const data = {
-		user_id: userdata.id,
-		study_id: userdata.study_id,
+		...requestBodyMeta(userdata, pageid),
 		step_id: studyStep.id,
-		page_id: pageid,
 		time_spent: timespent,
-		interaction_type: inttype,
-		interaction_target: target,
-		item_id: itemid,
-		rating: rating
+		interaction_type: inttype, interaction_target: target,
+		item_id: itemid, rating: rating
 	}
 	return put('user/' + userdata.id + '/log/', data, userdata)
 		.then((response): Promise<log> => response.json())
