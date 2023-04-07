@@ -63,7 +63,7 @@ export const RateMoviesLayout = (props) => {
 			setRatedMoviesData(newrefRatedMoviesData);
 		}
 		setMovies(newrefMovies);
-		sendLog(userdata, studyStep, null, new Date() - gridPageStarttime,
+		sendLog(userdata, studyStep.id, null, new Date() - gridPageStarttime,
 			'rate movie', 'gallery page ' + currentPage, movieid, newRating);
 	}
 
@@ -147,7 +147,7 @@ export const RateMoviesLayout = (props) => {
 		if (currentpage > page) {
 			action = 'prev';
 		}
-		sendLog(userdata, studyStep, null, new Date() - gridPageStarttime,
+		sendLog(userdata, studyStep.id, null, new Date() - gridPageStarttime,
 			action, 'gallery page ' + currentPage, null, null);
 		setCurrentPage(page);
 		setGridPageStarttime(new Date());

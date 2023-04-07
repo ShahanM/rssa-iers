@@ -61,7 +61,7 @@ export const RateMovies = (props) => {
 
 	function handleNavigate(recommendedMovies,
 		ratedMoviesData) {
-		sendLog(userdata, studyStep, null, new Date() - starttime,
+		sendLog(userdata, studyStep.id, null, new Date() - starttime,
 			'navigation', 'next', null, null)
 		navigate(props.next,
 			{

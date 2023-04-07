@@ -60,7 +60,7 @@ export default function Survey(props) {
 
 	useEffect(() => {
 		if (pageData.id === null) {
-			sendLog(userdata, studyStep, pageData.id, new Date() - starttime,
+			sendLog(userdata, studyStep.id, pageData.id, new Date() - starttime,
 				'survey complete', 'submit', null, null);
 			navigate(props.next, {
 				state: { user: userdata, studyStep: studyStep.id }
@@ -91,7 +91,7 @@ export default function Survey(props) {
 				}
 			}
 		}
-		sendLog(userdata, studyStep, pageData.id, timediff, behavior, buttonAct,
+		sendLog(userdata, studyStep.id, pageData.id, timediff, behavior, buttonAct,
 			null, null);
 	}
 
@@ -118,7 +118,7 @@ export default function Survey(props) {
 	}
 
 	const logHandler = (qid, val) => {
-		sendLog(userdata, studyStep, pageData.id, new Date() - pageStarttime,
+		sendLog(userdata, studyStep.id, pageData.id, new Date() - pageStarttime,
 			'surveyResponse', pageData.page_name, qid, val);
 	}
 

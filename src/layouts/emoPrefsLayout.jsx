@@ -6,7 +6,7 @@ import Spinner from 'react-bootstrap/Spinner';
 import { useLocation } from 'react-router-dom';
 import Shepherd from 'shepherd.js';
 import "shepherd.js/dist/css/shepherd.css";
-import { getNextStepPage, post, put, getPage } from '../utils/api-middleware';
+import { getPage, post, sendLog, submitSelection, updateEmotionPreference } from '../utils/api-middleware';
 import { emotionsDict, studyConditions } from '../utils/constants';
 import {
 	emoFinalizeStep, emoPrefDone, emoPrefSelectStep, emoPrefSteps,
@@ -51,6 +51,8 @@ const EmoPrefsLayout = (props) => {
 
 	const [pageData, setPageData] = useState(props.pageData);
 	useEffect(() => { setPageData(props.pageData) }, [props.pageData]);
+
+	const [pageStartTime, setPageStartTime] = useState(new Date());
 
 	const tour = useRef();
 	tour.current = new Shepherd.Tour(tourOptions);
@@ -155,14 +157,15 @@ const EmoPrefsLayout = (props) => {
 		}
 	}, [emotionToggles, userData, ratings]);
 
-
-
 	const handleHover = (isShown, activeMovie, action, panelid) => {
 		setIsShown(isShown);
 		setActiveMovie(activeMovie);
 	}
 
 	const handleToggle = (emotion, value) => {
+		sendLog(userData, pageData.step_id, pageData.id,
+			new Date() - pageStartTime, 'Set emotion value to ' + value,
+			emotion, null, null);
 		setEmotionToggles(prevState => {
 			return {
 				...prevState,
@@ -172,20 +175,41 @@ const EmoPrefsLayout = (props) => {
 	}
 
 	const handleSelection = (movieid) => {
+		sendLog(userData, pageData.step_id, pageData.id,
+			new Date() - pageStartTime, 'select movie', 'movie Select',
+			movieid, 99)
 		setSelectedMovieid(movieid);
 		setButtonDisabled(false);
 	}
 
-	const resetToggles = () => { setEmotionToggles(emotionsDict); }
+	const resetToggles = () => {
+		sendLog(userData, pageData.step_id, pageData.id,
+			new Date() - pageStartTime, 'reset emotions', 'emotionToggle',
+			null, null)
+		setEmotionToggles(emotionsDict);
+	}
 
-	const finalizeToggles = () => { setShowWarning(true); }
+	const finalizeToggles = () => {
+		sendLog(userData, pageData.step_id, pageData.id,
+			new Date() - pageStartTime, 'finalize toggles', 'finalize',
+			null, null)
+		setShowWarning(true);
+	}
 
 	const confirmWarning = () => {
 		setShowWarning(false);
 		finalizeEmotionPrefs();
+		sendLog(userData, pageData.step_id, pageData.id,
+			new Date() - pageStartTime, 'finalize toggles', 'confirm',
+			null, null)
 	}
 
-	const cancelWarning = () => { setShowWarning(false); }
+	const cancelWarning = () => {
+		sendLog(userData, pageData.step_id, pageData.id,
+			new Date() - pageStartTime, 'cancel finalize toggles', 'cancel',
+			null, null)
+		setShowWarning(false);
+	}
 
 	const finalizeEmotionPrefs = () => {
 		const emoinput = Object.keys(emotionToggles).map(
@@ -194,38 +218,40 @@ const EmoPrefsLayout = (props) => {
 				weight: emotionToggles[key].length > 0
 					? emotionToggles[key] : 'ignore'
 			}));
-		put('user/' + userData.id + '/emotionprefs/', emoinput)
+
+		// put('user/' + userData.id + '/emotionprefs/', emoinput)
+		updateEmotionPreference(userData, emoinput)
 			.then((response) => {
 				setIsToggleDone(true);
 			})
 			.catch((error) => {
 				console.log(error);
 			});
+
 		const emopanel = document.getElementById('emotionPanel');
 		emopanel.style.opacity = '0.5';
-		// getNextStepPage(userData.study_id, props.studyStep.id, pageData.id)
-		// 	.then((value) => {
-		// 		setPageData(value);
-		// 	});
+
 		getPage(userData.study_id, props.studyStep.id, 19)
 			.then((value) => {
 				setPageData(value);
 			});
+		setPageStartTime(new Date());
 		handleSelectionOnboarding(true, movies);
 	}
 
-	const handleNext = () => { submitSelection(selectedMovieid); }
+	const handleNext = () => {
 
-	const submitSelection = (movieid) => {
-		setLoading(true);
-		put('user/' + userData.id + '/itemselect/', {
-			'user_id': userData.id,
-			'page_id': props.studyStep.id,
-			'selected_item': {
-				'item_id': movieid,
-				'rating': 99
-			}
-		}).then((response): Promise<value> => response.json())
+		// put('user/' + userData.id + '/itemselect/', {
+		// 	'user_id': userData.id,
+		// 	study_id: 
+		// 	'page_id': pageData.id,
+		// 	'selected_item': {
+		// 		'item_id': movieid,
+		// 		'rating': 99
+		// 	}
+		// })
+		submitSelection(userData, pageData, selectedMovieid)
+			.then((response): Promise<value> => response.json())
 			.then((selectedItem: value) => {
 				if (selectedItem.item_id === parseInt(selectedMovieid) && selectedItem.rating === 99) {
 					props.nagivationCallback();

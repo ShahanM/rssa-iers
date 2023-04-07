@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { ShepherdTour } from 'react-shepherd';
 import "shepherd.js/dist/css/shepherd.css";
-import { get, getNextStudyStep } from '../utils/api-middleware';
+import { get, getNextStudyStep, sendLog } from '../utils/api-middleware';
 import { studyConditions } from '../utils/constants';
 import { LoadingScreen } from '../utils/loadingScreen';
 import EmoPrefsLayout from '../layouts/emoPrefsLayout';
@@ -16,6 +16,8 @@ const EmotionPreferences = (props) => {
 	const navigate = useNavigate();
 	const [studyStep, setStudyStep] = useState(undefined);
 	const [pageData, setPageData] = useState(undefined);
+
+	const [starttime, setStarttime] = useState(new Date());
 
 	useEffect(() => {
 		getNextStudyStep(userdata.study_id, stepid)
@@ -42,6 +44,8 @@ const EmotionPreferences = (props) => {
 	}, [studyStep, userdata]);
 
 	function navigateHandler() {
+		sendLog(userdata, studyStep.id, null, new Date() - starttime, 'navigate',
+			'next', null, null);
 		navigate(props.next, {
 			state: {
 				user: userdata,

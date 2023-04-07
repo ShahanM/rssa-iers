@@ -30,7 +30,7 @@ export default function Welcome(props) {
 	useEffect(() => {
 		const userProps = ['id', 'condition', 'user_type', 'seen_items'];
 		if (userProps.every(item => userdata.hasOwnProperty(item))) {
-			sendLog(userdata, studyStep, null, starttime - new Date(),
+			sendLog(userdata, studyStep.id, null, starttime - new Date(),
 				'user creation', 'study consent', null, null).then(() => {
 					navigate(props.next,
 						{

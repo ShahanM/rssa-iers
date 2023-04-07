@@ -135,6 +135,35 @@ export function updateRating(userdata, studyStep, pagelevel, ratings){
 	const url = 'user/' + userdata.id + '/itemrating/';
 	return put(url, data, userdata);
 }
+
+export function updateEmotionPreference(userdata, payload){
+	const url = 'user/' + userdata.id + '/emotionprefs/';
+	return put(url, payload, userdata);
+}
+
+export function submitSelection(userdata, pageData, selectedid){
+	const data = {
+		...requestBodyMeta(userdata, pageData.id),
+		selected_item: {
+			item_id: selectedid,
+			rating: 99
+		}
+	}
+	const url = 'user/' + userdata.id + '/itemselect/';
+	return put(url, data, userdata);
+}
+
+export function submitDemographicInfo(userdata, agecode, genderstr, educationstr){
+	const data = {
+		user_id: userdata.id,
+		study_id: userdata.study_id,
+		age: agecode,
+		gender: genderstr,
+		education: educationstr
+	}
+	const url = 'user/' + userdata.id + '/demographicInfo/';
+	return put(url, data, userdata);
+}
 // user_id: int
 // study_id: int
 // step_id: int
@@ -145,11 +174,11 @@ export function updateRating(userdata, studyStep, pagelevel, ratings){
 // item_id: Optional[int]
 // rating: Optional[int]
 
-export function sendLog(userdata, studyStep, pageid: int, timespent: int, 
+export function sendLog(userdata, stepid, pageid: int, timespent: int, 
 	inttype: string, target: string, itemid: int, rating: int) {
 	const data = {
 		...requestBodyMeta(userdata, pageid),
-		step_id: studyStep.id,
+		step_id: stepid,
 		time_spent: timespent,
 		interaction_type: inttype, interaction_target: target,
 		item_id: itemid, rating: rating

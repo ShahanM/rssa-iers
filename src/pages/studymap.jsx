@@ -33,7 +33,7 @@ export default function StudyMap(props) {
 	}, []);
 
 	const navigateToNext = () => {
-		sendLog(userdata, studyStep, null, starttime - Date.now(), 'passive',
+		sendLog(userdata, studyStep.id, null, starttime - Date.now(), 'passive',
 			'study overview', null, null).then(() => {
 				navigate(props.next, {
 					state: {

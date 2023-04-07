@@ -4,7 +4,7 @@ import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { get, getNextStudyStep, put } from '../utils/api-middleware';
+import { get, getNextStudyStep, sendLog, submitResponse } from '../utils/api-middleware';
 import NextButton from '../widgets/nextButton';
 
 
@@ -19,6 +19,8 @@ export default function FeedbackPage(props) {
 	const [responseText, setResponseText] = useState('');
 	const [studyStep, setStudyStep] = useState({});
 	const [pageData, setPageData] = useState({});
+
+	const [starttime, setStarttime] = useState(new Date());
 
 	useEffect(() => {
 		getNextStudyStep(userdata.study_id, stepid)
@@ -54,18 +56,14 @@ export default function FeedbackPage(props) {
 		if (Object.keys(studyStep).length > 0) {
 			getStepPage(userdata.study_id, studyStep.id, null);
 		}
-	}, [studyStep]);
+	}, [studyStep, userdata.study_id]);
 
 	const submitHandler = () => {
-		put('user/' + userdata.id + '/response/freetext/', {
-			'user_id': userdata.id,
-			'study_id': userdata.study_id,
-			'page_id': pageData.id,
-			'responses': [{
-				question_id: pageData.questions[0].id,
-				response: responseText
-			}]
-		})
+		sendLog(userdata, studyStep.id, null, new Date() - starttime, 'navigate', 'next', null, null);
+
+		submitResponse('freetext', userdata, pageData.id,
+			[{ question_id: pageData.questions[0].id, response: responseText }]
+		)
 			.then((response): Promise<isvalidated> => response.json())
 			.then((isvalidated: isvalidated) => {
 				if (isvalidated === true) {
