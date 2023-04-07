@@ -108,7 +108,19 @@ export function getPage(studyid, stepid, pageid) {
 // item_id: Optional[int]
 // rating: Optional[int]
 
-export function sendLog(data, userdata) {
+export function sendLog(userdata, studyStep, pageid, timespent, inttype,
+	target, itemid, rating) {
+	const data = {
+		user_id: userdata.id,
+		study_id: userdata.study_id,
+		step_id: studyStep.id,
+		page_id: pageid,
+		time_spent: timespent,
+		interaction_type: inttype,
+		interaction_target: target,
+		item_id: itemid,
+		rating: rating
+	}
 	return put('user/' + userdata.id + '/log', data, userdata)
 		.then((response): Promise<log> => response.json())
 		.then((log: log) => {

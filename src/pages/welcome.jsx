@@ -30,25 +30,16 @@ export default function Welcome(props) {
 	useEffect(() => {
 		const userProps = ['id', 'condition', 'user_type', 'seen_items'];
 		if (userProps.every(item => userdata.hasOwnProperty(item))) {
-			sendLog({
-				user_id: userdata.id,
-				study_id: studyID,
-				step_id: studyStep.id,
-				page_id: null,
-				time_spent: (new Date() - starttime),
-				interaction_type: 'user created',
-				interaction_target: 'study',
-				item_id: null,
-				rating: null
-			}, userdata).then(() => {
-				navigate(props.next,
-					{
-						state: {
-							user: userdata,
-							studyStep: studyStep.id
-						}
-					});
-			})
+			sendLog(userdata, studyStep, null, starttime - new Date(),
+				'user creation', 'study consent', null, null).then(() => {
+					navigate(props.next,
+						{
+							state: {
+								user: userdata,
+								studyStep: studyStep.id
+							}
+						});
+				})
 		}
 	}, [userdata, navigate, studyStep, props.next, starttime]);
 
@@ -84,10 +75,6 @@ export default function Welcome(props) {
 	return (
 		<Container>
 			<Row>
-				{/* <div className="jumbotron">
-					<h1 className="header">Welcome</h1>
-					<p>Welcome to the study on movie recommendation.</p>
-				</div> */}
 				<HeaderJumbotron title="Welcome"
 					content="Welcome to the study on movie recommendation." />
 			</Row>

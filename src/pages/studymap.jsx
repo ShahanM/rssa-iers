@@ -8,6 +8,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { getNextStudyStep } from "../utils/api-middleware";
 import HeaderJumbotron from "../widgets/headerJumbotron";
 import Image from "react-bootstrap/Image";
+import { sendLog } from "../utils/api-middleware";
 
 export default function StudyMap(props) {
 
@@ -16,6 +17,8 @@ export default function StudyMap(props) {
 	const navigate = useNavigate();
 
 	const [studyStep, setStudyStep] = useState({});
+
+	const [starttime, setStarttime] = useState(new Date());
 
 
 	const rspref = require("../res/rate-prefs.png");
@@ -26,7 +29,20 @@ export default function StudyMap(props) {
 	useEffect(() => {
 		getNextStudyStep(userdata.study_id, stepid)
 			.then((value) => { setStudyStep(value) });
+		setStarttime(new Date());
 	}, []);
+
+	const navigateToNext = () => {
+		sendLog(userdata, studyStep, null, starttime - Date.now(), 'passive',
+			'study overview', null, null).then(() => {
+				navigate(props.next, {
+					state: {
+						user: userdata,
+						studyStep: studyStep.id
+					}
+				})
+			})
+	}
 
 	return (
 		<Container>
@@ -80,12 +96,7 @@ export default function StudyMap(props) {
 			<Row>
 				<div className="jumbotron jumbotron-footer">
 					<Button variant="ers" size="lg" className="footer-btn"
-						onClick={() => navigate(props.next, {
-							state: {
-								user: userdata,
-								studyStep: studyStep.id
-							}
-						})}>
+						onClick={navigateToNext}>
 						Next
 					</Button>
 				</div>
