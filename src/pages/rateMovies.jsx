@@ -78,7 +78,8 @@ export const RateMovies = (props) => {
 		<div>
 			{
 				(studyStep === undefined || movieids.length <= 0) ?
-					<LoadingScreen loading={!studyStep} />
+					<LoadingScreen loading={!studyStep} 
+					loadingMessage={'Please wait while we generate the movie gallery.'}/>
 					:
 					<ShepherdTour steps={[]}>
 						<RateMoviesLayout navigationCallback={handleNavigate}

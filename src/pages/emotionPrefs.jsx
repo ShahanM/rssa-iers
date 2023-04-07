@@ -58,7 +58,8 @@ const EmotionPreferences = (props) => {
 		<>
 			{
 				(studyStep === undefined || pageData === undefined) ?
-					<LoadingScreen loading={!studyStep} />
+					<LoadingScreen loading={!studyStep}
+						loadingMessage={'Please wait while the system prepares your recommendations'} />
 					:
 					<ShepherdTour steps={[]}>
 						<EmoPrefsLayout nagivationCallback={navigateHandler}

@@ -11,6 +11,7 @@ import RateMovies from './pages/rateMovies';
 import StudyMap from './pages/studymap';
 import Survey from './pages/survey';
 import Welcome from './pages/welcome';
+import { FinalPage } from './pages/finalPage';
 
 function App() {
 
@@ -51,7 +52,7 @@ function App() {
 						<Route path="/feedback" element={<FeedbackPage next="/postsurvey" />} />
 						<Route path="/postsurvey" element={<Survey next="/demography" />} />
 						<Route path="/demography" element={<DemographyPage next="/quit" />} />
-						<Route path="/quit" element={<h1>Thank you for participating!</h1>} />
+						<Route path="/quit" element={<FinalPage />} />
 					</Routes>
 				</Suspense>
 			</Router>

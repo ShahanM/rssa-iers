@@ -1,10 +1,11 @@
+import { useCallback, useEffect, useState } from "react";
 import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
-import NextButton from "../widgets/nextButton";
-import { useState, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import { getNextStudyStep } from "../utils/api-middleware";
 import Form from "react-bootstrap/Form";
+import Row from "react-bootstrap/Row";
+import { useLocation, useNavigate } from "react-router-dom";
+import { getNextStudyStep, submitDemographicInfo, sendLog } from "../utils/api-middleware";
+import { ageGroups, educationGroups, genderCats } from "../utils/constants";
+import NextButton from "../widgets/nextButton";
 
 
 export const DemographyPage = (props) => {
@@ -19,14 +20,17 @@ export const DemographyPage = (props) => {
 
 	const [age, setAge] = useState(-1);
 	const [gender, setGender] = useState(-1);
+	const [genderText, setGenderText] = useState('');
 	const [education, setEducation] = useState(-1);
 
-
 	const [genderPref, setGenderPref] = useState("hidden");
+
+	const [starttime, setStarttime] = useState(new Date());
 
 	useEffect(() => {
 		getNextStudyStep(userdata.study_id, stepid)
 			.then((value) => { setStudyStep(value) });
+		setStarttime(new Date());
 	}, []);
 
 	useEffect(() => {
@@ -38,20 +42,61 @@ export const DemographyPage = (props) => {
 	}, [gender]);
 
 	useEffect(() => {
-		if (age >= 0 && gender >= 0 && education >= 0) {
-			setButtonDisabled(false);
+		setButtonDisabled(!(age >= 0 && gender >= 0 && education >= 0 &&
+			((gender === 4 && genderText.length >= 3) || gender !== 4)));
+	}, [age, gender, education, genderText.length]);
+
+
+
+	const updateLog = useCallback((action, target) => {
+		if (userdata !== undefined && userdata !== null
+			&& studyStep.id !== undefined) {
+			sendLog(userdata, studyStep.id, null, new Date() - starttime,
+				action, target, null, null);
 		}
-	}, [age, gender, education]);
+	}, [userdata, studyStep.id, starttime]);
+
+	useEffect(() => {
+		if (age >= 0) {
+			updateLog("changed age value to " + age, "age");
+		}
+	}, [age, updateLog]);
+
+	useEffect(() => {
+		if (gender >= 0) {
+			updateLog("changed gender value to " + gender, "gender");
+		}
+	}, [gender, updateLog]);
+
+	useEffect(() => {
+		if (education >= 0) {
+			updateLog("changed education value to " + education, "education");
+		}
+	}, [education, updateLog]);
 
 	const submitHandler = () => {
 		setLoading(true);
 		setButtonDisabled(true);
 
-		// TODO: Send data to backend
+		const agestr = ageGroups[age];
+		const genderstr = gender === 4 ? genderText : genderCats[gender];
 
+		const educationstr = educationGroups[education];
+
+		submitDemographicInfo(userdata, agestr, genderstr, educationstr)
+			.then(() => {
+				sendLog(userdata, studyStep.id, null, new Date() - starttime,
+					"submit demographic info", "submit", null, null);
+				navigateToNext();
+			});
 
 		setLoading(false);
 		setButtonDisabled(false);
+	}
+
+	const navigateToNext = () => {
+		sendLog(userdata, studyStep.id, null, new Date() - starttime,
+			"navigate", "next", null, null);
 		navigate(props.next, {
 			state: {
 				user: userdata,
@@ -59,6 +104,7 @@ export const DemographyPage = (props) => {
 			}
 		});
 	}
+
 
 	return (
 		<Container>
@@ -70,52 +116,43 @@ export const DemographyPage = (props) => {
 				</div>
 			</Row>
 			<Row className="generalBodyContainer">
-				<Form.Group className="mb-3" style={{textAlign: "left"}}>
+				<Form.Group className="mb-3" style={{ textAlign: "left" }}>
 					<Form.Label>What is your age?</Form.Label>
 					<Form.Select variant="outline-secondary" title="Dropdown" id="input-group-dropdown-1"
-						style={{width: "400px"}}
+						style={{ width: "400px" }}
 						onChange={(evt) => setAge(+evt.target.value)} value={age}>
 						<option value="-1">Please choose an option</option>
-						<option value="0">18 - 24 years old</option>
-						<option value="1">25 - 29 years old</option>
-						<option value="2">30 - 34 years old</option>
-						<option value="3">35 - 39 years old</option>
-						<option value="4">40 - 44 years old</option>
-						<option value="5">45 - 49 years old</option>
-						<option value="6">50 - 54 years old</option>
-						<option value="7">55+</option>
-						<option value="8">Prefer not to say</option>
+						{Object.keys(ageGroups).map((key) => {
+							return <option key={'age_' + key} value={key}>
+								{ageGroups[key]}
+							</option>
+						})}
 					</Form.Select>
 					<br />
 					<Form.Label>What is your gender?</Form.Label>
 					<Form.Select variant="outline-secondary" title="Dropdown" id="input-group-dropdown-2"
-						style={{width: "400px"}}
+						style={{ width: "400px" }}
 						onChange={(evt) => setGender(+evt.target.value)} value={gender}>
 						<option value="-1">Please choose an option</option>
-						<option value="0">Woman</option>
-						<option value="1">Man</option>
-						<option value="2">Non-binary</option>
-						<option value="3">Prefer not to disclose</option>
-						<option value="4">Prefer to self-describe</option>
+						{Object.keys(genderCats).map((key) => {
+							return <option key={'gender_' + key} value={key}>
+								{genderCats[key]}
+							</option>
+						})}
 					</Form.Select>
 					<Form.Control type={genderPref} style={{ marginTop: "9px" }}
-						onChange={(evt) => this.onValueChange(evt, "genText")} />
+						onChange={(evt) => setGenderText(evt.target.value)} />
 					<br />
 					<Form.Label>What is the highest degree or level of education you have completed?</Form.Label>
 					<Form.Select variant="outline-secondary" title="Dropdown" id="input-group-dropdown-4"
-						style={{width: "400px"}}
+						style={{ width: "400px" }}
 						onChange={(evt) => setEducation(+evt.target.value)} value={education}>
 						<option value="-1">Please choose an option</option>
-						<option value="0">Some high school</option>
-						<option value="1">High school</option>
-						<option value="2">Some college</option>
-						<option value="3">Trade, technical or vocational training</option>
-						<option value="4">Associate's degree</option>
-						<option value="5">Bachelor's degree</option>
-						<option value="6">Master's degree</option>
-						<option value="7">Professional degree</option>
-						<option value="8">Doctorate</option>
-						<option value="9">Prefer not to say</option>
+						{Object.keys(educationGroups).map((key) => {
+							return <option key={'education_' + key} value={key}>
+								{educationGroups[key]}
+							</option>
+						})}
 					</Form.Select>
 				</Form.Group>
 			</Row>
@@ -125,7 +162,6 @@ export const DemographyPage = (props) => {
 						loading={loading} onClick={() => submitHandler()} />
 				</div>
 			</Row>
-
 
 		</Container>
 

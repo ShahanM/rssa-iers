@@ -1,13 +1,14 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 
 
 export const LoadingScreen = (props) => {
 
 	const [loading, setLoading] = useState(props.loading);
+	useEffect(() => { setLoading(props.loading) }, [props.loading]);
 
-	useEffect(() => {
-		setLoading(props.loading);
-	}, [props.loading]);
+	const [loadingMessage, setLoadingMessage] = useState(props.loadingMessage);
+	useEffect(() => { setLoadingMessage(props.loadingMessage) }, [props.loadingMessage]);
+
 
 	return (
 		<>
@@ -22,7 +23,7 @@ export const LoadingScreen = (props) => {
 						margin: "300px auto",
 						color: "black"
 					}}>
-						Please wait while the system prepares your recommendations
+						{loadingMessage}
 						<div className="loaderStage">
 							<div className="dot-floating" style={{
 								margin: "1.5em auto"

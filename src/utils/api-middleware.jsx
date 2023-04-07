@@ -107,7 +107,7 @@ export function submitResponse(responseType: string, userdata, pageid,
 	return put(url, data, userdata);
 }
 
-export function updateSeen(userdata, studyStep, pagelevel, items){
+export function updateSeen(userdata, studyStep, pagelevel, items) {
 	const data = {
 		...requestBodyMeta(userdata, studyStep.id),
 		page_level: pagelevel,
@@ -117,7 +117,7 @@ export function updateSeen(userdata, studyStep, pagelevel, items){
 	return put(url, data, userdata);
 }
 
-export function updateRating(userdata, studyStep, pagelevel, ratings){
+export function updateRating(userdata, studyStep, pagelevel, ratings) {
 	const data = {
 		...requestBodyMeta(userdata, studyStep.id),
 		page_level: pagelevel,
@@ -127,12 +127,12 @@ export function updateRating(userdata, studyStep, pagelevel, ratings){
 	return put(url, data, userdata);
 }
 
-export function updateEmotionPreference(userdata, payload){
+export function updateEmotionPreference(userdata, payload) {
 	const url = 'user/' + userdata.id + '/emotionprefs/';
 	return put(url, payload, userdata);
 }
 
-export function submitSelection(userdata, pageData, selectedid){
+export function submitSelection(userdata, pageData, selectedid) {
 	const data = {
 		...requestBodyMeta(userdata, pageData.id),
 		selected_item: {
@@ -144,28 +144,19 @@ export function submitSelection(userdata, pageData, selectedid){
 	return put(url, data, userdata);
 }
 
-export function submitDemographicInfo(userdata, agecode, genderstr, educationstr){
+export function submitDemographicInfo(userdata, agestr, genderstr, educationstr) {
 	const data = {
 		user_id: userdata.id,
 		study_id: userdata.study_id,
-		age: agecode,
+		age_group: agestr,
 		gender: genderstr,
 		education: educationstr
 	}
 	const url = 'user/' + userdata.id + '/demographicInfo/';
 	return put(url, data, userdata);
 }
-// user_id: int
-// study_id: int
-// step_id: int
-// page_id: Optional[int]
-// time_spent: int
-// interaction_type: str
-// interaction_target: str
-// item_id: Optional[int]
-// rating: Optional[int]
 
-export function sendLog(userdata, stepid, pageid: int, timespent: int, 
+export function sendLog(userdata, stepid, pageid: int, timespent: int,
 	inttype: string, target: string, itemid: int, rating: int) {
 	const data = {
 		...requestBodyMeta(userdata, pageid),
@@ -178,6 +169,14 @@ export function sendLog(userdata, stepid, pageid: int, timespent: int,
 		.then((response): Promise<log> => response.json())
 		.then((log: log) => {
 			return log;
+		})
+}
+
+export function getCompletionURL(userdata) {
+	return get('user/' + userdata.id + '/completion', userdata)
+		.then((response): Promise<completionObj> => response.json())
+		.then((completionObj: completionObj) => {
+			return completionObj;
 		})
 }
 

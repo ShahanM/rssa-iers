@@ -4,7 +4,7 @@ import Row from 'react-bootstrap/Row';
 import { useLocation } from 'react-router-dom';
 import Shepherd from 'shepherd.js';
 import "shepherd.js/dist/css/shepherd.css";
-import { post, put, sendLog, updateRating } from '../utils/api-middleware';
+import { post, sendLog, updateRating } from '../utils/api-middleware';
 import { LoadingScreen } from '../utils/loadingScreen';
 import { ratingSteps, tourOptions } from '../utils/onboarding';
 import HeaderJumbotron from '../widgets/headerJumbotron';
@@ -101,8 +101,7 @@ export const RateMoviesLayout = (props) => {
 		setTimerStamp(Date.now());
 		if (ratedMovies.length > 0) {
 			updateRating(userdata, studyStep, currentPage, ratedMoviesData)
-			// updateItemrating()
-			.then((isupdateSuccess): Promise<Boolean> => isupdateSuccess)
+				.then((isupdateSuccess): Promise<Boolean> => isupdateSuccess)
 				.then((isupdateSuccess) => {
 					if (isupdateSuccess) {
 						post('ers/recommendation/', {
@@ -129,18 +128,6 @@ export const RateMoviesLayout = (props) => {
 		}
 	}
 
-	const updateItemrating = async () => {
-		return put('user/' + userdata.id + '/itemrating/', {
-			'user_id': userdata.id,
-			'page_id': studyStep.id,
-			'page_level': currentPage,
-			'ratings': ratedMoviesData
-		})
-			.then((response): Promise<ratedItems[]> => response.json())
-			.then((ratedItems: ratedItems) => { return ratedItems.length > 0; })
-			.catch((error) => { console.log(error); return false });
-	}
-
 	const updateCurrentPage = (page) => {
 		const currentpage = currentPage;
 		let action = 'next';
@@ -156,7 +143,8 @@ export const RateMoviesLayout = (props) => {
 	return (
 		<>
 			{loading ?
-				<LoadingScreen loading={loading} />
+				<LoadingScreen loading={loading}
+					loadingMessage={'Please wait while the system prepares your recommendations'} />
 				:
 				<Container>
 					<Row>

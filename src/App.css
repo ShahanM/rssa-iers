@@ -25,7 +25,7 @@
 	font-size: 1.3rem;
 }
 
-.App h5  {
+.App h5 {
 	font-size: 1.25rem !important;
 }
 
@@ -94,18 +94,21 @@
 	border-width: 0;
 	cursor: default;
 }
+
 .btn-ers-disabled:hover {
 	background-color: #c0c0c0ee;
 	color: #4a4b4b;
 	border-width: 0;
 	cursor: default;
 }
+
 .btn-ers-disabled:active {
 	background-color: #c0c0c0ee !important;
 	color: #4a4b4b !important;
 	border-width: 0 !important;
 	cursor: default !important;
 }
+
 .btn-ers-disabled:focus-visible {
 	background-color: #c0c0c0ee;
 	color: #4a4b4b;
@@ -384,7 +387,7 @@
 }
 
 .survey-question-block:nth-child(even) {
-	background: linear-gradient(0.25turn,  #f2f2f2bb,  #f2f2f299, white);
+	background: linear-gradient(0.25turn, #f2f2f2bb, #f2f2f299, white);
 }
 
 .survey-question-block-responded {
@@ -399,7 +402,7 @@
 }
 
 .survey-question-responded:nth-child(even) {
-	background: linear-gradient(0.25turn,  #f2f2f2bb,  #f2f2f299, white);
+	background: linear-gradient(0.25turn, #f2f2f2bb, #f2f2f299, white);
 }
 
 .survey-question-block-unanswered {
@@ -414,7 +417,7 @@
 }
 
 .survey-question-block:nth-child(even) {
-	background: linear-gradient(0.25turn,  #f2f2f2bb,  #f2f2f299, white);
+	background: linear-gradient(0.25turn, #f2f2f2bb, #f2f2f299, white);
 }
 
 .surveyQuestionText {
@@ -499,7 +502,7 @@
 .moviePreviewPanel {
 	background-color: #e9ecef;
 	border-radius: 0.3em;
-	padding: 0.25em 1em 1em 1em;
+	padding: 0.25em 0.25em 0.25em 0.25em;
 	height: 100%;
 }
 
@@ -602,7 +605,7 @@ div.badge div span {
 	box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
 	will-change: transform;
 	padding: 9px
-	/* display: block !important; */
+		/* display: block !important; */
 }
 
 
@@ -890,6 +893,6 @@ p.informedConsent-text {
 
 .movielist-btn {
 	width: 81px;
-    font-size: 13px;
-    margin-right: 6px;
+	font-size: 13px;
+	margin-right: 6px;
 }
