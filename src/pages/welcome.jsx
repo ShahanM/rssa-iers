@@ -5,7 +5,7 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import { useNavigate } from 'react-router-dom';
 import {
-	createTestUser, createUser, getFirstStudyStep,
+	createUser, getFirstStudyStep,
 	getStudy, sendLog
 } from '../utils/api-middleware';
 import InformedConsentModal from '../widgets/dialogs/informedConsent';
@@ -52,23 +52,15 @@ export default function Welcome(props) {
 
 	}, []);
 
-	const consentCallbackHandler = (consent, condition) => {
+	const consentCallbackHandler = (consent) => {
 		if (consent) {
-			if (condition === 0) {
-				createUser('ersStudy', study.id)
-					.then((response): Promise<user> => response.json())
-					.then((user: user) => {
-						setUserdata(user);
-					})
-					.catch((error) => console.log(error));
-			} else {
-				createTestUser('ersStudy', study.id, condition)
-					.then((response): Promise<user> => response.json())
-					.then((user: user) => {
-						setUserdata(user);
-					})
-					.catch((error) => console.log(error));
-			}
+			createUser('ersStudy', study.id)
+				.then((response): Promise<user> => response.json())
+				.then((user: user) => {
+					setUserdata(user);
+				})
+				.catch((error) => console.log(error));
+
 		}
 	}
 

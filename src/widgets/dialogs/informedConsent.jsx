@@ -14,11 +14,9 @@ export default function InformedConsentModal(props) {
 	const [isConsentGiven, setIsConsentGiven] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
 
-	const [condition, setCondition] = useState(0);
-
 	const handleConsent = (e) => {
 		setIsLoading(true);
-		props.consentCallback(isConsentGiven, condition);
+		props.consentCallback(isConsentGiven);
 	}
 
 	return (
@@ -153,45 +151,6 @@ export default function InformedConsentModal(props) {
 					research study"
 					onChange={(evt) => setIsConsentGiven(evt.target.checked)}
 					default={false} />
-
-				<InputGroup className="mb-3">
-					<InputGroup.Text id="inputGroup-sizing-sm">
-						Ranking Strategy
-					</InputGroup.Text>
-					<Form.Select aria-label="Algo Experiment"
-						onChange={(evt) => setCondition(evt.target.value)}
-						value={condition}>
-						<option value="0" >
-							0
-						</option>
-						<option value="1" >
-							1
-						</option>
-						<option value="2" >
-							2
-						</option>
-						<option value="3" >
-							3
-						</option>
-						<option value="4" >
-							4
-						</option>
-						<option value="5" >
-							5
-						</option>
-						<option value="6" >
-							6
-						</option>
-						<option value="7" >
-							7
-						</option>
-						<option value="8" >
-							8
-						</option>
-					</Form.Select>
-				</InputGroup>
-
-
 			</Modal.Body>
 			<Modal.Footer>
 				<Link to="/quit">

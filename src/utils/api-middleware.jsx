@@ -49,15 +49,6 @@ export function createUser(userType: string, studyId: int) {
 	}, { study_id: studyId })
 }
 
-// FIXME: This is a temporary function to create a test user
-// Get rid of this function once the backend is fixed
-export function createTestUser(userType, studyId, conditionId) {
-	return post('user/consent/' + conditionId + '/', {
-		study_id: studyId,
-		user_type: 'ersStudy'
-	}, { study_id: studyId })
-}
-
 export function getStudy(studyid) {
 	return get('study/' + studyid)
 		.then((response): Promise<studyres> => response.json())

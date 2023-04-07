@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@floating-ui/react": "^0.22.3",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
@@ -33,7 +34,7 @@
       "react-app/jest"
     ]
   },
-  "homepage": "https://rssa.recsys.dev/ierss",
+  "homepage": "https://rssa.recsys.dev/ers-study",
   "browserslist": {
     "production": [
       ">0.2%",

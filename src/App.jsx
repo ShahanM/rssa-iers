@@ -40,7 +40,7 @@ function App() {
 					disableHide={true}
 				/>
 			}
-			<Router basename='/ierss'>
+			<Router basename='/ers-study'>
 				<Suspense fallback={<h1>Loading</h1>}>
 					<Routes>
 						<Route path="/" element={<Welcome next="/studyoverview" />} />
