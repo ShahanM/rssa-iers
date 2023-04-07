@@ -2,10 +2,10 @@ import { useEffect, useState } from "react";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import { useLocation, useNavigate } from "react-router-dom";
-import { get, getNextStudyStep, put } from "../utils/api-middleware";
+import { get, getNextStudyStep, sendLog, submitResponse } from "../utils/api-middleware";
 import HeaderJumbotron from "../widgets/headerJumbotron";
 import NextButton from "../widgets/nextButton";
-import SurveyTemplate from "../widgets/surveyTemplate";
+import SurveyTemplate from "../widgets/survey/surveyTemplate";
 
 export default function Survey(props) {
 
@@ -22,6 +22,9 @@ export default function Survey(props) {
 	const [studyStep, setStudyStep] = useState({});
 	const [showUnanswered, setShowUnanswered] = useState(false);
 
+	const [starttime, setStarttime] = useState(new Date());
+	const [pageStarttime, setPageStarttime] = useState(new Date());
+
 	const getsurveypage = (studyid, stepid, pageid) => {
 		let path = '';
 		if (pageid !== null) {
@@ -33,6 +36,7 @@ export default function Survey(props) {
 			.then((response): Promise<page> => response.json())
 			.then((page: page) => {
 				setPageData(page);
+				setPageStarttime(new Date());
 				setShowUnanswered(false);
 				const pagevalidation = {};
 				pagevalidation[page.id] = false;
@@ -45,6 +49,7 @@ export default function Survey(props) {
 	useEffect(() => {
 		getNextStudyStep(userdata.study_id, stepid)
 			.then((value) => { setStudyStep(value) });
+		setStarttime(new Date());
 	}, []);
 
 	useEffect(() => {
@@ -55,32 +60,39 @@ export default function Survey(props) {
 
 	useEffect(() => {
 		if (pageData.id === null) {
+			sendLog(userdata, studyStep, pageData.id, new Date() - starttime,
+				'survey complete', 'submit', null, null);
 			navigate(props.next, {
-				state: {
-					user: userdata,
-					studyStep: studyStep.id
-				}
+				state: { user: userdata, studyStep: studyStep.id }
 			});
-		} else {
-			window.scrollTo(0, 0);
-		}
+		} else { window.scrollTo(0, 0); }
 		setLoading(false);
-	}, [pageData, navigate, userdata, studyStep, props.next]);
+	}, [pageData, navigate, userdata, studyStep, props.next, starttime]);
 
 	const next = () => {
+		let timediff = 0;
+		let behavior = 'buttonClick';
+		let buttonAct = 'something went wrong: React App survey.jsx next()';
 		if (nextButtonDisabled) {
 			setShowUnanswered(true);
+			timediff = new Date() - pageStarttime;
+			behavior = 'prematureNext';
+			buttonAct = 'next';
 		} else {
 			setLoading(true);
 			if (pageData.id !== null) {
 				if (serverValidation[pageData.id] === false) {
 					submitAndValidate();
+					timediff = new Date() - pageStarttime;
+					behavior = 'surveyResponse';
+					buttonAct = 'next';
 				} else {
-					console.log('getting new set of questions.');
 					getsurveypage(userdata.study_id, studyStep.id, pageData.id);
 				}
 			}
 		}
+		sendLog(userdata, studyStep, pageData.id, timediff, behavior, buttonAct,
+			null, null);
 	}
 
 	const submitHandler = (data) => {
@@ -89,28 +101,25 @@ export default function Survey(props) {
 	}
 
 	const submitAndValidate = () => {
-		put('user/' + userdata.id + '/response/likert/', {
-			'user_id': userdata.id,
-			'study_id': userdata.study_id,
-			'page_id': pageData.id,
-			'responses': Object.entries(surveyAnswers).map(([key, value]) => {
-				return {
-					'question_id': key,
-					'response': value
-				}
+		const surveyResponse = Object.entries(surveyAnswers)
+			.map(([key, value]) => {
+				return { 'question_id': key, 'response': value }
 			})
-		})
+		submitResponse('likert', userdata, pageData.id, surveyResponse)
 			.then((response): Promise<isvalidated> => response.json())
 			.then((isvalidated: isvalidated) => {
 				if (isvalidated === true) {
 					setServerValidation({ ...serverValidation, [pageData.id]: true });
 					getsurveypage(userdata.study_id, studyStep.id, pageData.id);
 					setNextButtonDisabled(true);
-				} else {
-					setLoading(false);
-				}
+				} else { setLoading(false); }
 			})
 			.catch((error) => console.log(error));
+	}
+
+	const logHandler = (qid, val) => {
+		sendLog(userdata, studyStep, pageData.id, new Date() - pageStarttime,
+			'surveyResponse', pageData.page_name, qid, val);
 	}
 
 	return (
@@ -123,7 +132,8 @@ export default function Survey(props) {
 					<SurveyTemplate surveyquestions={pageData.questions}
 						surveyquestiongroup={pageData.page_name}
 						showUnanswered={showUnanswered}
-						submitCallback={submitHandler} />
+						submitCallback={submitHandler}
+						logginCallback={logHandler} />
 					: ''
 				}
 			</Row>

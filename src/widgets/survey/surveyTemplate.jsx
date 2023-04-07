@@ -62,6 +62,7 @@ export default function SurveyTemplate(props) {
 			}
 		}
 
+		props.logginCallback(qid, value);
 		let newAnswers = { ...surveyAnswers };
 		newAnswers[qid] = value;
 		setSurveyAnswers(newAnswers);
@@ -85,7 +86,7 @@ export default function SurveyTemplate(props) {
 							</p>
 						</div>
 						<LikertBar surveyquestiongroup={props.surveyquestiongroup}
-							qid={i} changeCallback={valueSelectHandler} />
+							qid={question.id} changeCallback={valueSelectHandler} />
 					</FormGroup>
 				)
 			})}

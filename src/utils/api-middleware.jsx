@@ -24,8 +24,19 @@ export function post(path: string, data: any, userdata) {
 }
 
 export function put(path: string, data: any, userdata) {
-	console.log(getHeaders(userdata));
 	return bodyRequest('PUT', path, data, getHeaders(userdata));
+}
+
+export function submitResponse(responseType: string, userdata, pageid,
+	responses) {
+	const data = {
+		user_id: userdata.id,
+		study_id: userdata.study_id,
+		page_id: pageid,
+		responses: responses
+	}
+	const url = 'user/' + userdata.id + '/response/' + responseType + '/';
+	return put(url, data, userdata);
 }
 
 function bodyRequest(method: string, path: string, data: any, headers) {
@@ -43,7 +54,7 @@ export function get(path: string, userdata) {
 	});
 }
 
-export function createUser(userType, studyId) {
+export function createUser(userType: string, studyId: int) {
 	return post('user/consent/', {
 		study_id: studyId,
 		user_type: 'ersStudy'
@@ -108,8 +119,8 @@ export function getPage(studyid, stepid, pageid) {
 // item_id: Optional[int]
 // rating: Optional[int]
 
-export function sendLog(userdata, studyStep, pageid, timespent, inttype,
-	target, itemid, rating) {
+export function sendLog(userdata, studyStep, pageid: int, timespent: int, 
+	inttype: string, target: string, itemid: int, rating: int) {
 	const data = {
 		user_id: userdata.id,
 		study_id: userdata.study_id,
@@ -121,7 +132,7 @@ export function sendLog(userdata, studyStep, pageid, timespent, inttype,
 		item_id: itemid,
 		rating: rating
 	}
-	return put('user/' + userdata.id + '/log', data, userdata)
+	return put('user/' + userdata.id + '/log/', data, userdata)
 		.then((response): Promise<log> => response.json())
 		.then((log: log) => {
 			return log;
