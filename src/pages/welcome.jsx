@@ -44,7 +44,7 @@ export default function Welcome(props) {
 	}, [userdata, navigate, studyStep, props.next, starttime]);
 
 	useEffect(() => {
-		getStudy(studyID).then((studyres: studyres) => { setStudy(studyres); });
+		getStudy(studyID).then((studyres: studyres) => { setStudy(studyres) });
 		getFirstStudyStep(studyID).then((studyStepRes: studyStepRes) => {
 			setStudyStep(studyStepRes);
 		});
