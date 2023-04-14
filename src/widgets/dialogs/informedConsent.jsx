@@ -91,7 +91,7 @@ export default function InformedConsentModal(props) {
 				<p className='informedConsent-title'>Incentives</p>
 				<p>
 					Participants who complete all tasks will be compensated
-					with $2.75. Successful and careful completion of the tasks
+					with $2.40. Successful and careful completion of the tasks
 					is a prerequisite for payment.
 				</p>
 
