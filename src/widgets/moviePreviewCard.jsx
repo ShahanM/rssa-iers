@@ -15,7 +15,7 @@ export default function MoviePreviewCard(props) {
 			<Row>
 				<Col>
 					<div className="movie-preview-card-image">
-						<Image src={imgurl(movie.poster_identifier)}
+						<Image src={movie.poster}
 							alt={"Post of the movie " + movie.title}
 							variant="left"
 							className="d-flex mx-auto d-block img-thumbnail" />

@@ -15,7 +15,8 @@ export default function MovieGridItem(props) {
 	return (
 		<div id={"TN_" + movieItem.movie_id}
 			className={"grid-item"} style={{
-				backgroundImage: "url(" + imgurl(poster_identifier) + "), url(" + imgurl(null) + ")",
+				// backgroundImage: "url(" + imgurl(poster_identifier) + "), url(" + imgurl(null) + ")",
+				backgroundImage: "url(" + movieItem.poster + "), url(https://commons.wikimedia.org/wiki/Category:SVG_film_reel_icons#/media/File:Filmreel-icon.svg)",
 			backgroundColor: "rgb(249, 176, 92, 0.6)"
 			}}>
 			<div className={rated ? "rated overlay" : "overlay"}>

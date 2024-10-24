@@ -17,7 +17,7 @@ export default function MovieListPanelItem(props) {
 			onMouseEnter={(evt) => props.hoverHandler(evt, true, movie, "enter")}
 		>
 			<div>
-				<Image className="sidePanelThumbnail" src={imgurl(movie.poster_identifier)} />
+				<Image className="sidePanelThumbnail" src={movie.poster} />
 			</div>
 			<div style={{
 				position: "relative", boxSizing: "border-box", width: "87%",

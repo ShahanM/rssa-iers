@@ -1,17 +1,16 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Suspense, useEffect, useState } from 'react';
-import Navbar from 'react-bootstrap/Navbar';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import './App.css';
-import { WarningDialog } from './widgets/dialogs/warningDialog';
 import DemographyPage from './pages/demographyPage';
 import EmotionPreferences from './pages/emotionPrefs';
 import FeedbackPage from './pages/feedbackPage';
+import { FinalPage } from './pages/finalPage';
 import RateMovies from './pages/rateMovies';
 import StudyMap from './pages/studymap';
 import Survey from './pages/survey';
 import Welcome from './pages/welcome';
-import { FinalPage } from './pages/finalPage';
+import { WarningDialog } from './widgets/dialogs/warningDialog';
 
 function App() {
 
