@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
@@ -9,6 +9,8 @@ import MovieGridItem from './movieGridItem';
 
 export default function MovieGrid(props) {
 	const [currentPage, setCurrentPage] = useState(1);
+	const [movies, setMovies] = useState(props.movies);
+	useEffect(() => { setMovies(props.movies) }, [props.movies]);
 
 	const renderPrev = () => {
 		if (currentPage > 1) {
@@ -20,7 +22,7 @@ export default function MovieGrid(props) {
 	}
 
 	const renderNext = () => {
-		if (currentPage % 2 === 0) {
+		if (currentPage * props.itemsPerPage < props.movies.length) {
 			props.dataCallback();
 		}
 		if (props.pagingCallback) {
@@ -32,31 +34,33 @@ export default function MovieGrid(props) {
 	return (
 		<Container className="gallery">
 			<Row>
-				<Col md={12}>
-					{(currentPage * props.itemsPerPage <= props.movies.length) ?
-						<div className="grid-container">
-							{props.movies.slice((currentPage - 1) * props.itemsPerPage, currentPage * props.itemsPerPage).map(currentMovie => (
+				{/* <Col md={12}> */}
+				<div className="grid-container">
+					{(currentPage * props.itemsPerPage <= movies.length) ?
+						<>
+							{movies.slice((currentPage - 1) * props.itemsPerPage, currentPage * props.itemsPerPage).map(currentMovie => (
 								<MovieGridItem key={"TN_" + currentMovie.id} movieItem={currentMovie}
 									handleRating={props.ratingCallback} />
 							))}
-						</div>
-						: <div style={{ minWidth: "918px", minHeight: "656px" }}>
+						</>
+						: <div style={{ minWidth: "918px", minHeight: "fit-parent" }}>
 							<Spinner animation="border" role="status" style={{ margin: "18% 50%", width: "54px", height: "54px" }} />
 						</div>
 					}
-				</Col>
+				</div>
+				{/* </Col> */}
 			</Row>
-			<Row>
-				<Col md={3}>
+			<Row className="galleryFooter">
+				<Col>
 					<div className="btnDiv">
 						<Button id="gallery-left-btn" disabled={currentPage === 1} variant="ers" onClick={renderPrev}>
 							&lt;
 						</Button>
 					</div>
 				</Col>
-				<Col md={{ span: 3, offset: 5 }}>
+				<Col>
 					<div className="btnDiv">
-						<Button id="gallery-right-btn" variant="ers" onClick={renderNext}>
+						<Button id="gallery-right-btn" disabled={currentPage * props.itemsPerPage === props.maxlength} variant="ers" onClick={renderNext}>
 							&gt;
 						</Button>
 					</div>

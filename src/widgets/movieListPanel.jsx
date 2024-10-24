@@ -1,10 +1,11 @@
+import { useState } from "react";
 import Col from "react-bootstrap/Col";
 import ListGroup from "react-bootstrap/ListGroup";
-import { useState } from "react";
 
 export default function MovieListPanel(props) {
 
 	const [selectedid, setSelectedid] = useState(props.selectedid);
+
 
 	const changeRating = (newRating, movieid) => {
 		let panelid = props.id;
@@ -12,9 +13,6 @@ export default function MovieListPanel(props) {
 	}
 
 	const onValueChange = (movieid) => {
-		// let panelid = props.id;
-		// console.log("onValueChange: ", event);
-		// let movieid = event.target.value;
 		props.selectionHandler(movieid);
 		setSelectedid(movieid);
 	}
@@ -25,22 +23,42 @@ export default function MovieListPanel(props) {
 	}
 
 	return (
-		<Col id={props.id}>
+		<Col id={props.id} className="recommendationsListContainer">
 			<div className="align-items-center justify-content-center"
 				style={{
-					height: props.byline.length > 0 ? "108px" : "81", padding: "27px 18px",
+					height: "99px", padding: "9px 18px",
 					textAlign: "center", borderRadius: "0.3rem 0.3rem 0 0",
 					backgroundColor: "#e9ecef"
 				}}>
 				<h5>{props.panelTitle}</h5>
-				{props.byline.length > 0 ?
-					<p style={{ textAlign: "left", fontSize: "14px" }}>
-						{props.panelByline}
-					</p>
-					: ''
+				{props.panelByline.length > 0 ?
+					Object.keys(props.byline)
+						.filter(key =>
+							!(props.byline[key].length === 0
+								|| props.byline[key] === 'ignore'))
+						.map((key, i) => {
+							return (
+								<div className="badge" key={'badge_' + i}>
+									<div className="name">
+										<span>
+											{key}
+										</span>
+									</div>
+									<div
+										className={props.byline[key] === 'low'
+											? "status ersorange" : "status green"}>
+										<span>
+											{props.byline[key]}
+										</span>
+									</div>
+								</div>
+							)
+						})
+					: ""
+					// <p style={{ padding: "1.8em" }}>No emotion preference selected</p>
 				}
 			</div>
-			<ListGroup as="ul">
+			<ListGroup as="ul" style={{ minHeight: "504px" }}>
 				{props.movieList.map((movie) => (
 					props.render({
 						key: movie.movie_id,
@@ -50,12 +68,6 @@ export default function MovieListPanel(props) {
 						ratingsHandler: changeRating,
 						selectionHandler: onValueChange
 					})
-					// <SidePanelItem key={movie.movie_id} movie={movie}
-					// 	pick={this.props.pick || false}
-					// 	selectedid={this.props.selectedid}
-					// 	hoverHandler={this.onHover}
-					// 	ratingsHandler={this.changeRating}
-					// 	selectStateHandler={this.onValueChange} />
 				))}
 			</ListGroup>
 		</Col>
