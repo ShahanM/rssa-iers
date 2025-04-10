@@ -23,7 +23,7 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "PORT=3340 react-scripts start",
+    "start": "PORT=3350 react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -34,7 +34,7 @@
       "react-app/jest"
     ]
   },
-  "homepage": "https://rssa.recsys.dev/ers-study",
+  "homepage": "https://rssa.recsys.dev/demo/rssa-emotions",
   "browserslist": {
     "production": [
       ">0.2%",
