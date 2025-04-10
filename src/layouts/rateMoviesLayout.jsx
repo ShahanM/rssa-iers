@@ -13,7 +13,7 @@ import NextButton from '../widgets/nextButton';
 
 export const RateMoviesLayout = (props) => {
 	const itemsPerPage = 24;
-	const userdata = useLocation().state.user;
+	// const userdata = useLocation().state.user;
 
 	const [ratedMoviesData, setRatedMoviesData] = useState([]);
 	const [ratedMovies, setRatedMovies] = useState([]);
@@ -36,35 +36,34 @@ export const RateMoviesLayout = (props) => {
 	tour.current = new Shepherd.Tour(tourOptions);
 
 	const rateMoviesHandler = (newRating, idstr) => {
-		const movieid = parseInt(idstr);
+		// const movieid = parseInt(idstr);
 		const isNew = !ratedMoviesData.some(item =>
-			item.item_id === movieid);
-
+			item.item_id === idstr);
 		let newrefMovies = [...movies];
 		let newrefRatedMovies = [...ratedMovies];
 		let newrefRatedMoviesData = [...ratedMoviesData];
 
-		let updatedmovie = newrefMovies.find(item => item.movie_id === movieid);
+		let updatedmovie = newrefMovies.find(item => item.id === idstr);
 		updatedmovie.rating = newRating;
 		if (isNew) {
-			let updatevisited = [...ratedMoviesData, { item_id: movieid, rating: newRating }];
+			let updatevisited = [...ratedMoviesData, { item_id: idstr, rating: newRating }];
 			let updaterated = [...ratedMovies, updatedmovie];
 			setRatedMovies(updaterated);
 			setRatedMoviesData(updatevisited);
 			setRatedMovieCount(updatevisited.length);
 			setButtonDisabled(updatevisited.length < 10);
 		} else {
-			let updatevisited = newrefRatedMoviesData.find(item => item.item_id === movieid);
+			let updatevisited = newrefRatedMoviesData.find(item => item.id === idstr);
 			updatevisited.rating = newRating;
 
-			let updaterated = newrefRatedMovies.find(item => item.movie_id === movieid);
+			let updaterated = newrefRatedMovies.find(item => item.id === idstr);
 			updaterated.rating = newRating;
 			setRatedMovies(newrefRatedMovies);
 			setRatedMoviesData(newrefRatedMoviesData);
 		}
 		setMovies(newrefMovies);
-		sendLog(userdata, studyStep.id, null, new Date() - gridPageStarttime,
-			'rate movie', 'gallery page ' + currentPage, movieid, newRating);
+		// sendLog(userdata, studyStep.id, null, new Date() - gridPageStarttime,
+		// 	'rate movie', 'gallery page ' + currentPage, movieid, newRating);
 	}
 
 	const fetchMovies = async () => {
@@ -74,7 +73,7 @@ export const RateMoviesLayout = (props) => {
 	}
 
 	const getMoviesByIDs = async (ids) => {
-		post('ers/movies/', ids)
+		post('movie/ers/', ids)
 			.then((response): Promise<movie[]> => response.json())
 			.then((newmovies: movie[]) => {
 				setMovies([...movies, ...newmovies]);
@@ -100,13 +99,13 @@ export const RateMoviesLayout = (props) => {
 		setLoading(true);
 		setTimerStamp(Date.now());
 		if (ratedMovies.length > 0) {
-			updateRating(userdata, studyStep, currentPage, ratedMoviesData)
-				.then((isupdateSuccess): Promise<Boolean> => isupdateSuccess)
-				.then((isupdateSuccess) => {
-					if (isupdateSuccess) {
+			// updateRating(userdata, studyStep, currentPage, ratedMoviesData)
+			// 	.then((isupdateSuccess): Promise<Boolean> => isupdateSuccess)
+			// 	.then((isupdateSuccess) => {
+			// 		if (isupdateSuccess) {
 						post('ers/recommendation/', {
-							user_id: userdata.id,
-							user_condition: userdata.condition,
+							user_id: 'f47000b3-a9a7-4722-aba1-ec42eff5cc07',
+							user_condition: 'f47000b3-a9a7-4722-aba1-ec42eff5cc07',
 							ratings: ratedMoviesData,
 							rec_type: recType,
 							num_rec: 20
@@ -123,9 +122,9 @@ export const RateMoviesLayout = (props) => {
 								setLoading(false);
 							});
 					}
-				})
-				.catch((error) => { console.log(error); setLoading(false); });
-		}
+				// })
+				// .catch((error) => { console.log(error); setLoading(false); });
+		// }
 	}
 
 	const updateCurrentPage = (page) => {
@@ -134,8 +133,8 @@ export const RateMoviesLayout = (props) => {
 		if (currentpage > page) {
 			action = 'prev';
 		}
-		sendLog(userdata, studyStep.id, null, new Date() - gridPageStarttime,
-			action, 'gallery page ' + currentPage, null, null);
+		// sendLog(userdata, studyStep.id, null, new Date() - gridPageStarttime,
+		// 	action, 'gallery page ' + currentPage, null, null);
 		setCurrentPage(page);
 		setGridPageStarttime(new Date());
 	}
@@ -148,10 +147,10 @@ export const RateMoviesLayout = (props) => {
 				:
 				<Container>
 					<Row>
-						<HeaderJumbotron title={studyStep.step_name} content={studyStep.step_description} />
+						<HeaderJumbotron title="Movie Gallery" content="You can rate movies here." />
 					</Row>
 					<Row>
-						<MovieGrid ratingCallback={rateMoviesHandler} userid={userdata.id} movies={movies}
+						<MovieGrid ratingCallback={rateMoviesHandler} userid={1} movies={movies}
 							pagingCallback={updateCurrentPage} itemsPerPage={itemsPerPage} dataCallback={fetchMovies} />
 					</Row>
 					<Row>

@@ -29,7 +29,8 @@ const EmoPrefsLayout = (props) => {
 	const [userData, setUserData] = useState(props.user);
 	useEffect(() => { setUserData(props.user) }, [props.user]);
 
-	const condition = userData.condition;
+	// const condition = userData.condition;
+	const condition = 5; // TODO: remove this line
 	const emoVizEnabled = studyConditions[condition].emoVizEnabled;
 	const emoTogglesEnabled = studyConditions[condition].emoTogglesEnabled;
 	const defaultEmoWeightLabel = studyConditions[condition].defaultEmoWeightLabel;
@@ -120,8 +121,8 @@ const EmoPrefsLayout = (props) => {
 		const updateRecommendations = (emoinput) => {
 			setLoading(true);
 			post('ers/updaterecommendations/', {
-				user_id: userData.id,
-				user_condition: userData.condition,
+				user_id: 1,
+				user_condition: 5,
 				input_type: "discrete",
 				emotion_input: emoinput,
 				ratings: ratings,
@@ -163,9 +164,9 @@ const EmoPrefsLayout = (props) => {
 	}
 
 	const handleToggle = (emotion, value) => {
-		sendLog(userData, pageData.step_id, pageData.id,
-			new Date() - pageStartTime, 'Set emotion value to ' + value,
-			emotion, null, null);
+		// sendLog(userData, pageData.step_id, pageData.id,
+		// 	new Date() - pageStartTime, 'Set emotion value to ' + value,
+		// 	emotion, null, null);
 		setEmotionToggles(prevState => {
 			return {
 				...prevState,
@@ -250,16 +251,17 @@ const EmoPrefsLayout = (props) => {
 		// 		'rating': 99
 		// 	}
 		// })
-		submitSelection(userData, pageData, selectedMovieid)
-			.then((response): Promise<value> => response.json())
-			.then((selectedItem: value) => {
-				if (selectedItem.item_id === parseInt(selectedMovieid) && selectedItem.rating === 99) {
-					props.nagivationCallback();
-				}
-			}).catch((error) => {
-				console.log(error);
-			});
-		setLoading(false);
+		// submitSelection(userData, pageData, selectedMovieid)
+		// 	.then((response): Promise<value> => response.json())
+		// 	.then((selectedItem: value) => {
+		// 		if (selectedItem.item_id === parseInt(selectedMovieid) && selectedItem.rating === 99) {
+		// 			props.nagivationCallback();
+		// 		}
+		// 	}).catch((error) => {
+		// 		console.log(error);
+		// 	});
+		// setLoading(false);
+		props.nagivationCallback();
 	}
 
 	const infoHandler = () => {
@@ -271,7 +273,7 @@ const EmoPrefsLayout = (props) => {
 	return (
 		<Container>
 			<Row>
-				<HeaderJumbotron title={pageData.page_name} content={pageData.page_instruction} />
+				<HeaderJumbotron title={"Your recommendations"} content={"Explore the movie emotions."} />
 			</Row >
 			<WarningDialog show={showWarning} title={"Are you sure?"}
 				message={`<p>Finalizing will freeze your current emotion settings.</p> 
@@ -331,11 +333,13 @@ const EmoPrefsLayout = (props) => {
 			</Row >
 			<Row>
 				<div className="jumbotron jumbotron-footer">
-					{emoTogglesEnabled && !isToggleDone ?
-						<FooterButton className="toggleFinalizeButton" variant="ersDone"
-							onClick={() => finalizeToggles()} text="Finalize" />
-						:
-						<NextButton className="nextButton" disabled={buttonDisabled && !loading}
+					{
+					// emoTogglesEnabled && !isToggleDone ?
+					// 	<FooterButton className="toggleFinalizeButton" variant="ersDone"
+					// 		onClick={() => finalizeToggles()} text="Finalize" />
+					// 	:
+						<FooterButton 
+						text="Back to Gallery"
 							onClick={handleNext} loading={loading} />
 					}
 				</div>

@@ -5,7 +5,6 @@ import MoviePreviewCard from "./moviePreviewCard";
 
 
 export default function MovieEmotionPreviewPanel(props) {
-
 	return (
 		<Container>
 			<Row style={{ height: "279px" }}>

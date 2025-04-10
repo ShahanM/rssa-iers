@@ -43,15 +43,15 @@ function App() {
 			<Router basename='/ers-study'>
 				<Suspense fallback={<h1>Loading</h1>}>
 					<Routes>
-						<Route path="/" element={<Welcome next="/studyoverview" />} />
-						<Route path="/studyoverview" element={<StudyMap next="/presurvey" />} />
-						<Route path="/presurvey" element={<Survey next="/ratemovies" />} />
-						<Route path="/ratemovies" element={<RateMovies next="/recommendations" />} />
-						<Route path="/recommendations" element={<EmotionPreferences next="/feedback" />} />
-						<Route path="/feedback" element={<FeedbackPage next="/postsurvey" />} />
-						<Route path="/postsurvey" element={<Survey next="/demography" />} />
-						<Route path="/demography" element={<DemographyPage next="/quit" />} />
-						<Route path="/quit" element={<FinalPage />} />
+						{/* <Route path="/" element={<Welcome next="/studyoverview" />} /> */}
+						{/* <Route path="/studyoverview" element={<StudyMap next="/presurvey" />} /> */}
+						{/* <Route path="/presurvey" element={<Survey next="/ratemovies" />} /> */}
+						<Route path="/" element={<RateMovies next="/recommendations" />} />
+						<Route path="/recommendations" element={<EmotionPreferences next="/" />} />
+						{/* <Route path="/feedback" element={<FeedbackPage next="/postsurvey" />} /> */}
+						{/* <Route path="/postsurvey" element={<Survey next="/demography" />} /> */}
+						{/* <Route path="/demography" element={<DemographyPage next="/quit" />} /> */}
+						{/* <Route path="/quit" element={<FinalPage />} /> */}
 					</Routes>
 				</Suspense>
 			</Router>

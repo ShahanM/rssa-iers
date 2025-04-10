@@ -8,8 +8,8 @@ import { LoadingScreen } from '../utils/loadingScreen';
 
 export const RateMovies = (props) => {
 
-	const userdata = useLocation().state.user;
-	const stepid = useLocation().state.studyStep;
+	// const userdata = useLocation().state.user;
+	// const stepid = useLocation().state.studyStep;
 
 	const navigate = useNavigate();
 	const [studyStep, setStudyStep] = useState(undefined);
@@ -18,16 +18,16 @@ export const RateMovies = (props) => {
 
 	const [starttime, setStarttime] = useState(new Date());
 
-	useEffect(() => {
-		getNextStudyStep(userdata.study_id, stepid)
-			.then((value) => {
-				setStudyStep(value)
-			});
-	}, [userdata, stepid]);
+	// useEffect(() => {
+		// getNextStudyStep(userdata.study_id, stepid)
+			// .then((value) => {
+				// setStudyStep(value)
+			// });
+	// }, [userdata, stepid]);
 
 	useEffect(() => {
 		const getAllMovieIds = async () => {
-			get('ers/movies/ids/')
+			get('movie/ids/ers')
 				.then((response): Promise<movie[]> => response.json())
 				.then((newmovies: movie[]) => {
 					setMovieIds(newmovies);
@@ -35,9 +35,9 @@ export const RateMovies = (props) => {
 				.catch((error) => console.log(error));
 		}
 
-		if (studyStep !== undefined && Object.keys(studyStep).length > 0) {
-			getAllMovieIds();
-		}
+		// if (studyStep !== undefined && Object.keys(studyStep).length > 0) {
+		getAllMovieIds();
+		// }
 	}, [studyStep]);
 
 	const pickRandomMovies = (limit) => {
@@ -48,28 +48,28 @@ export const RateMovies = (props) => {
 			randomMovies.push(...randomMovie);
 		}
 		setMovieIds(moviearr);
-		updateSeenItems(randomMovies);
+		// updateSeenItems(randomMovies);
 		return randomMovies;
 	}
 
-	const updateSeenItems = async (items) => {
-		updateSeen(userdata, studyStep, pageNum, items)
-			.then((response): Promise<success> => response.json())
-			.then((success: success) => { setPageNum(pageNum + 1) })
-			.catch((error) => console.log(error));
-	}
+	// const updateSeenItems = async (items) => {
+	// 	updateSeen(userdata, studyStep, pageNum, items)
+	// 		.then((response): Promise<success> => response.json())
+	// 		.then((success: success) => { setPageNum(pageNum + 1) })
+	// 		.catch((error) => console.log(error));
+	// }
 
 	function handleNavigate(recommendedMovies,
 		ratedMoviesData) {
-		sendLog(userdata, studyStep.id, null, new Date() - starttime,
-			'navigation', 'next', null, null)
+		// sendLog(userdata, studyStep.id, null, new Date() - starttime,
+		// 	'navigation', 'next', null, null)
 		navigate(props.next,
 			{
 				state: {
 					recommendations: recommendedMovies,
 					ratings: ratedMoviesData,
-					user: userdata,
-					studyStep: studyStep.id
+					// user: userdata,
+					// studyStep: studyStep.id
 				}
 			});
 	}
@@ -77,13 +77,13 @@ export const RateMovies = (props) => {
 	return (
 		<div>
 			{
-				(studyStep === undefined || movieids.length <= 0) ?
+				(movieids.length <= 0) ?
 					<LoadingScreen loading={!studyStep} 
 					loadingMessage={'Please wait while we generate the movie gallery.'}/>
 					:
 					<ShepherdTour steps={[]}>
 						<RateMoviesLayout navigationCallback={handleNavigate}
-							stepName={studyStep.step_name}
+							stepName={"You can rate movies in the gallery below."}
 							studyStep={studyStep}
 							getMoviesCallback={pickRandomMovies} />
 					</ShepherdTour>
