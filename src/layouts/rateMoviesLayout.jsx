@@ -103,7 +103,7 @@ export const RateMoviesLayout = (props) => {
 			// 	.then((isupdateSuccess): Promise<Boolean> => isupdateSuccess)
 			// 	.then((isupdateSuccess) => {
 			// 		if (isupdateSuccess) {
-						post('ers/recommendation/', {
+						post('ers/recommendation', {
 							user_id: 'f47000b3-a9a7-4722-aba1-ec42eff5cc07',
 							user_condition: 'f47000b3-a9a7-4722-aba1-ec42eff5cc07',
 							ratings: ratedMoviesData,
