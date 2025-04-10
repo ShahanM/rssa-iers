@@ -73,7 +73,7 @@ export const RateMoviesLayout = (props) => {
 	}
 
 	const getMoviesByIDs = async (ids) => {
-		post('movie/ers/', ids)
+		post('movie/ers', ids)
 			.then((response): Promise<movie[]> => response.json())
 			.then((newmovies: movie[]) => {
 				setMovies([...movies, ...newmovies]);
