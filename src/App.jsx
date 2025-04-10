@@ -40,7 +40,7 @@ function App() {
 					disableHide={true}
 				/>
 			}
-			<Router basename='/rssa-emotions'>
+			<Router basename='/demo/rssa-emotions'>
 				<Suspense fallback={<h1>Loading</h1>}>
 					<Routes>
 						{/* <Route path="/" element={<Welcome next="/studyoverview" />} /> */}
